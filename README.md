@@ -1,2 +1,2 @@
 # stocksight
-Stock analyzer and predictor using Elasticsearch, Twitter and Python Language Detection
+Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing/sentiment analysis
