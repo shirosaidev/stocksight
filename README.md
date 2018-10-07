@@ -1,2 +1,2 @@
 # stocksight
-Stock analyzer and predictor using Elasticsearch and Kibana machine learning
+Stock analyzer and predictor using Elasticsearch, Twitter and Python Language Detection
