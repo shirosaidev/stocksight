@@ -8,7 +8,7 @@ Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natur
 - nltk python module
 - requests python module
 - tweepy python module
-- bs4 (Beautiful Soup 4) python module
+- beautifulsoup4 python module
 - textblob python module
 
 ## How to use
