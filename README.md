@@ -13,6 +13,8 @@
 # stocksight
 Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing and sentiment analysis
 
+<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" width="1280" height="720" />
+
 ## Requirements
 - Python 2.7. or Python 3.6. (Python 3 recommended)
 - Elasticsearch 5
