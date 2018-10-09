@@ -2,7 +2,7 @@
 Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing and sentiment analysis
 
 ## Requirements
-- Python 2
+- Python 2.7.
 - Elasticsearch 5
 - elasticsearch python module
 - nltk python module
