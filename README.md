@@ -40,14 +40,6 @@ $ python stockprice.py -s TSLA --debug
 
 Load 'stocksight' index in Kibana and import json file for visuals/dashboard.
 
-## Download
-
-```shell
-$ git clone https://github.com/shirosaidev/stocksight.git
-$ cd stocksight
-```
-[Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
-
 ## Requirements
 - Python 2.7. or Python 3.6. (Python 3 recommended)
 - Elasticsearch 5
@@ -58,7 +50,15 @@ $ cd stocksight
 - beautifulsoup4 python module
 - textblob python module
 
-## CLI options
+### Download
+
+```shell
+$ git clone https://github.com/shirosaidev/stocksight.git
+$ cd stocksight
+```
+[Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
+
+### CLI options
 
 ```
 usage: sentiment.py [-h] [-i INDEX] [-d] [-k KEYWORDS] [-u URL] [-f FILE] [-v]
