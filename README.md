@@ -11,7 +11,9 @@
                            :) = +$   :( = -$                        |  $$$$$$/                    
                                                                      \______/ 
 # stocksight
-Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing and sentiment analysis
+Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing and sentiment analysis. How much do emotions on Twitter affect a stock's price? Let's find out ...
+
+<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
 
 ## Requirements
 - Python 2.7. or Python 3.6. (Python 3 recommended)
