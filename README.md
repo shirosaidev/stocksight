@@ -18,7 +18,7 @@ https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens
 
 Add consumer key/access token to config.py
 
-Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if found the tweet will not be added to Elasticsearch (blacklist).
+Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch (blacklist).
 
 Run sentiment.py to create 'sentiment' index in Elasticsearch and start mining and analyzing Tweets
 
