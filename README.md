@@ -28,7 +28,9 @@ Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natur
 Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
-Add consumer key/access token to config.py
+Copy config.py.sample to config.py
+
+Add consumer key/access token and secrets to config.py
 
 Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch (blacklist).
 
