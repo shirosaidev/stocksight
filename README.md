@@ -13,16 +13,16 @@ Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natur
 
 ## How to use
 
-- Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
+Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
-- Add consumer key/access token to config.py
+Add consumer key/access token to config.py
 
-- Run sentiment.py to create 'sentiment' index in Elasticsearch and start analyzing Tweets
+Run sentiment.py to create 'sentiment' index in Elasticsearch and start analyzing Tweets
 
 `python sentiment.py`
 
-- Load 'sentiment' index in Kibana.
+Load 'sentiment' index in Kibana.
 
 ## Usage options
 
