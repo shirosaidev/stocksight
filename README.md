@@ -49,6 +49,7 @@ Load 'stocksight' index in Kibana and import export.json file for visuals/dashbo
 - tweepy python module
 - beautifulsoup4 python module
 - textblob python module
+- vaderSentiment python module
 
 ### Download
 
