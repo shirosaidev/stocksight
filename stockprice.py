@@ -85,18 +85,22 @@ class GetStock:
                     logger.error("Exception: exception getting stock data caused by %s" % e)
                     raise
 
-                logger.info("Adding stock data to Elasticsearch...")
-                # add stock price info to elasticsearch
-                es.index(index=args.index,
-                         doc_type="stock",
-                         body={"symbol": D['symbol'],
-                               "price_last": D['last'],
-                               "date": D['date'],
-                               "change": D['change'],
-                               "price_high": D['high'],
-                               "price_low": D['low'],
-                               "vol": D['vol']
-                               })
+                # check before adding to ES
+                if D['last'] > 0 and D['high'] > 0 and D['low'] > 0:
+                    logger.info("Adding stock data to Elasticsearch...")
+                    # add stock price info to elasticsearch
+                    es.index(index=args.index,
+                             doc_type="stock",
+                             body={"symbol": D['symbol'],
+                                   "price_last": D['last'],
+                                   "date": D['date'],
+                                   "change": D['change'],
+                                   "price_high": D['high'],
+                                   "price_low": D['low'],
+                                   "vol": D['vol']
+                                   })
+                else:
+                    logger.warning("Some stock data had 0 values, not adding to Elasticsearch")
 
             except Exception as e:
                 logger.error("Exception: can't get stock data, trying again later, reason is %s" % e)
