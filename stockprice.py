@@ -73,7 +73,7 @@ class GetStock:
                         pass
                     D['high'] = data['chart']['result'][0]['indicators']['quote'][0]['high'][-1]
                     if D['high'] is None:
-                        data['chart']['result'][0]['indicators']['quote'][0]['high'][-2]
+                        D['high'] = data['chart']['result'][0]['indicators']['quote'][0]['high'][-2]
                     D['low'] = data['chart']['result'][0]['indicators']['quote'][0]['low'][-1]
                     if D['low'] is None:
                         D['low'] = data['chart']['result'][0]['indicators']['quote'][0]['low'][-2]
