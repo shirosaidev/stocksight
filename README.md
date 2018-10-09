@@ -1,3 +1,15 @@
+
+                 /$$                         /$$                 /$$           /$$         /$$    
+                | $$                        | $$                |__/          | $$        | $$    
+      /$$$$$$$ /$$$$$$    /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$$ /$$  /$$$$$$ | $$$$$$$  /$$$$$$  
+     /$$_____/|_  $$_/   /$$__  $$ /$$_____/| $$  /$$/ /$$_____/| $$ /$$__  $$| $$__  $$|_  $$_/  
+    |  $$$$$$   | $$    | $$  \ $$| $$      | $$$$$$/ |  $$$$$$ | $$| $$  \ $$| $$  \ $$  | $$    
+     \____  $$  | $$ /$$| $$  | $$| $$      | $$_  $$  \____  $$| $$| $$  | $$| $$  | $$  | $$ /$$
+     /$$$$$$$/  |  $$$$/|  $$$$$$/|  $$$$$$$| $$ \  $$ /$$$$$$$/| $$|  $$$$$$$| $$  | $$  |  $$$$/
+    |_______/    \___/   \______/  \_______/|__/  \__/|_______/ |__/ \____  $$|__/  |__/   \___/  
+                                                                     /$$  \ $$                    
+                           :) = +$   :( = -$                        |  $$$$$$/                    
+                                                                     \______/ 
 # stocksight
 Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing and sentiment analysis
 
@@ -64,7 +76,7 @@ optional arguments:
                         Index name for Elasticsearch (default: stocksight)
   -d, --delindex        Delete existing Elasticsearch index first
   -s SYMBOL, --symbol SYMBOL
-                        Stock symbol to use, example: AAPL
+                        Stock symbol to use, example: TSLA
   -f FREQUENCY, --frequency FREQUENCY
                         How often in seconds to retrieve stock data, default:
                         120 sec
