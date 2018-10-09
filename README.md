@@ -15,16 +15,6 @@ Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natur
 
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
 
-## Requirements
-- Python 2.7. or Python 3.6. (Python 3 recommended)
-- Elasticsearch 5
-- elasticsearch python module
-- nltk python module
-- requests python module
-- tweepy python module
-- beautifulsoup4 python module
-- textblob python module
-
 ## How to use
 
 Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
@@ -38,15 +28,37 @@ Edit config.py and modify NLTK tokens required/ignored and twitter feeds you wan
 
 Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets
 
-`python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug`
+`sh
+$ python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug
+`
 
 Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
 
-`python stockprice.py -s TSLA --debug`
+`sh
+$ python stockprice.py -s TSLA --debug
+`
 
 Load 'stocksight' index in Kibana and import json file for visuals/dashboard.
 
-## Usage options
+## Download
+
+```shell
+$ git clone https://github.com/shirosaidev/stocksight.git
+$ cd stocksight
+```
+[Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
+
+## Requirements
+- Python 2.7. or Python 3.6. (Python 3 recommended)
+- Elasticsearch 5
+- elasticsearch python module
+- nltk python module
+- requests python module
+- tweepy python module
+- beautifulsoup4 python module
+- textblob python module
+
+## CLI options
 
 ```
 usage: sentiment.py [-h] [-i INDEX] [-d] [-k KEYWORDS] [-u URL] [-f FILE] [-v]
