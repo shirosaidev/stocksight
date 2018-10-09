@@ -2,7 +2,7 @@
 Stock analyzer and stock predictor using Elasticsearch, Twitter and Python natural language processing and sentiment analysis
 
 ## Requirements
-- Python 2.7.
+- Python 2.7. or Python 3.6. (Python 3 recommended)
 - Elasticsearch 5
 - elasticsearch python module
 - nltk python module
@@ -20,11 +20,15 @@ Add consumer key/access token to config.py
 
 Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch (blacklist).
 
-Run sentiment.py to create 'sentiment' index in Elasticsearch and start mining and analyzing Tweets
+Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets
 
-`python sentiment.py`
+`python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug`
 
-Load 'sentiment' index in Kibana.
+Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
+
+`python stockprice.py -s TSLA --debug`
+
+Load 'stocksight' index in Kibana and import json file for visuals/dashboard.
 
 ## Usage options
 
@@ -38,9 +42,10 @@ optional arguments:
                         Index name for Elasticsearch (default: stocksight)
   -d, --delindex        Delete existing Elasticsearch index first
   -k KEYWORDS, --keywords KEYWORDS
-                        Keywords to search for in Tweets, separated by comma
-                        case insensitive, spaces are ANDs commas are ORs
-                        example: aapl,'iphone xs review'
+                        Use keywords to search for in Tweets instead of feeds.
+                        Separated by comma, case insensitive, spaces are ANDs
+                        commas are ORs. Example: TSLA,'Elon
+                        Musk',Musk,Tesla,SpaceX
   -u URL, --url URL     Use twitter users from any links in web page at url
   -f FILE, --file FILE  Use twitter user ids from file
   -v, --verbose         Increase output verbosity
