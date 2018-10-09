@@ -53,3 +53,24 @@ optional arguments:
   -q, --quiet           Run quiet with no message output
   -V, --version         Prints version and exits
   ```
+  
+  ```
+  usage: stockprice.py [-h] [-i INDEX] [-d] [-s SYMBOL] [-f FREQUENCY] [-v]
+                     [--debug] [-q] [-V]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INDEX, --index INDEX
+                        Index name for Elasticsearch (default: stocksight)
+  -d, --delindex        Delete existing Elasticsearch index first
+  -s SYMBOL, --symbol SYMBOL
+                        Stock symbol to use, example: AAPL
+  -f FREQUENCY, --frequency FREQUENCY
+                        How often in seconds to retrieve stock data, default:
+                        120 sec
+  -v, --verbose         Increase output verbosity
+  --debug               Debug message output
+  -q, --quiet           Run quiet and just print out any possible mount points
+                        for crawling
+  -V, --version         Prints version and exits
+  ```
