@@ -19,6 +19,7 @@ https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens
 - Add consumer key/access token to config.py
 
 - Run sentiment.py to create 'sentiment' index in Elasticsearch and start analyzing Tweets
+
 `python sentiment.py`
 
 - Load 'sentiment' index in Kibana.
