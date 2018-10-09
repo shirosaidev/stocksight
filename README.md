@@ -38,7 +38,7 @@ Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
 $ python stockprice.py -s TSLA --debug
 ```
 
-Load 'stocksight' index in Kibana and import json file for visuals/dashboard.
+Load 'stocksight' index in Kibana and import export.json file for visuals/dashboard.
 
 ## Requirements
 - Python 2.7. or Python 3.6. (Python 3 recommended)
