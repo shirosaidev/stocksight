@@ -28,15 +28,15 @@ Edit config.py and modify NLTK tokens required/ignored and twitter feeds you wan
 
 Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets
 
-`sh
+```sh
 $ python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug
-`
+```
 
 Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
 
-`sh
+```sh
 $ python stockprice.py -s TSLA --debug
-`
+```
 
 Load 'stocksight' index in Kibana and import json file for visuals/dashboard.
 
