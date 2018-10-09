@@ -86,7 +86,7 @@ class GetStock:
                     raise
 
                 # check before adding to ES
-                if D['last'] > 0 and D['high'] > 0 and D['low'] > 0:
+                if D['last'] is not None and D['high'] is not None and D['low'] is not None:
                     logger.info("Adding stock data to Elasticsearch...")
                     # add stock price info to elasticsearch
                     es.index(index=args.index,
@@ -100,7 +100,7 @@ class GetStock:
                                    "vol": D['vol']
                                    })
                 else:
-                    logger.warning("Some stock data had 0 values, not adding to Elasticsearch")
+                    logger.warning("Some stock data had null values, not adding to Elasticsearch")
 
             except Exception as e:
                 logger.error("Exception: can't get stock data, trying again later, reason is %s" % e)
