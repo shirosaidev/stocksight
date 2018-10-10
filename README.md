@@ -26,10 +26,18 @@ Add consumer key/access token and secrets to config.py
 
 Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch (blacklist).
 
-Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets
+### Examples:
+
+Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets using keywords
 
 ```sh
 $ python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug
+```
+
+Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets from feeds in config
+
+```sh
+$ python sentiment.py --debug
 ```
 
 Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing News headlines and following headline links and scraping relevant text on landing page
