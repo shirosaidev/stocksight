@@ -34,10 +34,10 @@ Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining 
 $ python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug
 ```
 
-Start mining and analyzing Tweets from feeds in config
+Start mining and analyzing Tweets from feeds in config using cached user ids from file
 
 ```sh
-$ python sentiment.py --debug
+$ python sentiment.py -f twitteruserids.txt --debug
 ```
 
 Start mining and analyzing News headlines and following headline links and scraping relevant text on landing page
