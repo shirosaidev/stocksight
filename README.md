@@ -32,6 +32,12 @@ Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining 
 $ python sentiment.py -k TSLA,'Elon Musk',Musk,Tesla --debug
 ```
 
+Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing News headlines and following headline links and scraping relevant text on landing page
+
+```sh
+$ python sentiment.py -n TSLA --followlinks --debug
+```
+
 Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
 
 ```sh
