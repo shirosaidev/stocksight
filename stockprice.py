@@ -121,7 +121,7 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--symbol", metavar="SYMBOL",
                         help="Stock symbol to use, example: TSLA")
     parser.add_argument("-f", "--frequency", metavar="FREQUENCY", default=120, type=int,
-                        help="How often in seconds to retrieve stock data, default: 120 sec")
+                        help="How often in seconds to retrieve stock data (default: 120 sec)")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="Increase output verbosity")
     parser.add_argument("--debug", action="store_true",
