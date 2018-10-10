@@ -62,7 +62,8 @@ $ cd stocksight
 ### CLI options
 
 ```
-usage: sentiment.py [-h] [-i INDEX] [-d] [-k KEYWORDS] [-u URL] [-f FILE] [-v]
+usage: sentiment.py [-h] [-i INDEX] [-d] [-k KEYWORDS] [-u URL] [-f FILE]
+                    [-n SYMBOL] [--frequency FREQUENCY] [--followlinks] [-v]
                     [--debug] [-q] [-V]
 
 optional arguments:
@@ -77,6 +78,14 @@ optional arguments:
                         Musk',Musk,Tesla,SpaceX
   -u URL, --url URL     Use twitter users from any links in web page at url
   -f FILE, --file FILE  Use twitter user ids from file
+  -n SYMBOL, --newsheadlines SYMBOL
+                        Get news headlines instead of Twitter using stock
+                        symbol, example: TSLA
+  --frequency FREQUENCY
+                        How often in seconds to retrieve news headlines
+                        (default: 120 sec)
+  --followlinks         Follow links on news headlines and scrape relevant
+                        text from landing page
   -v, --verbose         Increase output verbosity
   --debug               Debug message output
   -q, --quiet           Run quiet with no message output
