@@ -11,7 +11,7 @@
                            :) = +$   :( = -$                        |  $$$$$$/                    
                                                                      \______/ 
 # stocksight
-Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis. How much do emotions on Twitter affect a stock's price?
+Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis. How much do emotions on Twitter affect a stock's price? Let's find out ...
 
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
 
