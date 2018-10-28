@@ -127,7 +127,7 @@ if __name__ == '__main__':
     parser.add_argument("--debug", action="store_true",
                         help="Debug message output")
     parser.add_argument("-q", "--quiet", action="store_true",
-                        help="Run quiet and just print out any possible mount points for crawling")
+                        help="Run quiet with no message output")
     parser.add_argument("-V", "--version", action="version",
                         version="sharesniffer v%s" % STOCKSIGHT_VERSION,
                         help="Prints version and exits")
