@@ -57,6 +57,7 @@ Load 'stocksight' index in Kibana and import export.json file for visuals/dashbo
 ## Requirements
 - Python 2.7. or Python 3.6. (Python 3 recommended)
 - Elasticsearch 5
+- Kibana
 - elasticsearch python module
 - nltk python module
 - requests python module
