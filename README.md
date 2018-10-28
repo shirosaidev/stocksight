@@ -122,7 +122,6 @@ optional arguments:
                         120 sec
   -v, --verbose         Increase output verbosity
   --debug               Debug message output
-  -q, --quiet           Run quiet and just print out any possible mount points
-                        for crawling
+  -q, --quiet           Run quiet with no message output
   -V, --version         Prints version and exits
   ```
