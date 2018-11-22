@@ -17,6 +17,10 @@ Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines 
 
 ## How to use
 
+Install python requirements using pip
+
+`pip install -r requirements.txt`
+
 Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
