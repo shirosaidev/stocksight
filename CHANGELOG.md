@@ -1,5 +1,10 @@
 # stocksight Change Log
 
+## [0.1-b.3] = 2018-11-23
+### added
+- requirements.txt for installing python requirements with pip
+- config.py.sample has new setting for specifying elasticsearch host/ip, port, username and password, copy to your config file
+
 ## [0.1-b.2] = 2018-10-10
 ### added
 - cli option -n --newsheadlines to fetch and analyze stock symbol headlines from yahoo finance website instead of twitter

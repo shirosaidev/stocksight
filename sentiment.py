@@ -36,15 +36,16 @@ except ImportError:
 from random import randint
 from datetime import datetime
 
-# import twitter keys and tokens
+# import elasticsearch host, twitter keys and tokens
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.2'
+STOCKSIGHT_VERSION = '0.1-b.3'
 __version__ = STOCKSIGHT_VERSION
 
 # create instance of elasticsearch
-es = Elasticsearch()
+es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
+                   http_auth=(elasticsearch_user, elasticsearch_password))
 
 # sentiment text-processing url
 sentimentURL = 'http://text-processing.com/api/sentiment/'
@@ -757,7 +758,7 @@ if __name__ == '__main__':
             try:
                 f = open(twitter_users_file, "w")
                 for i in useridlist:
-                    f.write(str(i) + '\n')
+                    f.write(i + '\n')
                 f.close()
             except (IOError, OSError) as e:
                 logger.warning("Exception: error writing to file caused by: %s" % e)

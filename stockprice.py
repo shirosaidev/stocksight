@@ -22,16 +22,19 @@ except ImportError:
     from elasticsearch import Elasticsearch
 from random import randint
 
+# import elasticsearch host
+from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password
 
-STOCKSIGHT_VERSION = '0.1-b.1'
+
+STOCKSIGHT_VERSION = '0.1-b.3'
 __version__ = STOCKSIGHT_VERSION
 
 # url to fetch stock price from, SYMBOL will be replaced with symbol from cli args
 url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=2m&range=5d&corsDomain=finance.yahoo.com&.tsrc=finance"
 
 # create instance of elasticsearch
-es = Elasticsearch()
-
+es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
+                   http_auth=(elasticsearch_user, elasticsearch_password))
 
 class GetStock:
 
