@@ -61,9 +61,9 @@ $ python stockprice.py -s TSLA --debug
 Load 'stocksight' index in Kibana and import export.json file for visuals/dashboard.
 
 ## Requirements
-- Python 2.7. or Python 3.6. (Python 3 recommended)
-- Elasticsearch 5
-- Kibana
+- Python 3. (tested with Python 3.6.5)
+- Elasticsearch 5.
+- Kibana 5.
 - elasticsearch python module
 - nltk python module
 - requests python module
