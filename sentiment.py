@@ -40,8 +40,13 @@ from datetime import datetime
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.3'
+STOCKSIGHT_VERSION = '0.1-b.4'
 __version__ = STOCKSIGHT_VERSION
+
+IS_PY3 = sys.version_info >= (3, 0)
+
+if IS_PY3:
+    unicode = str
 
 # create instance of elasticsearch
 es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
@@ -85,7 +90,7 @@ class TweetStreamListener(StreamListener):
             text = re.sub(r"&.*?;", "", text)
             text = re.sub(r"<.*?>", "", text)
             text = text.replace("RT", "")
-            text = text.replace("…", "")
+            text = text.replace(u"…", "")
             text = text.strip()
 
             # get date when tweet was created
@@ -101,7 +106,7 @@ class TweetStreamListener(StreamListener):
             statuses = int(dict_data.get("user", {}).get("statuses_count"))
             text_filtered = str(text)
             tweetid = int(dict_data.get("id"))
-            text_raw = str(dict_data.get("text"))
+            text_raw = unicode(dict_data.get("text"))
 
             # output twitter data
             print("\n------------------------------")
@@ -737,7 +742,7 @@ if __name__ == '__main__':
                     try:
                         # get user id from screen name using twitter api
                         user = api.get_user(screen_name=u)
-                        uid = str(user.id).encode('utf-8')
+                        uid = int(user.id)
                         if uid not in useridlist:
                             useridlist.append(uid)
                         time.sleep(randint(0, 2))
@@ -758,7 +763,7 @@ if __name__ == '__main__':
             try:
                 f = open(twitter_users_file, "w")
                 for i in useridlist:
-                    f.write(i + '\n')
+                    f.write(str(i) + '\n')
                 f.close()
             except (IOError, OSError) as e:
                 logger.warning("Exception: error writing to file caused by: %s" % e)

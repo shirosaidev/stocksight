@@ -1,5 +1,9 @@
 # stocksight Change Log
 
+## [0.1-b.4] = 2018-12-10
+### fixed
+- TypeError: can't concat str to bytes when writing to twitteruserids.txt
+
 ## [0.1-b.3] = 2018-11-23
 ### added
 - requirements.txt for installing python requirements with pip
