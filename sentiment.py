@@ -763,7 +763,12 @@ if __name__ == '__main__':
             try:
                 f = open(twitter_users_file, "w")
                 for i in useridlist:
-                    f.write(str(i) + '\n')
+                    try:
+                        i = str(i).replace('b','')
+                        i = i.replace("'","")     
+                    except Exception:
+                        pass
+                    f.write(i + '\n')
                 f.close()
             except (IOError, OSError) as e:
                 logger.warning("Exception: error writing to file caused by: %s" % e)
