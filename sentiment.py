@@ -40,7 +40,7 @@ from datetime import datetime
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.4'
+STOCKSIGHT_VERSION = '0.1-b.5'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
@@ -453,12 +453,14 @@ def get_twitter_users_from_url(url):
 
 
 def get_twitter_users_from_file(file):
+    # get twitter user ids from text file
     twitter_users = []
-    logger.info("Grabbing any twitter users from file %s" % file)
+    logger.info("Grabbing any twitter user ids from file %s" % file)
     try:
-        f = open(file,"r")
+        f = open(file, "rt", encoding='utf-8')
         for line in f.readlines():
-            twitter_users.append(str(line.strip()))
+            u = int(line.strip())
+            twitter_users.append(u)
         logger.debug(twitter_users)
         f.close()
     except (IOError, OSError) as e:
@@ -495,7 +497,7 @@ if __name__ == '__main__':
     parser.add_argument("-q", "--quiet", action="store_true",
                         help="Run quiet with no message output")
     parser.add_argument("-V", "--version", action="version",
-                        version="sharesniffer v%s" % STOCKSIGHT_VERSION,
+                        version="stocksight v%s" % STOCKSIGHT_VERSION,
                         help="Prints version and exits")
     args = parser.parse_args()
 
@@ -735,7 +737,7 @@ if __name__ == '__main__':
                 sys.exit(1)
         else:
             # build user id list from user names
-            logger.info("Looking up Twitter user id's from usernames...")
+            logger.info("Looking up Twitter user ids from usernames...")
             useridlist = []
             while True:
                 for u in twitter_feeds:
@@ -758,18 +760,21 @@ if __name__ == '__main__':
                         sys.exit(0)
                 break
 
-        if len(useridlist) > 0:
-            logger.info('Writing twitter user ids to text file %s' % twitter_users_file)
-            try:
-                f = open(twitter_users_file, "w")
-                for i in useridlist:
-                    f.write(str(i) + '\n')
-                f.close()
-            except (IOError, OSError) as e:
-                logger.warning("Exception: error writing to file caused by: %s" % e)
-                pass
-            except Exception as e:
-                raise
+            if len(useridlist) > 0:
+                logger.info('Writing twitter user ids to text file %s' % twitter_users_file)
+                try:
+                    f = open(twitter_users_file, "wt", encoding='utf-8')
+                    for i in useridlist:
+                        line = str(i) + "\n"
+                        if type(line) is bytes:
+                            line = line.decode('utf-8')
+                        f.write(line)
+                    f.close()
+                except (IOError, OSError) as e:
+                    logger.warning("Exception: error writing to file caused by: %s" % e)
+                    pass
+                except Exception as e:
+                    raise
 
         try:
             # search twitter for keywords

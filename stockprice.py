@@ -26,7 +26,7 @@ from random import randint
 from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password
 
 
-STOCKSIGHT_VERSION = '0.1-b.3'
+STOCKSIGHT_VERSION = '0.1-b.5'
 __version__ = STOCKSIGHT_VERSION
 
 # url to fetch stock price from, SYMBOL will be replaced with symbol from cli args
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     parser.add_argument("-q", "--quiet", action="store_true",
                         help="Run quiet with no message output")
     parser.add_argument("-V", "--version", action="version",
-                        version="sharesniffer v%s" % STOCKSIGHT_VERSION,
+                        version="stocksight v%s" % STOCKSIGHT_VERSION,
                         help="Prints version and exits")
     args = parser.parse_args()
 

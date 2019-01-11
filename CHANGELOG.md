@@ -1,5 +1,9 @@
 # stocksight Change Log
 
+## [0.1-b.5] = 2019-01-11
+### changed
+- set encoding to utf-8 and checked for bytes when writing to twitteruserids.txt
+
 ## [0.1-b.4] = 2018-12-10
 ### fixed
 - TypeError: can't concat str to bytes when writing to twitteruserids.txt
