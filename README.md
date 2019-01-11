@@ -15,6 +15,26 @@ Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines 
 
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
 
+## Requirements
+- Python 3. (tested with Python 3.6.5)
+- Elasticsearch 5.
+- Kibana 5.
+- elasticsearch python module
+- nltk python module
+- requests python module
+- tweepy python module
+- beautifulsoup4 python module
+- textblob python module
+- vaderSentiment python module
+
+### Download
+
+```shell
+$ git clone https://github.com/shirosaidev/stocksight.git
+$ cd stocksight
+```
+[Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
+
 ## How to use
 
 Install python requirements using pip
@@ -59,26 +79,6 @@ $ python stockprice.py -s TSLA --debug
 ```
 
 Load 'stocksight' index in Kibana and import export.json file for visuals/dashboard.
-
-## Requirements
-- Python 3. (tested with Python 3.6.5)
-- Elasticsearch 5.
-- Kibana 5.
-- elasticsearch python module
-- nltk python module
-- requests python module
-- tweepy python module
-- beautifulsoup4 python module
-- textblob python module
-- vaderSentiment python module
-
-### Download
-
-```shell
-$ git clone https://github.com/shirosaidev/stocksight.git
-$ cd stocksight
-```
-[Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
 
 ### CLI options
 
