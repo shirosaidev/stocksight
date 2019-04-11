@@ -99,4 +99,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+config.py
 .DS_Store
