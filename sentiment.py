@@ -40,7 +40,7 @@ from datetime import datetime
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.5'
+STOCKSIGHT_VERSION = '0.1-b.6'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
@@ -459,7 +459,7 @@ def get_twitter_users_from_file(file):
     try:
         f = open(file, "rt", encoding='utf-8')
         for line in f.readlines():
-            u = int(line.strip())
+            u = line.strip()
             twitter_users.append(u)
         logger.debug(twitter_users)
         f.close()
