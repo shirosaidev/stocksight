@@ -2,8 +2,8 @@
 layout: splash
 permalink: /
 header:
-  overlay_color: "#FFF"
-  overlay_filter: "0.5"
+  overlay_color: "#000"
+  overlay_filter: "0.3"
   overlay_image: https://github.com/shirosaidev/stocksight/blob/master/docs/_pages/wp2128259-stock-market-wallpapers.jpg?raw=true
   cta_label: "<i class='fa fa-download' aria-hidden='true'></i> Download"
   cta_url: "https://github.com/shirosaidev/stocksight/releases/latest"
