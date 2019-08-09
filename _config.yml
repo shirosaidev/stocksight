@@ -13,10 +13,10 @@ repository               : "shirosaidev/stocksight"
 show_downloads           : true
 
 # Analytics
-#analytics:
-#  provider               : google
-#  google:
-#    tracking_id          : UA-98866026-1
+analytics:
+  provider               : google
+  google:
+    tracking_id          : UA-145407030-1
 
 plugins:
   - jekyll-remote-theme
