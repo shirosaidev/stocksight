@@ -3,7 +3,7 @@ layout: splash
 permalink: /
 header:
   overlay_color: "#FFF"
-  overlay_filter: "0.7"
+  overlay_filter: "0.2"
   overlay_image: https://github.com/shirosaidev/stocksight/blob/master/docs/_pages/wp2128259-stock-market-wallpapers.jpg?raw=true
   cta_label: "<i class='fa fa-download' aria-hidden='true'></i> Download"
   cta_url: "https://github.com/shirosaidev/stocksight/releases/latest"
@@ -20,8 +20,7 @@ intro:
 {% include feature_row id="intro" type="center" %}
 
 <div align="center"><img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_diagram.png?raw=true" alt="stocksight diagram" width="685" height="600"/></div>
-<p><strong>stocksight</strong> is a croud-sourced stock analyzer open source software that uses <strong>Elasticsearch</strong> to store twitter and news source data about stocks. stocksight analyzes the emotions of what the data author writes and does sentiment analysis on the data to determine if they feel positive, negative or neutral about a stock. stocksight uses all the data discovered and make an aggregated analysis of all collected data from all sources.</p>
-<p>Each user running stocksight has a unique fingerprint: stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are scraping. Users can have stocks in common, but their data source coudl vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis 
-results from other stocksight users.</p>
+<p><strong>stocksight</strong> is a croud-sourced stock analyzer open source software that uses <strong>Elasticsearch</strong> to store twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine if the author feels positive, negative or neutral about a stock. stocksight makes an aggregated analysis of all collected data from all sources.</p>
+<p>Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to analyze. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis results from other stocksight users and a combined aggregated view of all.</p>
 <h2>Stocksight web site coming soon</h2>
 <p>If you are interested in joining the web site beta sign up, please email me.</p>
