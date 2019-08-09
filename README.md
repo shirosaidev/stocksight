@@ -8,8 +8,6 @@ Crowd-sourced stock analyzer and stock predictor using Elasticsearch, Twitter, N
 [![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
 [![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
 
-<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
-
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_diagram.png?raw=true" alt="stocksight diagram" />
 
 ## About
@@ -39,6 +37,10 @@ $ git clone https://github.com/shirosaidev/stocksight.git
 $ cd stocksight
 ```
 [Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
+
+## Screenshot
+Stocksight Kibana dashboard
+<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
 
 ## How to use
 
