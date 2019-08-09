@@ -4,7 +4,6 @@ minimal_mistakes_skin    : "default"
 # Site Settings
 locale                   : "en-US"
 title                    : "stocksight"
-logo                     : "/stocksight.png"
 title_separator          : "-"
 name                     : "shirosaidev"
 description              : "croud-sourced open-source stock analyzer and stock predictor"
