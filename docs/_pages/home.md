@@ -19,7 +19,7 @@ intro:
 
 {% include feature_row id="intro" type="center" %}
 
-<div align="center"><img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_diagram.png?raw=true" alt="stocksight diagram" width="685" height="600"/></div><br>
+<div align="center"><img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_diagram.png?raw=true" alt="stocksight diagram" width="914" height="800"/></div><br>
 <p><strong>stocksight</strong> is a croud-sourced stock analyzer open source software that uses <strong>Elasticsearch</strong> to store twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine if the author feels positive, negative or neutral about a stock. stocksight makes an aggregated analysis of all collected data from all sources.</p>
 <p>Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to analyze. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis results from other stocksight users and a combined aggregated view of all.</p>
 <h2>Stocksight web site coming soon</h2>
