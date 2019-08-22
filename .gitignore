@@ -97,6 +97,12 @@ ENV/
 # mkdocs documentation
 /site
 
+#Custom files
+data/
+config.py
+*_export.json
+.git
+
 # mypy
 .mypy_cache/
 .DS_Store
