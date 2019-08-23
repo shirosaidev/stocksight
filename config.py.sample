@@ -6,7 +6,11 @@ consumer_key = ""
 consumer_secret = ""
 access_token = ""
 access_token_secret = ""
-nltk_tokens_required = ("Tesla", "@Tesla", "#Tesla", "tesla", "TSLA", "tsla", "#TSLA", "#tsla", "elonmusk", "Elon", "Musk")
+nltk_tokens_required = {
+ 'default': ("Tesla", "@Tesla", "#Tesla", "tesla", "TSLA", "tsla", "#TSLA", "#tsla", "elonmusk", "Elon", "Musk"),
+ 'tsla':  ("Tesla", "@Tesla", "#Tesla", "tesla", "TSLA", "tsla", "#TSLA", "#tsla", "elonmusk", "Elon", "Musk"),
+ 'amd': ('amd','ryzen','epyc','radeon','server','data','center','crossfire','threadripper')
+}
 nltk_tokens_ignored = ("win", "Win", "giveaway", "Giveaway")
 twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits",
                  "@Newsweek", "@WashingtonPost", "@breakoutstocks", "@bespokeinvest",

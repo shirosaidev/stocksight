@@ -100,8 +100,8 @@ ENV/
 #Custom files
 data/
 config.py
-*_export.json
 .git
+.idea
 
 # mypy
 .mypy_cache/

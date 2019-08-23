@@ -199,7 +199,7 @@ class TweetStreamListener(StreamListener):
 
 
 class NewsHeadlineListener:
-    def __init__(self, url=None, frequency=120):
+    def __init__(self, url=None, frequency=3600):
         self.url = url
         self.headlines = []
         self.followedlinks = []
@@ -223,7 +223,7 @@ class NewsHeadlineListener:
                     # create tokens of words in text using nltk
                     text_for_tokens = re.sub(
                         r"[\%|\$|\.|\,|\!|\:|\@]|\(|\)|\#|\+|(``)|('')|\?|\-", "", htext)
-                    tokens = nltk.word_tokenize(text_for_tokens)
+                    tokens = nltk.word_tokenize(text_for_tokens.lower())
                     print("NLTK Tokens: " + str(tokens))
 
                     # check ignored tokens from config
@@ -233,7 +233,14 @@ class NewsHeadlineListener:
                             continue
                     # check required tokens from config
                     tokenspass = False
-                    for t in nltk_tokens_required:
+
+
+                    if args.index in nltk_tokens_required:
+                        nltk_tokens = nltk_tokens_required[args.index]
+                    else:
+                        nltk_tokens = nltk_tokens_required['default']
+
+                    for t in nltk_tokens:
                         if t in tokens:
                             tokenspass = True
                             break
@@ -486,8 +493,8 @@ if __name__ == '__main__':
                         help="Use twitter user ids from file")
     parser.add_argument("-n", "--newsheadlines", metavar="SYMBOL",
                         help="Get news headlines instead of Twitter using stock symbol, example: TSLA")
-    parser.add_argument("--frequency", metavar="FREQUENCY", default=120, type=int,
-                        help="How often in seconds to retrieve news headlines (default: 120 sec)")
+    parser.add_argument("--frequency", metavar="FREQUENCY", default=3600, type=int,
+                        help="How often in seconds to retrieve news headlines (default: 3600 sec)")
     parser.add_argument("--followlinks", action="store_true",
                         help="Follow links on news headlines and scrape relevant text from landing page")
     parser.add_argument("-v", "--verbose", action="store_true",
@@ -785,14 +792,20 @@ if __name__ == '__main__':
             logger.info('Twitter keywords: ' + str(args.keywords))
             logger.info('Listening for Tweets (ctrl-c to exit)...')
             if args.keywords is None:
-                stream.filter(follow=useridlist, languages=['en'])
+                stream.filter(follow= str(useridlist), languages=['en'])
             else:
                 # keywords to search on twitter
                 # add keywords to list
                 keywords = args.keywords.split(',')
+
+                if args.index in nltk_tokens_required:
+                    nltk_tokens = nltk_tokens_required[args.index]
+                else:
+                    nltk_tokens = nltk_tokens_required['default']
+
                 # add tokens to keywords to list
-                for f in nltk_tokens_required:
-                    keywords.append(f)
+                for f in nltk_tokens:
+                    keywords.append(f.lower())
                 stream.filter(track=keywords, languages=['en'])
         except TweepError as te:
             logger.debug("Tweepy Exception: Failed to get tweets caused by: %s" % te)
