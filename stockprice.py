@@ -123,7 +123,7 @@ if __name__ == '__main__':
                         help="Delete existing Elasticsearch index first")
     parser.add_argument("-s", "--symbol", metavar="SYMBOL",
                         help="Stock symbol to use, example: TSLA")
-    parser.add_argument("-f", "--frequency", metavar="FREQUENCY", default=120, type=int,
+    parser.add_argument("-f", "--frequency", metavar="FREQUENCY", default=600, type=int,
                         help="How often in seconds to retrieve stock data (default: 120 sec)")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="Increase output verbosity")
