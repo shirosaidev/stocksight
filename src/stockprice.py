@@ -10,12 +10,13 @@ stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
-import time
-import requests
-import re
 import argparse
 import logging
 import sys
+import time
+
+import requests
+
 try:
     from elasticsearch5 import Elasticsearch
 except ImportError:

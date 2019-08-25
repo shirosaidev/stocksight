@@ -11,15 +11,16 @@ stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
-import sys
-import json
-import time
-import re
-import unicodedata
-import requests
-import nltk
 import argparse
+import json
 import logging
+import re
+import sys
+import time
+
+import nltk
+import requests
+
 try:
     import urllib.parse as urlparse
 except ImportError:

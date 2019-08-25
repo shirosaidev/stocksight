@@ -21,9 +21,17 @@ services:
       nproc:
         soft: 2048
         hard: 2048
-    ports:
-      - "9200:9200"
   kibana:
     image: docker.elastic.co/kibana/kibana:5.6.16
+    depends_on:
+      - elasticsearch
     ports:
       - "5601:5601"
+  python3:
+    build:
+      context: ./
+      dockerfile: Python.Dockerfile
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./src:/usr/src/app

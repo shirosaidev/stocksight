@@ -1,4 +1,4 @@
-elasticsearch_host = "localhost"
+elasticsearch_host = "elasticsearch"
 elasticsearch_port = 9200
 elasticsearch_user = ""
 elasticsearch_password = ""
