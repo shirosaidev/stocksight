@@ -51,9 +51,8 @@ class GetStock:
         while True:
 
             if self.isNotLive(eastern_timezone):
-                #logger.info("Stock market is not live. Current time: %s" % datetime.datetime.now(timezone).strftime("%Y-%m-%d %H:%M"))
                 today = datetime.datetime.now(eastern_timezone)
-                logger.info("Stock market is not live. Current time: %s" % today.strftime('%H'))
+                logger.info("Stock market is not live. Current time: %s" % today.strftime("%Y-%m-%d %H:%M"))
                 logger.info("Will get stock data again in %s sec..." % args.frequency)
                 time.sleep(args.frequency)
                 continue
