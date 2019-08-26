@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 15
+sleep 30
 python sentiment.py -n TSLA --followlinks -i tsla &
 sleep 1
 python stockprice.py -s TSLA -i tsla &

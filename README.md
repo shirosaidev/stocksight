@@ -139,3 +139,10 @@ optional arguments:
   -q, --quiet           Run quiet with no message output
   -V, --version         Prints version and exits
   ```
+
+### HOWTO DOCKER
+- Change config.py
+- Change startup.sh to include your tickers
+- run docker-compose up
+- ???
+- Profit

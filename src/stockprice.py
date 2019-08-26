@@ -14,8 +14,10 @@ import argparse
 import logging
 import sys
 import time
-
+import datetime
+import re
 import requests
+from pytz import timezone
 
 try:
     from elasticsearch5 import Elasticsearch
@@ -24,7 +26,8 @@ except ImportError:
 from random import randint
 
 # import elasticsearch host
-from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password
+from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password, \
+                   price_frequency, weekday_start, weekday_end, hour_start, hour_end, timezone_str
 
 
 STOCKSIGHT_VERSION = '0.1-b.5'
@@ -37,19 +40,31 @@ url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=e
 es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
                    http_auth=(elasticsearch_user, elasticsearch_password))
 
+regex = re
+
 class GetStock:
 
     def get_price(self, url, symbol):
-        import re
+
+        eastern_timezone = timezone(timezone_str)
 
         while True:
+
+            if self.isNotLive(eastern_timezone):
+                #logger.info("Stock market is not live. Current time: %s" % datetime.datetime.now(timezone).strftime("%Y-%m-%d %H:%M"))
+                today = datetime.datetime.now(eastern_timezone)
+                logger.info("Stock market is not live. Current time: %s" % today.strftime('%H'))
+                logger.info("Will get stock data again in %s sec..." % args.frequency)
+                time.sleep(args.frequency)
+                continue
+
 
             logger.info("Grabbing stock data for symbol %s..." % symbol)
 
             try:
 
                 # add stock symbol to url
-                url = re.sub("SYMBOL", symbol, url)
+                url = regex.sub("SYMBOL", symbol, url)
                 # get stock data (json) from url
                 try:
                     r = requests.get(url)
@@ -113,6 +128,17 @@ class GetStock:
             logger.info("Will get stock data again in %s sec..." % args.frequency)
             time.sleep(args.frequency)
 
+    def isNotLive(self, timezone):
+        today = datetime.datetime.now(timezone);
+        if today.weekday() >= weekday_start and \
+           today.weekday() <= weekday_end and \
+           today.hour() >= hour_start and \
+           today.hour() <= hour_end:
+            return False;
+
+        return True;
+
+
 
 if __name__ == '__main__':
 
@@ -124,8 +150,8 @@ if __name__ == '__main__':
                         help="Delete existing Elasticsearch index first")
     parser.add_argument("-s", "--symbol", metavar="SYMBOL",
                         help="Stock symbol to use, example: TSLA")
-    parser.add_argument("-f", "--frequency", metavar="FREQUENCY", default=600, type=int,
-                        help="How often in seconds to retrieve stock data (default: 120 sec)")
+    parser.add_argument("-f", "--frequency", metavar="FREQUENCY", default=price_frequency, type=int,
+                        help="How often in seconds to retrieve stock data (default: %d sec)" % price_frequency)
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="Increase output verbosity")
     parser.add_argument("--debug", action="store_true",

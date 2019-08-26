@@ -200,14 +200,17 @@ class TweetStreamListener(StreamListener):
 
 
 class NewsHeadlineListener:
-    def __init__(self, url=None, frequency=3600):
+    def __init__(self, url=None, frequency=sentiment_frequency):
         self.url = url
         self.headlines = []
         self.followedlinks = []
         self.frequency = frequency
+        self.max_cache = 1000;
 
         while True:
             new_headlines = self.get_news_headlines(self.url)
+
+            self.cleanup()
 
             # add any new headlines
             for htext, htext_url in new_headlines:
@@ -265,6 +268,21 @@ class NewsHeadlineListener:
 
             logger.info("Will get news headlines again in %s sec..." % self.frequency)
             time.sleep(self.frequency)
+    def cleanup(self):
+        new_headline = []
+        new_followlink = []
+        if len(self.headlines) > self.max_cache:
+            for i in range(self.max_cache / 2, len(self.headlines) - 1):
+              new_headline.append(self.headlines[i])
+
+        self.headlines = new_headline
+
+        if len(self.followedlinks) > self.max_cache:
+            for i in range(self.max_cache / 2, len(self.followedlinks) - 1):
+              new_followlink.append(self.followedlinks[i])
+
+        self.followedlinks = new_followlink
+
 
     def get_news_headlines(self, url):
 
@@ -494,8 +512,8 @@ if __name__ == '__main__':
                         help="Use twitter user ids from file")
     parser.add_argument("-n", "--newsheadlines", metavar="SYMBOL",
                         help="Get news headlines instead of Twitter using stock symbol, example: TSLA")
-    parser.add_argument("--frequency", metavar="FREQUENCY", default=3600, type=int,
-                        help="How often in seconds to retrieve news headlines (default: 3600 sec)")
+    parser.add_argument("--frequency", metavar="FREQUENCY", default=sentiment_frequency, type=int,
+                        help="How often in seconds to retrieve news headlines (default: %d sec)" % sentiment_frequency)
     parser.add_argument("--followlinks", action="store_true",
                         help="Follow links on news headlines and scrape relevant text from landing page")
     parser.add_argument("-v", "--verbose", action="store_true",
