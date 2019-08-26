@@ -210,8 +210,6 @@ class NewsHeadlineListener:
         while True:
             new_headlines = self.get_news_headlines(self.url)
 
-            self.cleanup()
-
             # add any new headlines
             for htext, htext_url in new_headlines:
                 if htext not in self.headlines:
@@ -266,8 +264,12 @@ class NewsHeadlineListener:
                                    "subjectivity": subjectivity,
                                    "sentiment": sentiment})
 
+            new_headlines = None;
+            self.cleanup()
+
             logger.info("Will get news headlines again in %s sec..." % self.frequency)
             time.sleep(self.frequency)
+
     def cleanup(self):
         new_headline = []
         new_followlink = []
@@ -303,7 +305,7 @@ class NewsHeadlineListener:
 
             if html:
                 for i in html:
-                    latestheadlines.append((i.next.next.next.next, url))
+                    latestheadlines.append((unicode(i.next.next.next.next), url))
             logger.debug(latestheadlines)
 
             if args.followlinks:
@@ -320,7 +322,7 @@ class NewsHeadlineListener:
 
                 for linkurl in latestheadlines_links:
                     for p in get_page_text(linkurl):
-                        latestheadlines.append((p, linkurl))
+                        latestheadlines.append((unicode(p), linkurl))
                 logger.debug(latestheadlines)
 
         except requests.exceptions.RequestException as re:
@@ -463,6 +465,7 @@ def get_twitter_users_from_url(url):
         html_links = []
         for link in soup.findAll('a'):
             html_links.append(link.get('href'))
+
         if html_links:
             for link in html_links:
                 # check if twitter_url in link
