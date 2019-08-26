@@ -131,8 +131,8 @@ class GetStock:
         today = datetime.datetime.now(timezone);
         if today.weekday() >= weekday_start and \
            today.weekday() <= weekday_end and \
-           today.hour() >= hour_start and \
-           today.hour() <= hour_end:
+           today.hour >= hour_start and \
+           today.hour <= hour_end:
             return False;
 
         return True;
