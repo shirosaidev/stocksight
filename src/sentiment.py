@@ -273,17 +273,16 @@ class NewsHeadlineListener:
     def cleanup(self):
         new_headline = []
         new_followlink = []
+
         if len(self.headlines) > self.max_cache:
             for i in range(self.max_cache / 2, len(self.headlines) - 1):
               new_headline.append(self.headlines[i])
-
-        self.headlines = new_headline
+            self.headlines = new_headline
 
         if len(self.followedlinks) > self.max_cache:
             for i in range(self.max_cache / 2, len(self.followedlinks) - 1):
               new_followlink.append(self.followedlinks[i])
-
-        self.followedlinks = new_followlink
+            self.followedlinks = new_followlink
 
 
     def get_news_headlines(self, url):
