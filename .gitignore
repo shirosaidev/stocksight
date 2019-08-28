@@ -104,6 +104,7 @@ startup.sh
 .git
 .idea
 twitteruserids.txt
+*_export.json
 
 # mypy
 .mypy_cache/
