@@ -7,8 +7,7 @@ from bs4 import BeautifulSoup
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-from Initializer.LoggerInit import *
-
+from Sentiment.Initializer.LoggerInit import *
 
 def get_page_text(url):
 

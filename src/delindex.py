@@ -1,7 +1,7 @@
 import argparse
 
-from Initializer.LoggerInit import *
-from Initializer.ElasticSearchInit import es
+from Sentiment.Initializer.ElasticSearchInit import es
+from Sentiment.Initializer.LoggerInit import *
 
 if __name__ == '__main__':
 

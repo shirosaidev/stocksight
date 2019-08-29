@@ -11,13 +11,6 @@ LICENSE for the full license text.
 """
 
 import argparse
-import json
-import re
-import sys
-import time
-
-import nltk
-import requests
 
 try:
     import urllib.parse as urlparse
@@ -25,7 +18,7 @@ except ImportError:
     import urlparse
 
 # import elasticsearch host, twitter keys and tokens
-from NewsHeadlineListener import *
+from Sentiment.NewsHeadlineListener import *
 
 
 STOCKSIGHT_VERSION = '0.1-b.6'

@@ -1,9 +1,8 @@
+import hashlib
 import re
-import time
 from datetime import datetime
 
 import nltk
-import hashlib
 
 try:
     import urllib.parse as urlparse
@@ -11,12 +10,10 @@ except ImportError:
     import urlparse
 
 from config import *
-from Initializer.str_unicode import *
-from Helper.Sentiment import *
-from Initializer.ElasticSearchInit import es
-from Initializer.RedisInit import rds
-from Initializer.LoggerInit import *
-
+from Sentiment.Initializer.ElasticSearchInit import es
+from Sentiment.Initializer.str_unicode import *
+from Sentiment.Initializer.RedisInit import rds
+from Sentiment.Helper.Sentiment import *
 
 
 class NewsHeadlineListener:
@@ -29,8 +26,9 @@ class NewsHeadlineListener:
         # add any new headlines
         for htext, htext_url in new_headlines:
 
-            md5Hash = hashlib.md5( (htext+htext_url).encode() ).hexdigest()
-            if rds.exists(md5Hash):
+            md5_hash = hashlib.md5((htext+htext_url).encode()).hexdigest()
+
+            if rds.exists(md5_hash) is 0:
 
                 datenow = datetime.utcnow().isoformat()
                 # output news data
@@ -49,6 +47,7 @@ class NewsHeadlineListener:
                 for t in nltk_tokens_ignored:
                     if t in tokens:
                         logger.info("Text contains token from ignore list, not adding")
+                        rds.set(md5_hash,1,2628000)
                         continue
                 # check required tokens from config
                 tokenspass = False
@@ -65,6 +64,7 @@ class NewsHeadlineListener:
                         break
                 if not tokenspass:
                     logger.info("Text does not contain token from required list, not adding")
+                    rds.set(md5_hash,1,2628000)
                     continue
 
                 # get sentiment values
@@ -80,7 +80,7 @@ class NewsHeadlineListener:
                                "polarity": polarity,
                                "subjectivity": subjectivity,
                                "sentiment": sentiment})
-                rds.set(md5Hash,True)
+                rds.set(md5_hash,1,2628000)
 
 
     def get_news_headlines(self, url):
