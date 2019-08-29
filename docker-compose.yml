@@ -22,11 +22,14 @@ services:
         soft: 2048
         hard: 2048
     #expose this for local dev only!
-    ports:
-      - "9200:9200"
+    #ports:
+    #  - "9200:9200"
   redis:
     build:
       context: ./redis-docker
+    #expose this for local dev only!
+    #ports:
+    #  - "6379:6379"
   kibana:
     image: docker.elastic.co/kibana/kibana:5.6.16
     depends_on:
