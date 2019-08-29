@@ -6,3 +6,4 @@ beautifulsoup4
 textblob
 vaderSentiment
 pytz
+redis

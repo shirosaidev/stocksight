@@ -1,16 +1,11 @@
 #!/bin/bash
 
-sleep 30
-python sentiment.py -n TSLA -i tsla &
-sleep 1
-python stockprice.py -s TSLA -i tsla &
-sleep 1
-python sentiment.py -n AMD -i amd &
-sleep 1
-python stockprice.py -s AMD -i amd &
 
+sleep 20;
 
 while true
 do
+    #python stockprice.py -s AMD -i amd &
+    python news.sentiment.py &
     sleep 3600
 done
