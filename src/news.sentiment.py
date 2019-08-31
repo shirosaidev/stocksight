@@ -11,11 +11,8 @@ LICENSE for the full license text.
 """
 
 import argparse
-
-try:
-    import urllib.parse as urlparse
-except ImportError:
-    import urlparse
+import time
+import random
 
 # import elasticsearch host, twitter keys and tokens
 from Sentiment.NewsHeadlineListener import *
@@ -122,6 +119,7 @@ if __name__ == '__main__':
 
                 # create instance of NewsHeadlineListener
                 newslistener = NewsHeadlineListener(symbol, url)
+                time.sleep(random.randrange(2,5))
             except Exception as e:
                 logger.warning("%s" % e)
                 pass

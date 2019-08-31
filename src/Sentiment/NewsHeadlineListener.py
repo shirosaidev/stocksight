@@ -27,6 +27,7 @@ class NewsHeadlineListener:
         for htext, htext_url in new_headlines:
 
             md5_hash = hashlib.md5((htext+htext_url).encode()).hexdigest()
+            logger.debug("Hash"+md5_hash)
 
             if rds.exists(md5_hash) is 0:
 
@@ -49,8 +50,7 @@ class NewsHeadlineListener:
                         logger.info("Text contains token from ignore list, not adding")
                         rds.set(md5_hash,1,2628000)
                         continue
-                # check required tokens from config
-                tokenspass = False
+
 
 
                 if self.symbol in nltk_tokens_required:
@@ -58,10 +58,13 @@ class NewsHeadlineListener:
                 else:
                     nltk_tokens = nltk_tokens_required['default']
 
+                # check required tokens from config
+                tokenspass = False
                 for t in nltk_tokens:
                     if t in tokens:
                         tokenspass = True
                         break
+
                 if not tokenspass:
                     logger.info("Text does not contain token from required list, not adding")
                     rds.set(md5_hash,1,2628000)
@@ -72,7 +75,7 @@ class NewsHeadlineListener:
 
                 logger.info("Adding news headline to elasticsearch")
                 # add news headline data and sentiment info to elasticsearch
-                es.index(index=self.symbol,
+                es.index(index='stocksight_'+self.symbol,
                          doc_type="newsheadline",
                          body={"date": datenow,
                                "location": htext_url,

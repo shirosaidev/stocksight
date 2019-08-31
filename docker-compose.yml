@@ -4,9 +4,11 @@ version: '3'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
     environment:
-      - cluster.name=docker-cluster
+      - cluster.name=elasticsearch
+      - node.name=stockdata
+      - cluster.initial_master_nodes=stockdata
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
@@ -19,11 +21,11 @@ services:
         soft: 65536
         hard: 65536
       nproc:
-        soft: 2048
-        hard: 2048
+        soft: 4096
+        hard: 4096
     #expose this for local dev only!
-    #ports:
-    #  - "9200:9200"
+    ports:
+      - "9200:9200"
   redis:
     build:
       context: ./redis-docker
@@ -31,7 +33,7 @@ services:
     #ports:
     #  - "6379:6379"
   kibana:
-    image: docker.elastic.co/kibana/kibana:5.6.16
+    image: docker.elastic.co/kibana/kibana:7.3.1
     depends_on:
       - elasticsearch
     ports:
