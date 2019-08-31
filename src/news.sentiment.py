@@ -14,7 +14,6 @@ import argparse
 import time
 import random
 
-# import elasticsearch host, twitter keys and tokens
 from Sentiment.NewsHeadlineListener import *
 
 

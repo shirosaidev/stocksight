@@ -1,7 +1,8 @@
 #!/bin/bash
 
-
 sleep 30;
+
+python import.kibana.py
 
 while true
 do
