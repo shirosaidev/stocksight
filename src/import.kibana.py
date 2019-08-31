@@ -22,12 +22,13 @@ if __name__ == '__main__':
                 kibana_import_url = 'http://kibana:5601/api/saved_objects/_import'
                 payload = { 'overwrite': 'false'}
                 headers ={'kbn-xsrf': 'True'}
-                post = requests.post(kibana_import_url, headers=headers, files={'file': ndjson_file_path})
-                print("Import %s result" % symbol)
+                post = requests.request('POST',kibana_import_url, headers=headers, files={'file': open(ndjson_file_path, "rt", encoding='utf-8')})
+                print("Import %s Kibana Dashboard" % symbol)
+                print(ndjson_file_path)
                 print(post.text)
 
             except Exception as e:
-                print(e.with_traceback(e.__traceback__));
+                print(e);
                 pass
 
     except KeyboardInterrupt:
