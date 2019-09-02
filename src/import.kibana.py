@@ -24,11 +24,10 @@ if __name__ == '__main__':
         for symbol in symbols:
             try:
                 ndjson_file_path = 'kibana_export/'+symbol+'_exports.ndjson'
-                if os.path.exists(ndjson_file_path) is False:
-                    ndjson_file = open(ndjson_file_path, "xt", encoding='utf-8')
-                    final_text = import_template.replace('tmpl',symbol)
-                    ndjson_file.write(final_text)
-                    ndjson_file.close()
+                ndjson_file = open(ndjson_file_path, "wt", encoding='utf-8')
+                final_text = import_template.replace('tmpl',symbol)
+                ndjson_file.write(final_text)
+                ndjson_file.close()
 
                 kibana_import_url = 'http://kibana:5601/api/saved_objects/_import'
                 payload = { 'overwrite': 'false'}
