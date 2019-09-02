@@ -20,8 +20,8 @@ If you are interested in joining the web site beta sign up, please email c p a r
 
 ## Requirements
 - Python 3. (tested with Python 3.6.5)
-- Elasticsearch 5.
-- Kibana 5.
+- Elasticsearch 7.3.1.
+- Kibana 7.3.1.
 - elasticsearch python module
 - nltk python module
 - requests python module
@@ -41,6 +41,12 @@ $ cd stocksight
 ## Screenshot
 Stocksight Kibana dashboard
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
+
+### How to use with DOCKER
+- Change config.py
+- run docker-compose up
+- ???
+- Profit
 
 ## How to use
 
@@ -139,10 +145,3 @@ optional arguments:
   -q, --quiet           Run quiet with no message output
   -V, --version         Prints version and exits
   ```
-
-### HOWTO DOCKER
-- Change config.py
-- Change startup.sh to include your tickers
-- run docker-compose up
-- ???
-- Profit
