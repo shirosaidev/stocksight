@@ -87,12 +87,13 @@ class NewsHeadlineListener:
 
                 logger.info("Adding news headline to elasticsearch")
                 # add news headline data and sentiment info to elasticsearch
-                es.index(index='stocksight_'+self.symbol,
-                         doc_type="newsheadline",
+                es.index(index="stocksight_"+self.symbol+"_sentiment",
+                         doc_type="_doc",
                          body={"date": datenow,
                                "location": htext_url,
                                "message": htext,
                                "polarity": polarity,
+                               "msg_id": md5_hash,
                                "subjectivity": subjectivity,
                                "sentiment": sentiment})
                 rds.set(md5_hash,1,self.cache_length)

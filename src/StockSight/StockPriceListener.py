@@ -84,8 +84,8 @@ class StockPriceListener:
             if D['last'] is not None and D['high'] is not None and D['low'] is not None:
                 logger.info("Adding stock data to Elasticsearch...")
                 # add stock price info to elasticsearch
-                es.index(index=symbol,
-                         doc_type="stock",
+                es.index(index="stocksight_"+symbol+"_price",
+                         doc_type="_doc",
                          body={"symbol": D['symbol'],
                                "price_last": D['last'],
                                "date": D['date'],

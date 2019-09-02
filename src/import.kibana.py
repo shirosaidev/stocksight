@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""stockprice.py - get stock price from Yahoo and add to
+"""import.kibana.py - import kabana visual for each defined symbol
 Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.

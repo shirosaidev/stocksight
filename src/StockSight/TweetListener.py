@@ -19,21 +19,16 @@ import nltk
 
 from config import *
 from StockSight.Initializer.ElasticSearch import es
+from StockSight.Initializer.Redis import rds
 from StockSight.Helper.Sentiment import *
 
 from tweepy.streaming import StreamListener
-from tweepy import API, Stream, OAuthHandler, TweepError
+
 
 class TweetStreamListener(StreamListener):
 
-    # tweet id list
-    tweet_ids = []
-
     # file to hold twitter user ids
     twitter_users_file = './twitteruserids.txt'
-
-    def __init__(self,symbol):
-        self.symbol = symbol
 
     # on success
     def on_data(self, data):
@@ -100,11 +95,15 @@ class TweetStreamListener(StreamListener):
 
             # do some checks before adding to elasticsearch and crawling urls in tweet
             if friends == 0 or \
-                            followers == 0 or \
+                            followers < min_followers or \
                             statuses == 0 or \
-                            text == "" or \
-                            tweetid in self.tweet_ids:
+                            text == "":
                 logger.info("Tweet doesn't meet min requirements, not adding")
+                return True
+
+            redis_id = 'tweet'+str(tweetid);
+            if rds.exists(redis_id):
+                logger.info("Tweet already exists")
                 return True
 
             # check ignored tokens from config
@@ -114,10 +113,16 @@ class TweetStreamListener(StreamListener):
                     return True
             # check required tokens from config
             tokenspass = False
-            for t in nltk_tokens_required:
-                if t in tokens:
-                    tokenspass = True
+            for key, nltk_tokens_required_sublist in nltk_tokens_required.items():
+                if(key == 'default'): continue
+                self.symbol = key
+                for t in nltk_tokens_required_sublist:
+                    if t in tokens:
+                        tokenspass = True
+                        break
+                if tokenspass:
                     break
+
             if not tokenspass:
                 logger.info("Tweet does not contain token from required list, not adding")
                 return True
@@ -129,28 +134,24 @@ class TweetStreamListener(StreamListener):
             # get sentiment values
             polarity, subjectivity, sentiment = sentiment_analysis(tweet)
 
-            # add tweet_id to list
-            self.tweet_ids.append(dict_data["id"])
-
             # remove hashtags for elasticsearch
             #text_filtered = re.sub(r"[#|@|\$]\S+", "", text_filtered)
 
             logger.info("Adding tweet to elasticsearch")
             # add twitter data and sentiment info to elasticsearch
-            es.index(index=self.symbol,
-                     doc_type="tweet",
+            es.index(index="stocksight_"+self.symbol+"_sentiment",
+                     doc_type="_doc",
                      body={"author": screen_name,
                            "location": location,
-                           "language": language,
-                           "friends": friends,
-                           "followers": followers,
-                           "statuses": statuses,
                            "date": created_date,
                            "message": text_filtered,
-                           "tweet_id": tweetid,
+                           "msg_id": redis_id,
                            "polarity": polarity,
                            "subjectivity": subjectivity,
                            "sentiment": sentiment})
+
+            # add tweet_id to cache
+            rds.set(redis_id,1,86400)
 
             return True
 
