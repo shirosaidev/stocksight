@@ -32,6 +32,7 @@ twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits",
                  "@muddywatersre", "@mcuban", "@AswathDamodaran", "@elerianm",
                  "@MorganStanley", "@ianbremmer", "@GoldmanSachs", "@Wu_Tang_Finance",
                  "@Schuldensuehner", "@NorthmanTrader", "@Frances_Coppola", "@BuzzFeed","@nytimes"]
+min_followers = 1000
 
 #Stock Price fetcher config
 weekday_start = 1

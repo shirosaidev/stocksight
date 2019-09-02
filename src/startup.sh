@@ -14,8 +14,8 @@ tick_time=900
 tick=0
 let sentiment_time=900*4
 
-echo "Spawning Tweet Sentiment receiver instance";
-python tweet.sentiment.py &
+#echo "Spawning Tweet Sentiment receiver instance";
+#python tweet.sentiment.py &
 
 while true
 do
