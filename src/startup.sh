@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#Copyright (C) Allen (Jian Feng) Xie 2019
+#stocksight is released under the Apache 2.0 license. See
+#LICENSE for the full license text.
 
-sleep 30;
+echo "Waiting for other dependent instances to spawn... (60 seconds)"
+sleep 60;
 
 echo "Copy kibana dashboard if they don't exist";
 python import.kibana.py
@@ -9,6 +13,10 @@ python import.kibana.py
 tick_time=900
 tick=0
 let sentiment_time=900*4
+
+#echo "Spawning Tweet Sentiment receiver instance";
+#python tweet.sentiment.py &
+
 while true
 do
     echo "Spawning stock price receiver instance";
@@ -18,7 +26,7 @@ do
 
     if [ $tick_mod -eq 0 ]
     then
-        echo "Spawning news sentiment receiver instance";
+        echo "Spawning News Headline Sentiment receiver instance";
         python news.sentiment.py &
         echo "Will get sentiment data again in ${sentiment_time} sec...";
         let tick=0;

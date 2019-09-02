@@ -1,5 +1,7 @@
 FROM python:3-alpine
 
+LABEL maintainer="Allen (Jian Feng) Xie"
+
 WORKDIR /usr/src/app
 
 ADD requirements.txt ./requirements.txt

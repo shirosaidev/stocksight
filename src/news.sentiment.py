@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""sentiment.py - analyze tweets news sites and their sentiment values to
+"""stockprice.py - get stock price from Yahoo and add to
 Elasticsearch.
-See README.md or https://github.com/heyqule/stocksight
+See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Allen Xie 2019
+Copyright (C) Chris Park 2018
+Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """

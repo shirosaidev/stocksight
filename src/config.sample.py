@@ -4,17 +4,26 @@ elasticsearch_port = 9200
 elasticsearch_user = ""
 elasticsearch_password = ""
 
+redis_host = "redis"
+redis_port = 6379
+
+symbols = ['tsla','amd'];
+follow_link = False;
+
+
 #Sentiment Analyizers config
-consumer_key = ""
-consumer_secret = ""
-access_token = ""
-access_token_secret = ""
 nltk_tokens_required = {
  'default': ("increase","decrease","buying","sold","buy","selling","winning","losing"),
  'tsla':  ("tesla", "@tesla", "#tesla",  "tsla", "#tsla", "elonmusk", "elon", "musk"),
  'amd': ('amd','ryzen','epyc','radeon','crossfire','threadripper')
 }
-nltk_tokens_ignored = ("win", "Win", "giveaway", "Giveaway")
+nltk_tokens_ignored = ("win", "giveaway")
+
+#Twitter Settings
+consumer_key = ""
+consumer_secret = ""
+access_token = ""
+access_token_secret = ""
 twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits",
                  "@Newsweek", "@WashingtonPost", "@breakoutstocks", "@bespokeinvest",
                  "@WSJMarkets", "@stephanie_link", "@nytimesbusiness", "@IBDinvestors",
@@ -23,10 +32,8 @@ twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits",
                  "@muddywatersre", "@mcuban", "@AswathDamodaran", "@elerianm",
                  "@MorganStanley", "@ianbremmer", "@GoldmanSachs", "@Wu_Tang_Finance",
                  "@Schuldensuehner", "@NorthmanTrader", "@Frances_Coppola", "@BuzzFeed","@nytimes"]
-sentiment_frequency = 3600
 
 #Stock Price fetcher config
-price_frequency = 900
 weekday_start = 1
 weekday_end = 5
 hour_start = 9
