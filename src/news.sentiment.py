@@ -11,20 +11,13 @@ LICENSE for the full license text.
 """
 
 import argparse
-import time
-import random
+import sys
 
-from Sentiment.NewsHeadlineListener import *
+from StockSight.NewsHeadlineListener import *
 
 
 STOCKSIGHT_VERSION = '0.1-b.6'
 __version__ = STOCKSIGHT_VERSION
-
-IS_PY3 = sys.version_info >= (3, 0)
-
-if IS_PY3:
-    unicode = str
-
 
 
 if __name__ == '__main__':
@@ -118,7 +111,6 @@ if __name__ == '__main__':
 
                 # create instance of NewsHeadlineListener
                 newslistener = NewsHeadlineListener(symbol, url)
-                time.sleep(random.randrange(2,5))
             except Exception as e:
                 logger.warning("%s" % e)
                 pass

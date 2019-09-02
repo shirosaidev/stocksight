@@ -10,16 +10,16 @@ except ImportError:
     import urlparse
 
 from config import *
-from Sentiment.Initializer.ElasticSearchInit import es
-from Sentiment.Initializer.str_unicode import *
-from Sentiment.Initializer.RedisInit import rds
-from Sentiment.Helper.Sentiment import *
+from StockSight.Initializer.ElasticSearch import es
+from StockSight.Initializer.Redis import rds
+from StockSight.Helper.Sentiment import *
 
 
 class NewsHeadlineListener:
     def __init__(self, symbol,url=None):
         self.symbol = symbol
         self.url = url
+        self.cache_length = 2628000
 
         new_headlines = self.get_news_headlines(self.url)
 
@@ -48,7 +48,7 @@ class NewsHeadlineListener:
                 for t in nltk_tokens_ignored:
                     if t in tokens:
                         logger.info("Text contains token from ignore list, not adding")
-                        rds.set(md5_hash,1,2628000)
+                        rds.set(md5_hash,1,self.cache_length)
                         continue
 
 
@@ -67,7 +67,7 @@ class NewsHeadlineListener:
 
                 if not tokenspass:
                     logger.info("Text does not contain token from required list, not adding")
-                    rds.set(md5_hash,1,2628000)
+                    rds.set(md5_hash,1,self.cache_length)
                     continue
 
                 # get sentiment values
@@ -83,7 +83,7 @@ class NewsHeadlineListener:
                                "polarity": polarity,
                                "subjectivity": subjectivity,
                                "sentiment": sentiment})
-                rds.set(md5_hash,1,2628000)
+                rds.set(md5_hash,1,self.cache_length)
 
 
     def get_news_headlines(self, url):
@@ -105,7 +105,7 @@ class NewsHeadlineListener:
 
             if html:
                 for i in html:
-                    latestheadlines.append((unicode(i.next.next.next.next), url))
+                    latestheadlines.append((str(i.next.next.next.next), url))
             logger.debug(latestheadlines)
 
             if follow_link:
@@ -121,7 +121,7 @@ class NewsHeadlineListener:
 
                 for linkurl in latestheadlines_links:
                     for p in get_page_text(linkurl):
-                        latestheadlines.append((unicode(p), linkurl))
+                        latestheadlines.append((str(p), linkurl))
                 logger.debug(latestheadlines)
 
         except requests.exceptions.RequestException as re:

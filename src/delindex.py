@@ -1,7 +1,7 @@
 import argparse
 
-from Sentiment.Initializer.ElasticSearchInit import es
-from Sentiment.Initializer.LoggerInit import *
+from StockSight.Initializer.ElasticSearch import es
+from StockSight.Initializer.Logger import *
 
 if __name__ == '__main__':
 

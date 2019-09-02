@@ -6,13 +6,13 @@ from config import symbols
 if __name__ == '__main__':
 
     try:
-        template_file = open('../kibana_export/export.7.3.ndjson', "rt", encoding='utf-8')
+        template_file = open('kibana_export/export.7.3.ndjson', "rt", encoding='utf-8')
         import_template = template_file.read()
         template_file.close()
 
         for symbol in symbols:
             try:
-                ndjson_file_path = '../kibana_export/'+symbol+'_exports.ndjson'
+                ndjson_file_path = 'kibana_export/'+symbol+'_exports.ndjson'
                 if os.path.exists(ndjson_file_path) is False:
                     ndjson_file = open(ndjson_file_path, "xt", encoding='utf-8')
                     final_text = import_template.replace('tmpl',symbol)
