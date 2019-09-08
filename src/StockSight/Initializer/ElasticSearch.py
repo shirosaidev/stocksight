@@ -16,8 +16,8 @@ try:
 except ImportError:
     from elasticsearch import Elasticsearch
 
-from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password
+from StockSight.Initializer.ConfigReader import config
 
 # create instance of elasticsearch
-es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
-                   http_auth=(elasticsearch_user, elasticsearch_password))
+es = Elasticsearch(hosts=[{'host': config['elasticsearch']['host'], 'port': config['elasticsearch']['port']}],
+                   http_auth=(config['elasticsearch']['user'], config['elasticsearch']['password']))

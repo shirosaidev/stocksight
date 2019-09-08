@@ -11,8 +11,7 @@ LICENSE for the full license text.
 """
 import requests
 import sys
-import os.path
-from config import symbols
+from StockSight.Initializer.ConfigReader import *
 
 if __name__ == '__main__':
 
@@ -21,7 +20,7 @@ if __name__ == '__main__':
         import_template = template_file.read()
         template_file.close()
 
-        for symbol in symbols:
+        for symbol in config['tickers']:
             try:
                 ndjson_file_path = 'kibana_export/'+symbol+'_exports.ndjson'
                 ndjson_file = open(ndjson_file_path, "wt", encoding='utf-8')

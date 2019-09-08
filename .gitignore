@@ -100,11 +100,11 @@ ENV/
 #Custom files
 data/
 config.py
-startup.sh
 .git
 .idea
 twitteruserids.txt
 *_export.json
+config.yml
 
 # mypy
 .mypy_cache/

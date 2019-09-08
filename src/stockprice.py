@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""stockprice.docker.py - get stock price from Yahoo and add to
+"""stockprice.py - get stock price from News sources and add to
 Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
@@ -13,8 +13,11 @@ LICENSE for the full license text.
 import argparse
 import logging
 import sys
+import threading
+import time
+from random import randint
 
-from config import symbols
+from StockSight.Initializer.ConfigReader import *
 from StockSight.Initializer.ElasticSearch import es
 from StockSight.EsMap.StockPrice import mapping
 from StockSight.StockPriceListener import StockPriceListener
@@ -78,14 +81,18 @@ if __name__ == '__main__':
         requestslogger.disabled = True
 
     try:
-        for symbol in symbols:
+        for symbol in config['tickers']:
             try:
-                logger.info('Creating new Elasticsearch index or using existing ' + symbol)
-                es.indices.create(index="stocksight_"+symbol+"_price", body=mapping, ignore=[400, 404])
+                logger.info('Creating new Price index or using existing ' + symbol)
+                es.indices.create(index=config['elasticsearch']['table_prefix']['sentiment']+symbol.lower(), body=mapping, ignore=[400, 404])
 
                 stockprice = StockPriceListener()
 
-                stockprice.get_price(symbol=symbol)
+                priceThread = threading.Thread(target=stockprice.get_price,args=(symbol,))
+                priceThread.start()
+
+                time.sleep(randint(5,15))
+
             except Exception as e:
                 logger.warning("%s" % e)
                 pass

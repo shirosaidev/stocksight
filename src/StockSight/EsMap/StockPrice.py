@@ -24,5 +24,8 @@ mapping = {
                 "type": "integer"
             }
         }
+    },
+    "index" : {
+        "number_of_replicas" : "0"
     }
 }

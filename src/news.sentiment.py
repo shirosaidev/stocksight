@@ -13,8 +13,12 @@ LICENSE for the full license text.
 
 import argparse
 import sys
+import threading
+import time
+from random import randint
 
-from StockSight.NewsHeadlineListener import *
+from StockSight.YahooFinanceListener import *
+from StockSight.SeekAlphaListener import *
 from StockSight.EsMap.Sentiment import *
 
 
@@ -50,18 +54,19 @@ if __name__ == '__main__':
         requestslogger.disabled = True
 
     try:
-        for symbol in symbols:
+        for symbol in config['tickers']:
             try:
-                logger.info('Creating new Elasticsearch index or using existing ' + symbol)
-                es.indices.create(index="stocksight_"+symbol+"_sentiment", body=mapping, ignore=[400, 404])
-                url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
+                logger.info('Creating new Sentiment index or using existing ' + symbol)
+                es.indices.create(index=config['elasticsearch']['table_prefix']['sentiment']+symbol.lower(), body=mapping, ignore=[400, 404])
 
-                logger.info('NLTK tokens required: ' + str(nltk_tokens_required))
-                logger.info('NLTK tokens ignored: ' + str(nltk_tokens_ignored))
-                logger.info("Scraping news for %s from %s ..." % (symbol, url))
+                logger.info('NLTK tokens required: ' + str(config['tickers'][symbol]))
+                logger.info('NLTK tokens ignored: ' + str(config['sentiment_analyzer']['ignore_words']))
 
-                # create instance of NewsHeadlineListener
-                newslistener = NewsHeadlineListener(symbol, url)
+                yahooListener = YahooFinanceListener(symbol)
+                yahooThread = threading.Thread(target=yahooListener.execute)
+                yahooThread.start()
+
+                time.sleep(randint(5,15))
             except Exception as e:
                 logger.warning("%s" % e)
                 pass

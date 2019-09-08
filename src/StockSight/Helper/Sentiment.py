@@ -21,33 +21,6 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from StockSight.Initializer.Logger import *
 
-def get_page_text(url):
-
-    max_paragraphs = 10
-
-    try:
-        logger.debug(url)
-        req = requests.get(url)
-        html = req.text
-        soup = BeautifulSoup(html, 'html.parser')
-        html_p = soup.findAll('p')
-
-        logger.debug(html_p)
-
-        if html_p:
-            n = 1
-            for i in html_p:
-                if n <= max_paragraphs:
-                    if i.string is not None:
-                        logger.debug(i.string)
-                        yield i.string
-                n += 1
-
-    except requests.exceptions.RequestException as re:
-        logger.warning("Exception: can't crawl web site (%s)" % re)
-        pass
-
-
 def get_sentiment_from_url(text, sentimentURL):
     payload = {'text': text}
 

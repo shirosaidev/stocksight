@@ -17,7 +17,7 @@ import time
 
 import nltk
 
-from config import *
+from definitions import *
 from StockSight.Initializer.ElasticSearch import es
 from StockSight.Initializer.Redis import rds
 from StockSight.Helper.Sentiment import *
@@ -141,14 +141,17 @@ class TweetStreamListener(StreamListener):
             # add twitter data and sentiment info to elasticsearch
             es.index(index="stocksight_"+self.symbol+"_sentiment",
                      doc_type="_doc",
-                     body={"author": screen_name,
+                     body={
+                           "_id": redis_id,
+                           "author": screen_name,
                            "location": location,
                            "date": created_date,
+                           "title": '',
                            "message": text_filtered,
-                           "msg_id": redis_id,
                            "polarity": polarity,
                            "subjectivity": subjectivity,
-                           "sentiment": sentiment})
+                           "sentiment": sentiment
+                     })
 
             # add tweet_id to cache
             rds.set(redis_id,1,86400)
@@ -193,7 +196,6 @@ def get_twitter_users_from_url(url):
                 if parsed_uri in twitter_urls and "=" not in link and "?" not in link:
                     user = link.split('/')[3]
                     twitter_users.append(u'@' + user)
-            logger.debug(twitter_users)
     except requests.exceptions.RequestException as re:
         logger.warning("Requests exception: can't crawl web site caused by: %s" % re)
         pass
@@ -209,7 +211,6 @@ def get_twitter_users_from_file(file):
         for line in f.readlines():
             u = line.strip()
             twitter_users.append(u)
-        logger.debug(twitter_users)
         f.close()
     except (IOError, OSError) as e:
         logger.warning("Exception: error opening file caused by: %s" % e)

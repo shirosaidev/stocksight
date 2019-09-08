@@ -5,14 +5,23 @@ mapping = {
             "author": {
                 "type": "keyword",
             },
+            "referer_url": {
+                "type": "keyword",
+            },
+            "url": {
+                "type": "keyword",
+            },
             "location": {
                 "type": "keyword",
             },
             "date": {
                 "type": "date"
             },
+            "title": {
+                "type": "text",
+            },
             "message": {
-                "type": "keyword",
+                "type": "text",
             },
             "msg_id": {
                 "type": "text"
@@ -27,6 +36,9 @@ mapping = {
                 "type": "keyword",
             }
         }
+    },
+    "index" : {
+        "number_of_replicas" : "0"
     }
 }
 

@@ -10,6 +10,6 @@ stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 import redis
-from config import redis_host, redis_port
+from StockSight.Initializer.ConfigReader import config
 
-rds = redis.Redis(host=str(redis_host), port=redis_port, db=0)
+rds = redis.Redis(host=str(config['redis']['host']), port=config['redis']['port'], db=config['redis']['db'])

@@ -16,24 +16,31 @@ import re
 import requests
 from pytz import timezone
 
-from config import weekday_start, weekday_end, hour_start, hour_end, timezone_str
+from StockSight.Initializer.ConfigReader import *
 from StockSight.Initializer.Logger import logger
 from StockSight.Initializer.ElasticSearch import es
 
 regex = re
 
 class StockPriceListener:
+    def __init__(self):
+        self.index_name = None
 
     def get_price(self, symbol):
-        url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=2m&range=5d&corsDomain=finance.yahoo.com&.tsrc=finance"
-        eastern_timezone = timezone(timezone_str)
 
-        if self.isNotLive(eastern_timezone):
-            today = datetime.datetime.now(eastern_timezone)
+        logger.info("Scraping price for %s from Yahoo Finance ..." % (symbol))
+
+        if self.index_name is None:
+            self.index_name = config['elasticsearch']['table_prefix']['price']+symbol.lower()
+
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=2m&range=5d&corsDomain=finance.yahoo.com&.tsrc=finance"
+
+        current_timezone = timezone(config['stock_price']['timezone_str'])
+
+        if config['stock_price']['time_check'] and self.isNotLive(current_timezone):
+            today = datetime.datetime.now(current_timezone)
             logger.info("Stock market is not live. Current time: %s" % today.strftime("%Y-%m-%d %H:%M"))
             return self;
-
-
 
         logger.info("Grabbing stock data for symbol %s..." % symbol)
 
@@ -48,7 +55,6 @@ class StockPriceListener:
             except (requests.HTTPError, requests.ConnectionError, requests.ConnectTimeout) as re:
                 logger.error("Exception: exception getting stock data from url caused by %s" % re)
                 raise
-            logger.debug(data)
             # build dict to store stock info
             try:
                 D = {}
@@ -75,7 +81,6 @@ class StockPriceListener:
                 D['vol'] = data['chart']['result'][0]['indicators']['quote'][0]['volume'][-1]
                 if D['vol'] is None:
                     D['vol'] = data['chart']['result'][0]['indicators']['quote'][0]['volume'][-2]
-                logger.debug(D)
             except KeyError as e:
                 logger.error("Exception: exception getting stock data caused by %s" % e)
                 raise
@@ -84,7 +89,7 @@ class StockPriceListener:
             if D['last'] is not None and D['high'] is not None and D['low'] is not None:
                 logger.info("Adding stock data to Elasticsearch...")
                 # add stock price info to elasticsearch
-                es.index(index="stocksight_"+symbol+"_price",
+                es.index(index=self.index_name,
                          doc_type="_doc",
                          body={"symbol": D['symbol'],
                                "price_last": D['last'],
@@ -101,15 +106,17 @@ class StockPriceListener:
             logger.error("Exception: can't get stock data, trying again later, reason is %s" % e)
             pass
 
+        logger.info("Scraping price for %s from Yahoo Finance... Done" % (symbol))
+
         return self;
 
 
     def isNotLive(self, timezone):
         today = datetime.datetime.now(timezone);
-        if today.weekday() >= weekday_start and \
-           today.weekday() <= weekday_end and \
-           today.hour >= hour_start and \
-           today.hour <= hour_end:
+        if today.weekday() >= config['stock_price']['weekday_start'] and \
+           today.weekday() <= config['stock_price']['weekday_end'] and \
+           today.hour >= config['stock_price']['hour_start'] and \
+           today.hour <= config['stock_price']['hour_end']:
             return False;
 
         return True;

@@ -1,0 +1,62 @@
+elasticsearch:
+  host      : elasticsearch
+  port      : 9200
+  user      : your_cred
+  password  : your_cred
+  table_prefix:
+    sentiment : stocksight_sentiment_
+    price     : stocksight_price_
+
+redis:
+  host      : redis
+  port      : 6379
+  db        : 0
+
+sentiment_analyzer:
+  ignore_words:
+    - win
+    - giveaway
+    - vs
+
+news:
+    follow_link: false
+
+twitter:
+  consumer_key        : your_cred
+  consumer_secret     : your_cred
+  access_token        : your_cred
+  access_token_secret : your_cred
+  min_followers       : 1000
+  feeds               :
+    - '@elonmusk'
+    - '@stockwits'
+    - '@nytimes'
+    - '@MorganStanley'
+    - '@GoldmanSachs'
+    - '@WSJmarkets'
+    - '@WashingtonPost'
+    - '@nytimesbusiness'
+    - '@reutersbiz'
+
+stock_price:
+  time_check    : true  #True, fetch the price only within the below time range
+  weekday_start : 1
+  weekday_end   : 5
+  hour_start    : 9
+  hour_end      : 18
+  timezone_str  : America/Toronto
+
+tickers:
+  tsla:
+    - tesla
+    - tsla
+    - elonmusk
+    - elon
+    - musk
+  amd:
+    - amd
+    - ryzen
+    - epyc
+    - radeon
+    - crossfire
+    - threadripper
