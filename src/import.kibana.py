@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
         for symbol in config['tickers']:
             try:
-                print("Imported %s Kibana Dashboard" % symbol)
+                print("Starting %s Kibana Dashboard Import" % symbol)
                 ndjson_file_path = 'kibana_export/'+symbol+'_exports.ndjson'
                 ndjson_file = open(ndjson_file_path, "wt", encoding='utf-8')
                 final_text = import_template.replace('tmpl', symbol)
