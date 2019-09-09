@@ -119,7 +119,15 @@ class NewsHeadlineListener(ABC):
     def get_article_with_atag(self, raw_article, parsed_uri):
         a_tag = raw_article.find('a')
         url_link = a_tag.get('href')
-        if url_link.find('http') != -1:
+        #ignore 3rd party links
+        if url_link.find('http') != -1 and url_link.find(parsed_uri) == -1 :
             return None
-        return Article(a_tag.text, parsed_uri+url_link)
+        return Article(a_tag.text, url_link)
+
+    def get_proper_new_body_url(self, article_url, host):
+        if article_url.find('http') != -1:
+            news_url = article_url
+        else:
+            news_url = host[0:-1] + article_url
+        return news_url
 

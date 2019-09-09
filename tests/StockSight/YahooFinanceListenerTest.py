@@ -37,11 +37,15 @@ class YahooFinanceListenerTest(unittest.TestCase):
         self.assertIsNotNone(headlines[0].title, "Title is empty")
         self.assertIsNotNone(headlines[0].url, "URL is empty")
         self.assertNotEqual(headlines[0].referer_url, '', "Refer URL is empty")
+        hasBody = False
         for message in headlines:
-            if message.body == '': continue;
+            if message.body == '':
+                continue
             else:
-                self.assertNotEqual(headlines[0].body, '', "Body is empty")
+                hasBody = True
                 break
+
+        self.assertEqual(hasBody, True, "Body is empty")
 
     def test_execute(self):
         self.mainClass.index_name = self.index_name

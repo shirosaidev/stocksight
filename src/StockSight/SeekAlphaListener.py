@@ -27,8 +27,8 @@ class SeekAlphaListener(NewsHeadlineListener):
                         continue
 
                     if config['news']['follow_link']:
-                        analysis_url = parsed_uri + article.url
-                        for p in self.get_analysis_summary(analysis_url):
+                        body_url = self.get_proper_new_body_url(article.url, parsed_uri)
+                        for p in self.get_analysis_summary(body_url):
                             article.body += str(p)+" "
 
                     article.referer_url = self.url
@@ -42,8 +42,8 @@ class SeekAlphaListener(NewsHeadlineListener):
                         continue
 
                     if config['news']['follow_link']:
-                        news_url = parsed_uri + article.url
-                        for p in self.get_news_summary(news_url):
+                        body_url = self.get_proper_new_body_url(article.url, parsed_uri)
+                        for p in self.get_news_summary(body_url):
                             article.body += str(p)+" "
 
                     article.referer_url = self.url
@@ -78,7 +78,7 @@ class SeekAlphaListener(NewsHeadlineListener):
 
     def get_analysis_summary(self, url):
         try:
-            req = requests.get(url)
+            req = requests.get(str(url))
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
             html_p = soup.select('div.a-sum p')

@@ -27,8 +27,8 @@ class YahooFinanceListener(NewsHeadlineListener):
                         continue
 
                     if config['news']['follow_link']:
-                        news_url = parsed_uri + article.url
-                        for p in self.get_page_text(news_url):
+                        body_url = self.get_proper_new_body_url(article.url, parsed_uri)
+                        for p in self.get_page_text(body_url):
                             article.body += str(p)+" "
 
                     article.referer_url = self.url
