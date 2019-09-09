@@ -40,7 +40,7 @@ class TweetStreamListener(StreamListener):
             logger.debug(dict_data)
 
             # clean up tweet text
-            #text = unicodedata.normalize(
+            # text = unicodedata.normalize(
             #    'NFKD', dict_data["text"]).encode('ascii', 'ignore')
             text = dict_data["text"]
             if text is None:
@@ -48,7 +48,7 @@ class TweetStreamListener(StreamListener):
                 return True
 
             # grab html links from tweet
-            #tweet_urls = re.search("http\S+", text)
+            # tweet_urls = re.search("http\S+", text)
 
             # clean up tweet text more
             text = text.replace("\n", " ")
@@ -95,13 +95,13 @@ class TweetStreamListener(StreamListener):
 
             # do some checks before adding to elasticsearch and crawling urls in tweet
             if friends == 0 or \
-                            followers < config['twitter']['min_followers'] or \
-                            statuses == 0 or \
-                            text == "":
+               followers < config['twitter']['min_followers'] or \
+               statuses == 0 or \
+               text == "":
                 logger.info("Tweet doesn't meet min requirements, not adding")
                 return True
 
-            redis_id = 'tweet'+str(tweetid);
+            redis_id = 'tweet'+str(tweetid)
             if rds.exists(redis_id):
                 logger.info("Tweet already exists")
                 return True
@@ -134,7 +134,7 @@ class TweetStreamListener(StreamListener):
             polarity, subjectivity, sentiment = sentiment_analysis(tweet)
 
             # remove hashtags for elasticsearch
-            #text_filtered = re.sub(r"[#|@|\$]\S+", "", text_filtered)
+            # text_filtered = re.sub(r"[#|@|\$]\S+", "", text_filtered)
 
             self.index_name = config['elasticsearch']['table_prefix']['sentiment']+self.symbol.lower()
             logger.info("Adding tweet to elasticsearch")
@@ -154,7 +154,7 @@ class TweetStreamListener(StreamListener):
                      })
 
             # add tweet_id to cache
-            rds.set(redis_id,1,86400)
+            rds.set(redis_id, 1, 86400)
 
             return True
 
@@ -171,8 +171,6 @@ class TweetStreamListener(StreamListener):
     def on_timeout(self):
         logger.warning("Timeout...")
         return True
-
-
 
 def get_twitter_users_from_url(url):
     twitter_users = []
@@ -196,8 +194,8 @@ def get_twitter_users_from_url(url):
                 if parsed_uri in twitter_urls and "=" not in link and "?" not in link:
                     user = link.split('/')[3]
                     twitter_users.append(u'@' + user)
-    except requests.exceptions.RequestException as re:
-        logger.warning("Requests exception: can't crawl web site caused by: %s" % re)
+    except requests.exceptions.RequestException as exce:
+        logger.warning("Requests exception: can't crawl web site caused by: %s" % exce)
         pass
 
     return twitter_users

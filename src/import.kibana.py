@@ -25,20 +25,21 @@ if __name__ == '__main__':
                 print("Imported %s Kibana Dashboard" % symbol)
                 ndjson_file_path = 'kibana_export/'+symbol+'_exports.ndjson'
                 ndjson_file = open(ndjson_file_path, "wt", encoding='utf-8')
-                final_text = import_template.replace('tmpl',symbol)
+                final_text = import_template.replace('tmpl', symbol)
                 ndjson_file.write(final_text)
                 ndjson_file.close()
 
                 kibana_import_url = 'http://kibana:5601/api/saved_objects/_import'
-                payload = { 'overwrite': 'false'}
-                headers ={'kbn-xsrf': 'True'}
-                post = requests.request('POST',kibana_import_url, headers=headers, files={'file': open(ndjson_file_path, "rt", encoding='utf-8')})
+                payload = {'overwrite': 'false'}
+                headers = {'kbn-xsrf': 'True'}
+                post = requests.request('POST', kibana_import_url, headers=headers, files={'file': open(ndjson_file_path, "rt", encoding='utf-8')})
                 print("Imported %s Kibana Dashboard" % symbol)
                 print(ndjson_file_path)
                 print(post.text)
 
             except Exception as e:
-                print(e);
+                print(e)
+                print("Please run this script manually once kibana is ready.")
                 pass
 
     except KeyboardInterrupt:

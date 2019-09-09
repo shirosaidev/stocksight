@@ -30,12 +30,11 @@ from StockSight.Helper.Sentiment import *
 from StockSight.Model.Article import *
 
 
-
 class NewsHeadlineListener(ABC):
-    def __init__(self, type, symbol, url=None):
+    def __init__(self, news_type, symbol, url=None):
         self.symbol = symbol
         self.url = url
-        self.type = type
+        self.type = news_type
         self.cache_length = 2628000
         self.index_name = config['elasticsearch']['table_prefix']['sentiment']+self.symbol.lower()
 
@@ -67,14 +66,12 @@ class NewsHeadlineListener(ABC):
                 for t in config['sentiment_analyzer']['ignore_words']:
                     if t in tokens:
                         logger.info("Text contains token from ignore list, not adding")
-                        rds.set(md5_hash,1,self.cache_length)
+                        rds.set(md5_hash, 1, self.cache_length)
                         continue
-
 
                 nltk_tokens = []
                 if self.symbol in config['tickers']:
                     nltk_tokens = config['tickers'][self.symbol]
-
 
                 # check required tokens from config
                 tokenspass = False
@@ -85,7 +82,7 @@ class NewsHeadlineListener(ABC):
 
                 if not tokenspass:
                     logger.info("Text does not contain token from required list, not adding")
-                    rds.set(md5_hash,1,self.cache_length)
+                    rds.set(md5_hash, 1, self.cache_length)
                     continue
 
                 # get sentiment values
@@ -98,7 +95,7 @@ class NewsHeadlineListener(ABC):
                          body={
                                "msg_id": md5_hash,
                                "date": datenow,
-                               "referer_url": article_obj.refer_url,
+                               "referer_url": article_obj.referer_url,
                                "url": article_obj.url,
                                "title": article_obj.title,
                                "message": article_obj.body,
@@ -107,7 +104,7 @@ class NewsHeadlineListener(ABC):
                                "sentiment": sentiment
                          })
 
-                rds.set(md5_hash,1,self.cache_length)
+                rds.set(md5_hash, 1, self.cache_length)
 
         logger.info("Scraping news for %s from %s... Done" % (self.symbol, self.type))
 
@@ -116,7 +113,13 @@ class NewsHeadlineListener(ABC):
         pass
 
     @abstractmethod
-    def get_page_text(url):
+    def get_page_text(self, url):
         pass
 
+    def get_article_with_atag(self, raw_article, parsed_uri):
+        a_tag = raw_article.find('a')
+        url_link = a_tag.get('href')
+        if url_link.find('http') != -1:
+            return None
+        return Article(a_tag.text, parsed_uri+url_link)
 

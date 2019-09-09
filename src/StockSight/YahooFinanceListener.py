@@ -2,7 +2,7 @@ from StockSight.NewsHeadlineListener import *
 
 
 class YahooFinanceListener(NewsHeadlineListener):
-    def __init__(self,symbol):
+    def __init__(self, symbol):
         super(YahooFinanceListener, self)\
             .__init__("Yahoo Finance", symbol, "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol))
 
@@ -22,19 +22,20 @@ class YahooFinanceListener(NewsHeadlineListener):
             if html:
                 for rawArticle in html:
 
-                    aTag = rawArticle.find('a')
-                    article = Article(aTag.text, aTag.get('href'))
+                    article = self.get_article_with_atag(rawArticle, parsed_uri)
+                    if article is None:
+                        continue
 
                     if config['news']['follow_link']:
-                        new_url = parsed_uri + article.url
-                        for p in self.get_page_text(new_url):
-                            article.body += str(p)
+                        news_url = parsed_uri + article.url
+                        for p in self.get_page_text(news_url):
+                            article.body += str(p)+" "
 
-                    article.refer_url = self.url
+                    article.referer_url = self.url
                     articles.append(article)
 
-        except requests.exceptions.RequestException as re:
-            logger.warning("Exception: can't crawl web site (%s)" % re)
+        except requests.exceptions.RequestException as exce:
+            logger.warning("Exception: can't crawl web site (%s)" % exce)
             pass
 
         return articles

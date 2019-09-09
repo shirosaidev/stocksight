@@ -2,50 +2,94 @@ from StockSight.NewsHeadlineListener import *
 
 
 class SeekAlphaListener(NewsHeadlineListener):
-    def __init__(self,symbol):
-        super.__init__(symbol,"https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol))
+    def __init__(self, symbol):
+        super(SeekAlphaListener, self)\
+            .__init__("Seek Alpha", symbol, "https://seekingalpha.com/symbol/%s" % symbol)
 
     def get_news_headlines(self):
 
-        latestheadlines = []
-        latestheadlines_links = []
+        articles = []
 
         parsed_uri = urlparse.urljoin(self.url, '/')
 
         try:
-
             req = requests.get(self.url)
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
-            html = soup.findAll('h3')
-            links = soup.findAll('a')
+            analysis = soup.select('div.analysis div.symbol_article')
+            news = soup.select('div.news div.symbol_article')
 
-            if html:
-                for i in html:
-                    latestheadlines.append((str(i.next.next.next.next), self.url))
-            logger.debug(latestheadlines)
+            if analysis:
+                for rawArticle in analysis:
 
-            if config['news']['follow_link']:
-                if links:
-                    for i in links:
-                        if '/news/' in i['href']:
-                            l = parsed_uri.rstrip('/') + i['href']
-                            latestheadlines_links.append(l)
+                    article = self.get_article_with_atag(rawArticle, parsed_uri)
+                    if article is None:
+                        continue
 
-                logger.debug(latestheadlines_links)
+                    if config['news']['follow_link']:
+                        analysis_url = parsed_uri + article.url
+                        for p in self.get_analysis_summary(analysis_url):
+                            article.body += str(p)+" "
 
-                logger.info("Following any new links and grabbing text from page...")
+                    article.referer_url = self.url
+                    articles.append(article)
 
-                for linkurl in latestheadlines_links:
-                    for p in self.get_page_text(linkurl):
-                        latestheadlines.append((str(p), linkurl))
-                logger.debug(latestheadlines)
+            if news:
+                for rawArticle in news:
 
-        except requests.exceptions.RequestException as re:
-            logger.warning("Exception: can't crawl web site (%s)" % re)
+                    article = self.get_article_with_atag(rawArticle, parsed_uri)
+                    if article is None:
+                        continue
+
+                    if config['news']['follow_link']:
+                        news_url = parsed_uri + article.url
+                        for p in self.get_news_summary(news_url):
+                            article.body += str(p)+" "
+
+                    article.referer_url = self.url
+                    articles.append(article)
+
+        except requests.exceptions.RequestException as exce:
+            logger.warning("Exception: can't crawl web site (%s)" % exce)
             pass
 
-        return latestheadlines
+        return articles
 
-        def get_page_text(self):
+    def get_page_text(self, url):
+        pass
+
+    def get_news_summary(self, url):
+        try:
+            req = requests.get(url)
+            html = req.text
+            soup = BeautifulSoup(html, 'html.parser')
+            html_p = soup.select('p.bullets_li')
+
+            if html_p:
+                for i in html_p:
+                    if i.string is not None:
+                        yield i.string
+                    else:
+                        break
+
+        except requests.exceptions.RequestException as exce:
+            logger.warning("Exception: can't crawl web site (%s)" % exce)
+            pass
+
+    def get_analysis_summary(self, url):
+        try:
+            req = requests.get(url)
+            html = req.text
+            soup = BeautifulSoup(html, 'html.parser')
+            html_p = soup.select('div.a-sum p')
+
+            if html_p:
+                for i in html_p:
+                    if i.string is not None:
+                        yield i.string
+                    else:
+                        break
+
+        except requests.exceptions.RequestException as exce:
+            logger.warning("Exception: can't crawl web site (%s)" % exce)
             pass

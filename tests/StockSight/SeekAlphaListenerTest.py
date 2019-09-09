@@ -1,15 +1,15 @@
 import unittest
-from StockSight.YahooFinanceListener import *
+from StockSight.SeekAlphaListener import *
 from StockSight.EsMap.Sentiment import mapping
 
 
-class YahooFinanceListenerTest(unittest.TestCase):
+class SeekAlphaListenerTest(unittest.TestCase):
 
     symbol = 'tsla'
 
     def setUp(self):
         config['redis']['db'] = 1
-        self.mainClass = YahooFinanceListener(self.symbol)
+        self.mainClass = SeekAlphaListener(self.symbol)
 
     @classmethod
     def setUpClass(cls):

@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--delindex", action="store_true",
-                    help="Delete existing Elasticsearch index")
+                        help="Delete existing Elasticsearch index")
     args = parser.parse_args()
 
     eslogger = logging.getLogger('elasticsearch')

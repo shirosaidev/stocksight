@@ -21,11 +21,12 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from StockSight.Initializer.Logger import *
 
-def get_sentiment_from_url(text, sentimentURL):
+
+def get_sentiment_from_url(text, sentiment_url):
     payload = {'text': text}
 
     try:
-        post = requests.post(sentimentURL, data=payload)
+        post = requests.post(sentiment_url, data=payload)
         logger.debug(post.status_code)
         logger.debug(post.text)
     except requests.exceptions.RequestException as re:
@@ -62,10 +63,11 @@ def sentiment_analysis(text):
     uses sentiment polarity from TextBlob, VADER Sentiment and
     sentiment from text-processing URL
     could be made better :)
+    :param text:
     """
-    sentimentURL = 'http://text-processing.com/api/sentiment/'
+    sentiment_url = 'http://text-processing.com/api/sentiment/'
     # pass text into sentiment url
-    sentiment_url = get_sentiment_from_url(text, sentimentURL)
+    sentiment_url = get_sentiment_from_url(text, sentiment_url)
 
     # pass text into TextBlob
     text_tb = TextBlob(text)
@@ -79,7 +81,7 @@ def sentiment_analysis(text):
             sentiment = "negative"  # very negative
         elif text_tb.sentiment.polarity <= 0 and text_vs['compound'] <= -0.1:
             sentiment = "negative"  # somewhat negative
-        elif text_tb.sentiment.polarity == 0 and text_vs['compound'] > -0.1 and text_vs['compound'] < 0.1:
+        elif text_tb.sentiment.polarity == 0 and -0.1 < text_vs['compound'] < 0.1:
             sentiment = "neutral"
         elif text_tb.sentiment.polarity >= 0 and text_vs['compound'] >= 0.1:
             sentiment = "positive"  # somewhat positive

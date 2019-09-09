@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # parse cli args
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", action="store_true",
-                       help="Increase output verbosity")
+                        help="Increase output verbosity")
     parser.add_argument("--debug", action="store_true",
                         help="Debug message output")
     parser.add_argument("-q", "--quiet", action="store_true",
@@ -66,7 +66,11 @@ if __name__ == '__main__':
                 yahooThread = threading.Thread(target=yahooListener.execute)
                 yahooThread.start()
 
-                time.sleep(randint(5,15))
+                seekAlphaListener = SeekAlphaListener(symbol)
+                seekAlphaThread = threading.Thread(target=seekAlphaListener.execute)
+                seekAlphaThread.start()
+
+                time.sleep(randint(5, 10))
             except Exception as e:
                 logger.warning("%s" % e)
                 pass

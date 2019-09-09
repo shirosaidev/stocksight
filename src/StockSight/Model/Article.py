@@ -1,6 +1,6 @@
 class Article:
 
-    def __init__(self, title, url, body = '', referer_url = ''):
+    def __init__(self, title, url, body='', referer_url=''):
         self.title = title
         self.body = body
         self.url = url

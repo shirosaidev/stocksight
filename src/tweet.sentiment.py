@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # parse cli args
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", action="store_true",
-                       help="Increase output verbosity")
+                        help="Increase output verbosity")
     parser.add_argument("--debug", action="store_true",
                         help="Debug message output")
     parser.add_argument("-q", "--quiet", action="store_true",
@@ -52,21 +52,18 @@ if __name__ == '__main__':
         eslogger.disabled = True
         requestslogger.disabled = True
 
-
     consumer_key = config['twitter']['consumer_key']
     consumer_secret = config['twitter']['consumer_secret']
     access_token = config['twitter']['access_token']
     access_token_secret = config['twitter']['access_token_secret']
     twitter_feeds = config['twitter']['feeds']
 
-    #TODO exit if the twitter keys are empty
     if not consumer_key or \
        not consumer_secret or \
        not access_token or \
        not access_token_secret:
         logger.warning("Invalid Twitter API cred")
         sys.exit(1)
-
 
     try:
         for symbol in config['twitter']:
@@ -104,7 +101,7 @@ if __name__ == '__main__':
                         # sleep a bit in case twitter suspends us
                         logger.warning("Tweepy exception: twitter api error caused by: %s" % te)
                         logger.info("Sleeping for a random amount of time and retrying...")
-                        time.sleep(randint(1,10))
+                        time.sleep(randint(1, 10))
                         continue
                     except KeyboardInterrupt:
                         logger.info("Ctrl-c keyboard interrupt, exiting...")
@@ -128,7 +125,6 @@ if __name__ == '__main__':
                 except Exception as e:
                     raise
 
-
         # search twitter for keywords
         logger.info('NLTK tokens required: ' + str(config['tickers']))
         logger.info('NLTK tokens ignored: ' + str(config['sentiment_analyzer']['ignore_words']))
@@ -143,11 +139,6 @@ if __name__ == '__main__':
         print("Ctrl-c keyboard interrupt, exiting...")
         stream.disconnect()
         sys.exit(0)
-
     except Exception as e:
         logger.warning("%s" % e)
         pass
-
-    except KeyboardInterrupt:
-        print("Ctrl-c keyboard interrupt, exiting...")
-        sys.exit(0)

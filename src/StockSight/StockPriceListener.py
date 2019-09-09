@@ -22,13 +22,14 @@ from StockSight.Initializer.ElasticSearch import es
 
 regex = re
 
+
 class StockPriceListener:
     def __init__(self):
         self.index_name = None
 
     def get_price(self, symbol):
 
-        logger.info("Scraping price for %s from Yahoo Finance ..." % (symbol))
+        logger.info("Scraping price for %s from Yahoo Finance ..." % symbol)
 
         if self.index_name is None:
             self.index_name = config['elasticsearch']['table_prefix']['price']+symbol.lower()
@@ -37,10 +38,10 @@ class StockPriceListener:
 
         current_timezone = timezone(config['stock_price']['timezone_str'])
 
-        if config['stock_price']['time_check'] and self.isNotLive(current_timezone):
+        if config['stock_price']['time_check'] and self.is_not_live(current_timezone):
             today = datetime.datetime.now(current_timezone)
             logger.info("Stock market is not live. Current time: %s" % today.strftime("%Y-%m-%d %H:%M"))
-            return self;
+            return self
 
         logger.info("Grabbing stock data for symbol %s..." % symbol)
 
@@ -106,17 +107,14 @@ class StockPriceListener:
             logger.error("Exception: can't get stock data, trying again later, reason is %s" % e)
             pass
 
-        logger.info("Scraping price for %s from Yahoo Finance... Done" % (symbol))
+        logger.info("Scraping price for %s from Yahoo Finance... Done" % symbol)
 
-        return self;
+        return self
 
+    def is_not_live(self, current_timezone):
+        today = datetime.datetime.now(current_timezone)
+        if config['stock_price']['weekday_start'] <= today.weekday() <= config['stock_price']['weekday_end'] and \
+            config['stock_price']['hour_start'] <= today.hour <= config['stock_price']['hour_end']:
+            return False
 
-    def isNotLive(self, timezone):
-        today = datetime.datetime.now(timezone);
-        if today.weekday() >= config['stock_price']['weekday_start'] and \
-           today.weekday() <= config['stock_price']['weekday_end'] and \
-           today.hour >= config['stock_price']['hour_start'] and \
-           today.hour <= config['stock_price']['hour_end']:
-            return False;
-
-        return True;
+        return True

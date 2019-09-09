@@ -27,8 +27,6 @@ STOCKSIGHT_VERSION = '0.1-b.5'
 __version__ = STOCKSIGHT_VERSION
 
 
-
-
 if __name__ == '__main__':
 
     # parse cli args
@@ -84,7 +82,8 @@ if __name__ == '__main__':
         for symbol in config['tickers']:
             try:
                 logger.info('Creating new Price index or using existing ' + symbol)
-                es.indices.create(index=config['elasticsearch']['table_prefix']['sentiment']+symbol.lower(), body=mapping, ignore=[400, 404])
+                es.indices.create(index=config['elasticsearch']['table_prefix']['sentiment']+symbol.lower(),
+                                  body=mapping, ignore=[400, 404])
 
                 stockprice = StockPriceListener()
 
