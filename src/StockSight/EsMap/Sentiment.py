@@ -9,7 +9,7 @@ mapping = {
                 "type": "keyword",
             },
             "url": {
-                "type": "keyword",
+                "type": "text",
             },
             "location": {
                 "type": "keyword",
@@ -24,7 +24,7 @@ mapping = {
                 "type": "text",
             },
             "msg_id": {
-                "type": "text"
+                "type": "keyword"
             },
             "polarity": {
                 "type": "float"

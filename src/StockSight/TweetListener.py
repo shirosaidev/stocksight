@@ -146,8 +146,8 @@ class TweetStreamListener(StreamListener):
                            "author": screen_name,
                            "location": location,
                            "date": created_date,
-                           "title": '',
-                           "message": text_filtered,
+                           "title": text_filtered,
+                           "message": '',
                            "polarity": polarity,
                            "subjectivity": subjectivity,
                            "sentiment": sentiment
