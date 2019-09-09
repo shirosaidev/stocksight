@@ -25,7 +25,9 @@ mapping = {
             }
         }
     },
-    "index" : {
-        "number_of_replicas" : "0"
+    "settings": {
+        "index": {
+            "number_of_replicas": "0"
+        }
     }
 }
