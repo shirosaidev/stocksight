@@ -17,7 +17,7 @@ import time
 
 import nltk
 
-from definitions import *
+from StockSight.Initializer.ConfigReader import *
 from StockSight.Initializer.ElasticSearch import es
 from StockSight.Initializer.Redis import rds
 from StockSight.Helper.Sentiment import *
@@ -95,7 +95,7 @@ class TweetStreamListener(StreamListener):
 
             # do some checks before adding to elasticsearch and crawling urls in tweet
             if friends == 0 or \
-                            followers < min_followers or \
+                            followers < config['twitter']['min_followers'] or \
                             statuses == 0 or \
                             text == "":
                 logger.info("Tweet doesn't meet min requirements, not adding")
@@ -107,16 +107,15 @@ class TweetStreamListener(StreamListener):
                 return True
 
             # check ignored tokens from config
-            for t in nltk_tokens_ignored:
+            for t in config['sentiment_analyzer']['ignore_words']:
                 if t in tokens:
                     logger.info("Tweet contains token from ignore list, not adding")
                     return True
             # check required tokens from config
             tokenspass = False
-            for key, nltk_tokens_required_sublist in nltk_tokens_required.items():
-                if(key == 'default'): continue
+            for key in config['tickers']:
                 self.symbol = key
-                for t in nltk_tokens_required_sublist:
+                for t in config['tickers'][key]:
                     if t in tokens:
                         tokenspass = True
                         break
@@ -137,9 +136,10 @@ class TweetStreamListener(StreamListener):
             # remove hashtags for elasticsearch
             #text_filtered = re.sub(r"[#|@|\$]\S+", "", text_filtered)
 
+            self.index_name = config['elasticsearch']['table_prefix']['sentiment']+self.symbol.lower()
             logger.info("Adding tweet to elasticsearch")
             # add twitter data and sentiment info to elasticsearch
-            es.index(index="stocksight_"+self.symbol+"_sentiment",
+            es.index(index=self.index_name,
                      doc_type="_doc",
                      body={
                            "_id": redis_id,
@@ -199,6 +199,7 @@ def get_twitter_users_from_url(url):
     except requests.exceptions.RequestException as re:
         logger.warning("Requests exception: can't crawl web site caused by: %s" % re)
         pass
+
     return twitter_users
 
 
@@ -215,4 +216,5 @@ def get_twitter_users_from_file(file):
     except (IOError, OSError) as e:
         logger.warning("Exception: error opening file caused by: %s" % e)
         pass
+
     return twitter_users

@@ -15,6 +15,7 @@ import argparse
 import sys
 from random import randint
 
+from StockSight.Initializer.ConfigReader import *
 from StockSight.TweetListener import *
 from StockSight.EsMap.Sentiment import *
 from tweepy import API, Stream, OAuthHandler, TweepError
@@ -52,7 +53,11 @@ if __name__ == '__main__':
         requestslogger.disabled = True
 
 
-
+    consumer_key = config['twitter']['consumer_key']
+    consumer_secret = config['twitter']['consumer_secret']
+    access_token = config['twitter']['access_token']
+    access_token_secret = config['twitter']['access_token_secret']
+    twitter_feeds = config['twitter']['feeds']
 
     #TODO exit if the twitter keys are empty
     if not consumer_key or \
@@ -64,7 +69,7 @@ if __name__ == '__main__':
 
 
     try:
-        for symbol in symbols:
+        for symbol in config['twitter']:
             logger.info('Creating new Elasticsearch index or using existing ' + symbol)
             es.indices.create(index="stocksight_"+symbol+"_sentiment", body=mapping, ignore=[400, 404])
 
@@ -125,8 +130,8 @@ if __name__ == '__main__':
 
 
         # search twitter for keywords
-        logger.info('NLTK tokens required: ' + str(nltk_tokens_required))
-        logger.info('NLTK tokens ignored: ' + str(nltk_tokens_ignored))
+        logger.info('NLTK tokens required: ' + str(config['tickers']))
+        logger.info('NLTK tokens ignored: ' + str(config['sentiment_analyzer']['ignore_words']))
         logger.info('Twitter Feeds: ' + str(twitter_feeds))
         logger.info('Twitter User Ids: ' + str(useridlist))
         logger.info('Listening for Tweets (ctrl-c to exit)...')

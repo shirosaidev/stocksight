@@ -36,7 +36,7 @@ done
 
 
 echo "Copy kibana dashboard if they don't exist";
-python import.kibana.py
+python import.kibana.py &
 
 tick_time=900
 tick=0
