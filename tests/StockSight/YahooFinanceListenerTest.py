@@ -1,6 +1,7 @@
 import unittest
 from StockSight.YahooFinanceListener import *
 from StockSight.EsMap.Sentiment import mapping
+import time
 
 
 class YahooFinanceListenerTest(unittest.TestCase):
@@ -48,6 +49,7 @@ class YahooFinanceListenerTest(unittest.TestCase):
     def test_execute(self):
         self.mainClass.index_name = self.index_name
         self.mainClass.execute()
+        time.sleep(1)
         logs = es.search(index=self.index_name,body="{}")
         message = logs['hits']['hits'][0]['_source']
         self.assertIsNotNone(message['title'], "Title is empty")

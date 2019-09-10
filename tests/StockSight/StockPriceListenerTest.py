@@ -1,4 +1,5 @@
 import unittest
+import time
 from StockSight.StockPriceListener import *
 from StockSight.EsMap.StockPrice import mapping
 
@@ -24,6 +25,7 @@ class StockPriceListenerTest(unittest.TestCase):
         config['stock_price']['time_check'] = False
         self.mainClass.index_name = self.index_name
         self.mainClass.get_price(self.symbol)
+        time.sleep(1)
         logs = es.search(index=self.index_name,body="{}")
         message = logs['hits']['hits'][0]['_source']
         self.assertIsNotNone(message['price_last'], "Price is empty")
