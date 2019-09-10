@@ -11,19 +11,17 @@ class YahooFinanceListenerTest(unittest.TestCase):
         config['redis']['db'] = 1
         self.mainClass = YahooFinanceListener(self.symbol)
 
+    def tearDown(self):
+        rds.flushdb()
+
     @classmethod
     def setUpClass(cls):
         cls.index_name = "stocksight_sentiment_test_"+cls.symbol
         es.indices.create(index=cls.index_name, body=mapping, ignore=[400, 404])
 
-    @classmethod
-    def tearDownClass(cls):
-        rds.flushdb()
-        es.indices.delete(index=cls.index_name, ignore=[400, 404])
-
     def test_get_news_headlines(self):
         headlines = self.mainClass.get_news_headlines()
-        self.assertGreaterEqual(headlines.__len__(), 1, "Empty Headline")
+        self.assertGreaterEqual(headlines.__len__(), 1, "Empty Headline / Page returned 403")
         self.assertIsInstance(headlines[0], Article, "Is not an Article")
         self.assertIsNotNone(headlines[0].title, "Title is empty")
         self.assertIsNotNone(headlines[0].url, "URL is empty")
@@ -32,7 +30,7 @@ class YahooFinanceListenerTest(unittest.TestCase):
     def test_get_news_headlines_with_body(self):
         config['news']['follow_link'] = True
         headlines = self.mainClass.get_news_headlines()
-        self.assertGreaterEqual(headlines.__len__(), 1, "Empty Headline")
+        self.assertGreaterEqual(headlines.__len__(), 1, "Empty Headline / Page returned 403")
         self.assertIsInstance(headlines[0], Article, "Is not an Article")
         self.assertIsNotNone(headlines[0].title, "Title is empty")
         self.assertIsNotNone(headlines[0].url, "URL is empty")

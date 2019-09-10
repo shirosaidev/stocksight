@@ -23,16 +23,14 @@ class YahooFinanceListener(NewsHeadlineListener):
                 for rawArticle in html:
 
                     article = self.get_article_with_atag(rawArticle, parsed_uri)
-                    if article is None:
-                        continue
+                    if self.can_process(article):
+                        if config['news']['follow_link']:
+                            body_url = self.get_proper_new_body_url(article.url, parsed_uri)
+                            for p in self.get_page_text(body_url):
+                                article.body += str(p)+" "
 
-                    if config['news']['follow_link']:
-                        body_url = self.get_proper_new_body_url(article.url, parsed_uri)
-                        for p in self.get_page_text(body_url):
-                            article.body += str(p)+" "
-
-                    article.referer_url = self.url
-                    articles.append(article)
+                        article.referer_url = self.url
+                        articles.append(article)
 
         except requests.exceptions.RequestException as exce:
             logger.warning("Exception: can't crawl web site (%s)" % exce)

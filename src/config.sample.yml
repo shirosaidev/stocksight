@@ -40,10 +40,10 @@ twitter:
 
 stock_price:
   time_check    : true  #True, fetch the price only within the below time range
-  weekday_start : 1
-  weekday_end   : 5
+  weekday_start : 0
+  weekday_end   : 4
   hour_start    : 9
-  hour_end      : 18
+  hour_end      : 17
   timezone_str  : America/Toronto
 
 tickers:

@@ -45,9 +45,7 @@ class NewsHeadlineListener(ABC):
         # add any new headlines
         for article_obj in articles:
 
-            md5_hash = hashlib.md5((article_obj.title + article_obj.url).encode()).hexdigest()
-
-            if rds.exists(md5_hash) is 0:
+            if rds.exists(article_obj.msg_id) is 0:
 
                 datenow = datetime.utcnow().isoformat()
                 # output news data
@@ -66,7 +64,7 @@ class NewsHeadlineListener(ABC):
                 for t in config['sentiment_analyzer']['ignore_words']:
                     if t in tokens:
                         logger.info("Text contains token from ignore list, not adding")
-                        rds.set(md5_hash, 1, self.cache_length)
+                        rds.set(article_obj.msg_id, 1, self.cache_length)
                         continue
 
                 nltk_tokens = []
@@ -82,7 +80,7 @@ class NewsHeadlineListener(ABC):
 
                 if not tokenspass:
                     logger.info("Text does not contain token from required list, not adding")
-                    rds.set(md5_hash, 1, self.cache_length)
+                    rds.set(article_obj.msg_id, 1, self.cache_length)
                     continue
 
                 # get sentiment values
@@ -93,7 +91,7 @@ class NewsHeadlineListener(ABC):
                 es.index(index=self.index_name,
                          doc_type="_doc",
                          body={
-                               "msg_id": md5_hash,
+                               "msg_id": article_obj.msg_id,
                                "date": datenow,
                                "referer_url": article_obj.referer_url,
                                "url": article_obj.url,
@@ -104,7 +102,7 @@ class NewsHeadlineListener(ABC):
                                "sentiment": sentiment
                          })
 
-                rds.set(md5_hash, 1, self.cache_length)
+                rds.set(article_obj.msg_id, 1, self.cache_length)
 
         logger.info("Scraping news for %s from %s... Done" % (self.symbol, self.type))
 
@@ -131,3 +129,5 @@ class NewsHeadlineListener(ABC):
             news_url = host[0:-1] + article_url
         return news_url
 
+    def can_process(self, article):
+        return article is not None and rds.exists(article.msg_id) is 0
