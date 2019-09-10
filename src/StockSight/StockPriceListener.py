@@ -66,12 +66,17 @@ class StockPriceListener:
                 D['date'] = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())  # time now in gmt (utc)
                 try:
                     D['change'] = (data['chart']['result'][0]['indicators']['quote'][0]['close'][-1] -
-                                   data['chart']['result'][0]['indicators']['quote'][0]['close'][-2]) / \
-                                    data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] * 100
+                                   data['chart']['result'][0]['indicators']['quote'][0]['open'][-1]) / \
+                                    data['chart']['result'][0]['indicators']['quote'][0]['open'][-1] * 100
                 except TypeError:
-                    D['change'] = (data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] -
-                                   data['chart']['result'][0]['indicators']['quote'][0]['close'][-3]) / \
-                                  data['chart']['result'][0]['indicators']['quote'][0]['close'][-3] * 100
+                    if data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] is not None and \
+                       data['chart']['result'][0]['indicators']['quote'][0]['open'][-2] is not None:
+                        D['change'] = (data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] -
+                                       data['chart']['result'][0]['indicators']['quote'][0]['open'][-2]) / \
+                                      data['chart']['result'][0]['indicators']['quote'][0]['open'][-2] * 100
+                    else:
+                        D['change'] = 0
+
                     pass
                 D['high'] = data['chart']['result'][0]['indicators']['quote'][0]['high'][-1]
                 if D['high'] is None:
