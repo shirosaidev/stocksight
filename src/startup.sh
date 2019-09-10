@@ -7,7 +7,9 @@
 
 #Wait script based on https://github.com/elastic/elasticsearch-py/issues/778#issuecomment-384389668
 host='http://elasticsearch:9200'
+kibanahost='http://kibana:5601/api/status'
 
+#wait for elastic
 until $(curl --output /dev/null --silent --head --fail "$host"); do
     printf '.'
     sleep 5
@@ -15,7 +17,6 @@ done
 
 # First wait for ES to start...
 response=$(curl $host)
-
 until [ "$response" = "200" ]; do
     response=$(curl --write-out %{http_code} --silent --output /dev/null "$host")
     >&2 echo "Elastic Search is unavailable - sleeping"
@@ -34,6 +35,20 @@ until [ "$health" = 'green' ] || [ "$health" = 'yellow' ]; do
     sleep 5
 done
 
+# First wait for Kibana to start...
+response=$(curl $kibanahost)
+until [ "$response" = "200" ]; do
+    response=$(curl --write-out %{http_code} --silent --output /dev/null "$kibanahost")
+    >&2 echo "Kibana is unavailable - sleeping"
+    sleep 5
+done
+
+kibana_health="$(curl -fsSL "$kibanahost")"
+while [[ "$kibana_health" == *"Kibana server is not ready yet"* ]]; do
+    kibana_health="$(curl -fsSL "$kibanahost")"
+    >&2 echo "Kibana is not ready yet."
+    sleep 5
+done
 
 echo "Copy kibana dashboard if they don't exist";
 python import.kibana.py &
