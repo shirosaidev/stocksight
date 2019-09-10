@@ -24,7 +24,7 @@ class SeekAlphaListener(NewsHeadlineListener):
                     article = self.get_article_with_atag(rawArticle, parsed_uri)
                     if self.can_process(article):
                         if config['news']['follow_link']:
-                            body_url = self.get_proper_new_body_url(article.url, parsed_uri)
+                            body_url = article.url
                             for p in self.get_analysis_summary(body_url):
                                 article.body += str(p)+" "
 
@@ -36,7 +36,7 @@ class SeekAlphaListener(NewsHeadlineListener):
                     article = self.get_article_with_atag(rawArticle, parsed_uri)
                     if self.can_process(article):
                         if config['news']['follow_link']:
-                            body_url = self.get_proper_new_body_url(article.url, parsed_uri)
+                            body_url = article.url
                             for p in self.get_news_summary(body_url):
                                 article.body += str(p)+" "
 

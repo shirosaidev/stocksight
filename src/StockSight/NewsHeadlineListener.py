@@ -120,7 +120,7 @@ class NewsHeadlineListener(ABC):
         #ignore 3rd party links
         if url_link.find('http') != -1 and url_link.find(parsed_uri) == -1 :
             return None
-        return Article(a_tag.text, url_link)
+        return Article(a_tag.text, self.get_proper_new_body_url(url_link,parsed_uri))
 
     def get_proper_new_body_url(self, article_url, host):
         if article_url.find('http') != -1:
