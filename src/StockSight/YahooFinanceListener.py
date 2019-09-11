@@ -50,8 +50,8 @@ class YahooFinanceListener(NewsHeadlineListener):
                 n = 1
                 for i in html_p:
                     if n <= max_paragraphs:
-                        if i.string is not None:
-                            yield i.string
+                        if i.text is not None:
+                            yield i.text
                     else:
                         break
                     n += 1

@@ -82,7 +82,7 @@ if __name__ == '__main__':
         for symbol in config['tickers']:
             try:
                 logger.info('Creating new Price index or using existing ' + symbol)
-                es.indices.create(index=config['elasticsearch']['table_prefix']['sentiment']+symbol.lower(),
+                es.indices.create(index=config['elasticsearch']['table_prefix']['price']+symbol.lower(),
                                   body=mapping, ignore=[400, 404])
 
                 stockprice = StockPriceListener()

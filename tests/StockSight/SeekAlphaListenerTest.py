@@ -41,15 +41,21 @@ class SeekAlphaListenerTest(unittest.TestCase):
         self.assertIsNotNone(headlines[0].title, "Title is empty")
         self.assertIsNotNone(headlines[0].url, "URL is empty")
         self.assertNotEqual(headlines[0].referer_url, '', "Refer URL is empty")
-        hasBody = False
+        has_article_body = False
+        has_news_body = False
         for message in headlines:
             if message.body == '':
                 continue
-            else:
-                hasBody = True
-                break
+            elif message.url.find('article') > -1:
+                has_article_body = True
+            elif message.url.find('news') > -1:
+                has_news_body = True
 
-        self.assertEqual(hasBody, True, "Body is empty")
+            if has_article_body and has_news_body:
+                break;
+
+        self.assertEqual(has_news_body, True, "News body is empty")
+        self.assertEqual(has_article_body, True, "Article body is empty")
 
 
     def test_execute(self):

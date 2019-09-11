@@ -3,28 +3,58 @@ mapping = {
     "mappings": {
         "properties": {
             "author": {
-                "type": "keyword",
+                "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             },
             "referer_url": {
-                "type": "keyword",
+                "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             },
             "url": {
                 "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             },
             "location": {
-                "type": "keyword",
+                "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             },
             "date": {
                 "type": "date"
             },
             "title": {
                 "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             },
             "message": {
                 "type": "text",
             },
             "msg_id": {
-                "type": "keyword"
+                "type": "keyword",
             },
             "polarity": {
                 "type": "float"
@@ -33,7 +63,13 @@ mapping = {
                 "type": "float"
             },
             "sentiment": {
-                "type": "keyword",
+                "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             }
         }
     },

@@ -11,10 +11,7 @@ stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
-try:
-    from elasticsearch5 import Elasticsearch
-except ImportError:
-    from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch
 
 from StockSight.Initializer.ConfigReader import config
 

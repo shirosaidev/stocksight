@@ -61,8 +61,8 @@ class SeekAlphaListener(NewsHeadlineListener):
 
             if html_p:
                 for i in html_p:
-                    if i.string is not None:
-                        yield i.string
+                    if i.text is not None:
+                        yield i.text
                     else:
                         break
 
@@ -79,8 +79,8 @@ class SeekAlphaListener(NewsHeadlineListener):
 
             if html_p:
                 for i in html_p:
-                    if i.string is not None:
-                        yield i.string
+                    if i.text is not None:
+                        yield i.text
                     else:
                         break
 
