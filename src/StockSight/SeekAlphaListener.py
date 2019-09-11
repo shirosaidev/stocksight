@@ -54,7 +54,7 @@ class SeekAlphaListener(NewsHeadlineListener):
         pass
 
     def get_news_summary(self, url):
-        time.sleep(5)
+        time.sleep(self.delay)
         try:
             req = requests.get(url)
             html = req.text
@@ -73,7 +73,7 @@ class SeekAlphaListener(NewsHeadlineListener):
             pass
 
     def get_analysis_summary(self, url):
-        time.sleep(5)
+        time.sleep(self.delay)
         try:
             req = requests.get(str(url))
             html = req.text
