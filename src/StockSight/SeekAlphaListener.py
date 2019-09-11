@@ -1,10 +1,11 @@
 from StockSight.NewsHeadlineListener import *
-
+import time
 
 class SeekAlphaListener(NewsHeadlineListener):
     def __init__(self, symbol):
         super(SeekAlphaListener, self)\
             .__init__("Seek Alpha", symbol, "https://seekingalpha.com/symbol/%s" % symbol)
+        self.delay = 10
 
     def get_news_headlines(self):
 
@@ -53,6 +54,7 @@ class SeekAlphaListener(NewsHeadlineListener):
         pass
 
     def get_news_summary(self, url):
+        time.sleep(5)
         try:
             req = requests.get(url)
             html = req.text
@@ -71,6 +73,7 @@ class SeekAlphaListener(NewsHeadlineListener):
             pass
 
     def get_analysis_summary(self, url):
+        time.sleep(5)
         try:
             req = requests.get(str(url))
             html = req.text
