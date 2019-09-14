@@ -12,6 +12,8 @@ LICENSE for the full license text.
 """
 import re
 from datetime import datetime
+import time
+from random import randint
 
 
 import nltk
@@ -27,6 +29,7 @@ from StockSight.Initializer.ElasticSearch import es
 from StockSight.Initializer.Redis import rds
 from StockSight.Helper.Sentiment import *
 from StockSight.Model.Article import *
+
 
 
 class NewsHeadlineListener(ABC):
@@ -83,7 +86,8 @@ class NewsHeadlineListener(ABC):
                     continue
 
                 # get sentiment values
-                polarity, subjectivity, sentiment = sentiment_analysis(article_obj.title + "/n" + article_obj.body)
+                polarity, subjectivity, sentiment = sentiment_analysis(article_obj.title, True)
+                msg_polarity, msg_subjectivity, msg_sentiment = sentiment_analysis(article_obj.body)
 
                 logger.info("Adding news headline to elasticsearch")
                 # add news headline data and sentiment info to elasticsearch
@@ -98,7 +102,10 @@ class NewsHeadlineListener(ABC):
                                "message": article_obj.body,
                                "polarity": polarity,
                                "subjectivity": subjectivity,
-                               "sentiment": sentiment
+                               "sentiment": sentiment,
+                               "msg_polarity": msg_polarity,
+                               "msg_subjectivity": msg_subjectivity,
+                               "msg_sentiment": msg_sentiment
                          })
 
                 rds.set(article_obj.msg_id, 1, self.cache_length)
@@ -130,3 +137,10 @@ class NewsHeadlineListener(ABC):
 
     def can_process(self, article):
         return article is not None and rds.exists(article.msg_id) is 0
+
+    def get_soup(self, url):
+        time.sleep(randint(1,3))
+        req = requests.get(self.url)
+        html = req.text
+        soup = BeautifulSoup(html, 'html.parser')
+        return soup

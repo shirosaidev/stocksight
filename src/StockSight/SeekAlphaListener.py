@@ -1,11 +1,11 @@
 from StockSight.NewsHeadlineListener import *
 import time
+from random import randint
 
 class SeekAlphaListener(NewsHeadlineListener):
     def __init__(self, symbol):
         super(SeekAlphaListener, self)\
             .__init__("Seek Alpha", symbol, "https://seekingalpha.com/symbol/%s" % symbol)
-        self.delay = 10
 
     def get_news_headlines(self):
 
@@ -14,20 +14,20 @@ class SeekAlphaListener(NewsHeadlineListener):
         parsed_uri = urlparse.urljoin(self.url, '/')
 
         try:
-            req = requests.get(self.url)
-            html = req.text
-            soup = BeautifulSoup(html, 'html.parser')
+            soup = self.get_soup(self.url)
             analysis = soup.select('div.analysis div.symbol_article')
             news = soup.select('div.news div.symbol_article')
 
             if analysis:
+
                 for rawArticle in analysis:
                     article = self.get_article_with_atag(rawArticle, parsed_uri)
                     if self.can_process(article):
-                        if config['news']['follow_link']:
-                            body_url = article.url
-                            for p in self.get_analysis_summary(body_url):
-                                article.body += str(p)+" "
+
+                        # if config['news']['follow_link']:
+                        #     body_url = article.url
+                        #     for p in self.get_analysis_summary(body_url, 'p.bullets_li'):
+                        #         article.body += str(p)+" "
 
                         article.referer_url = self.url
                         articles.append(article)
@@ -36,10 +36,11 @@ class SeekAlphaListener(NewsHeadlineListener):
                 for rawArticle in news:
                     article = self.get_article_with_atag(rawArticle, parsed_uri)
                     if self.can_process(article):
-                        if config['news']['follow_link']:
-                            body_url = article.url
-                            for p in self.get_news_summary(body_url):
-                                article.body += str(p)+" "
+
+                        # if config['news']['follow_link']:
+                        #     body_url = article.url
+                        #     for p in self.get_summary(body_url, 'div.a-sum p'):
+                        #         article.body += str(p)+" "
 
                         article.referer_url = self.url
                         articles.append(article)
@@ -53,32 +54,10 @@ class SeekAlphaListener(NewsHeadlineListener):
     def get_page_text(self, url):
         pass
 
-    def get_news_summary(self, url):
-        time.sleep(self.delay)
+    def get_summary(self, url, selector):
         try:
-            req = requests.get(url)
-            html = req.text
-            soup = BeautifulSoup(html, 'html.parser')
-            html_p = soup.select('p.bullets_li')
-
-            if html_p:
-                for i in html_p:
-                    if i.text is not None:
-                        yield i.text
-                    else:
-                        break
-
-        except requests.exceptions.RequestException as exce:
-            logger.warning("Exception: can't crawl web site (%s)" % exce)
-            pass
-
-    def get_analysis_summary(self, url):
-        time.sleep(self.delay)
-        try:
-            req = requests.get(str(url))
-            html = req.text
-            soup = BeautifulSoup(html, 'html.parser')
-            html_p = soup.select('div.a-sum p')
+            soup = self.get_soup(url)
+            html_p = soup.select(selector)
 
             if html_p:
                 for i in html_p:

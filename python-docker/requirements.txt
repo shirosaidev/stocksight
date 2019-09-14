@@ -8,3 +8,4 @@ vaderSentiment
 pytz
 redis
 pyyaml
+fake-useragent

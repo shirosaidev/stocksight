@@ -14,6 +14,7 @@ import time
 import datetime
 import re
 import requests
+import os
 from pytz import timezone
 
 from StockSight.Initializer.ConfigReader import *
@@ -34,7 +35,8 @@ class StockPriceListener:
         if self.index_name is None:
             self.index_name = config['elasticsearch']['table_prefix']['price']+symbol.lower()
 
-        url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=2m&range=5d&corsDomain=finance.yahoo.com&.tsrc=finance"
+        tick_time = int(os.getenv('tick_time', 900)) / 60
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=%sm&range=2d&corsDomain=finance.yahoo.com&.tsrc=finance" % tick_time
 
         current_timezone = timezone(config['stock_price']['timezone_str'])
 
@@ -78,12 +80,23 @@ class StockPriceListener:
                         D['change'] = 0
 
                     pass
+
                 D['high'] = data['chart']['result'][0]['indicators']['quote'][0]['high'][-1]
                 if D['high'] is None:
                     D['high'] = data['chart']['result'][0]['indicators']['quote'][0]['high'][-2]
+
                 D['low'] = data['chart']['result'][0]['indicators']['quote'][0]['low'][-1]
                 if D['low'] is None:
                     D['low'] = data['chart']['result'][0]['indicators']['quote'][0]['low'][-2]
+
+                D['open'] = data['chart']['result'][0]['indicators']['quote'][0]['open'][-1]
+                if D['open'] is None:
+                    D['open'] = data['chart']['result'][0]['indicators']['quote'][0]['open'][-2]
+
+                D['close'] = data['chart']['result'][0]['indicators']['quote'][0]['close'][-1]
+                if D['close'] is None:
+                    D['close'] = data['chart']['result'][0]['indicators']['quote'][0]['close'][-2]
+
                 D['vol'] = data['chart']['result'][0]['indicators']['quote'][0]['volume'][-1]
                 if D['vol'] is None:
                     D['vol'] = data['chart']['result'][0]['indicators']['quote'][0]['volume'][-2]
@@ -103,6 +116,8 @@ class StockPriceListener:
                                "change": D['change'],
                                "price_high": D['high'],
                                "price_low": D['low'],
+                               "price_open": D['open'],
+                               "price_close": D['close'],
                                "vol": D['vol']
                                })
             else:

@@ -26,23 +26,32 @@ services:
     #expose this port for local dev only!
     ports:
       - "9200:9200"
+    restart: unless-stopped
   redis:
     build:
       context: ./redis-docker
     #expose this port for local dev only!
     ports:
       - "6379:6379"
+    restart: unless-stopped
   kibana:
     image: docker.elastic.co/kibana/kibana:7.3.1
     depends_on:
       - elasticsearch
     ports:
       - "5601:5601"
+    restart: unless-stopped
   python3:
     build:
       context: ./python-docker
+    environment:
+      #interval for getting stock price (in seconds)
+      - tick_time=900
+      #interval for getting stock news (tick_time * news_cycle)
+      - news_cycle=4
     depends_on:
       - elasticsearch
       - redis
     volumes:
       - ./src:/usr/src/app
+    restart: unless-stopped

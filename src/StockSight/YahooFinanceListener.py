@@ -1,4 +1,6 @@
 from StockSight.NewsHeadlineListener import *
+import time
+from random import randint
 
 
 class YahooFinanceListener(NewsHeadlineListener):
@@ -13,10 +15,7 @@ class YahooFinanceListener(NewsHeadlineListener):
         parsed_uri = urlparse.urljoin(self.url, '/')
 
         try:
-
-            req = requests.get(self.url)
-            html = req.text
-            soup = BeautifulSoup(html, 'html.parser')
+            soup = self.get_soup(self.url)
             html = soup.findAll('h3')
 
             if html:
@@ -41,9 +40,7 @@ class YahooFinanceListener(NewsHeadlineListener):
     def get_page_text(self, url):
         max_paragraphs = 5
         try:
-            req = requests.get(url)
-            html = req.text
-            soup = BeautifulSoup(html, 'html.parser')
+            soup = self.get_soup(url)
             html_p = soup.findAll('p')
 
             if html_p:

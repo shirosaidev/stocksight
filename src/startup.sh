@@ -15,7 +15,7 @@ until $(curl --output /dev/null --silent --head --fail "$host"); do
     sleep 5
 done
 
-# First wait for ES to start...
+# wait for ES to start...
 response=$(curl $host)
 until [ "$response" = "200" ]; do
     response=$(curl --write-out %{http_code} --silent --output /dev/null "$host")
@@ -35,7 +35,7 @@ until [ "$health" = 'green' ] || [ "$health" = 'yellow' ]; do
     sleep 5
 done
 
-# First wait for Kibana to start...
+# wait for Kibana to start...
 response=$(curl $kibanahost)
 until [ "$response" = "200" ]; do
     response=$(curl --write-out %{http_code} --silent --output /dev/null "$kibanahost")
@@ -50,12 +50,12 @@ while [[ "$kibana_health" == *"Kibana server is not ready yet"* ]]; do
     sleep 5
 done
 
+#Copy kibana dashboards
 echo "Copy kibana dashboard if they don't exist";
 python import.kibana.py &
 
-tick_time=900
 tick=0
-let sentiment_time=900*4
+let sentiment_time=$tick_time*$news_cycle
 
 #echo "Spawning Tweet Sentiment receiver instance";
 #python tweet.sentiment.py &
@@ -65,7 +65,7 @@ do
     echo "Spawning stock price receiver instance";
     python stockprice.py &
     echo "Will get stock data again in ${tick_time} sec...";
-    let tick_mod=tick%4
+    let tick_mod=tick%$news_cycle
 
     if [ $tick_mod -eq 0 ]
     then

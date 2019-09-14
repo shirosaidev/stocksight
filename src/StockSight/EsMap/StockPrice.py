@@ -20,6 +20,12 @@ mapping = {
             "price_low": {
                 "type": "float"
             },
+            "price_open": {
+                "type": "float"
+            },
+            "price_close": {
+                "type": "float"
+            },
             "vol": {
                 "type": "integer"
             }

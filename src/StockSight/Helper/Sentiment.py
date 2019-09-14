@@ -57,7 +57,7 @@ def get_sentiment_from_url(text, sentiment_url):
     return sentiment
 
 
-def sentiment_analysis(text):
+def sentiment_analysis(text, online = False):
     """Determine if sentiment is positive, negative, or neutral
     algorithm to figure out if sentiment is positive, negative or neutral
     uses sentiment polarity from TextBlob, VADER Sentiment and
@@ -65,9 +65,11 @@ def sentiment_analysis(text):
     could be made better :)
     :param text:
     """
-    sentiment_url = 'http://text-processing.com/api/sentiment/'
-    # pass text into sentiment url
-    sentiment_url = get_sentiment_from_url(text, sentiment_url)
+    sentiment_url = None;
+    if online == True:
+        sentiment_url = 'http://text-processing.com/api/sentiment/'
+        # pass text into sentiment url
+        sentiment_url = get_sentiment_from_url(text, sentiment_url)
 
     # pass text into TextBlob
     text_tb = TextBlob(text)

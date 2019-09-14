@@ -70,6 +70,21 @@ mapping = {
                         "ignore_above": 256
                       }
                 }
+            },
+            "msg_polarity": {
+                "type": "float"
+            },
+            "msg_subjectivity": {
+                "type": "float"
+            },
+            "msg_sentiment": {
+                "type": "text",
+                "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                }
             }
         }
     },

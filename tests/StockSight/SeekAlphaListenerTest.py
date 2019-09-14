@@ -6,7 +6,7 @@ import time
 
 class SeekAlphaListenerTest(unittest.TestCase):
 
-    symbol = 'tsla'
+    symbol = 'amd'
 
     def setUp(self):
         config['redis']['db'] = 1
@@ -33,6 +33,7 @@ class SeekAlphaListenerTest(unittest.TestCase):
         self.assertIsNotNone(headlines[0].url, "URL is empty")
         self.assertIsNotNone(headlines[0].referer_url, "Refer URL is empty")
 
+    #always fails b/c of 403.
     def test_get_news_headlines_with_body(self):
         config['news']['follow_link'] = True
         headlines = self.mainClass.get_news_headlines()
@@ -41,21 +42,13 @@ class SeekAlphaListenerTest(unittest.TestCase):
         self.assertIsNotNone(headlines[0].title, "Title is empty")
         self.assertIsNotNone(headlines[0].url, "URL is empty")
         self.assertNotEqual(headlines[0].referer_url, '', "Refer URL is empty")
-        has_article_body = False
-        has_news_body = False
+
+        empty_bodies = 0
         for message in headlines:
             if message.body == '':
-                continue
-            elif message.url.find('article') > -1:
-                has_article_body = True
-            elif message.url.find('news') > -1:
-                has_news_body = True
+                empty_bodies += 1
 
-            if has_article_body and has_news_body:
-                break;
-
-        self.assertEqual(has_news_body, True, "News body is empty")
-        self.assertEqual(has_article_body, True, "Article body is empty")
+        self.assertAlmostEqual(empty_bodies, 0, None, "There are %s empty bodies in %s headlines" % (empty_bodies, headlines.__len__()), 5)
 
 
     def test_execute(self):
