@@ -126,7 +126,7 @@ if __name__ == '__main__':
                     raise
 
         # search twitter for keywords
-        logger.info('NLTK tokens required: ' + str(config['tickers']))
+        logger.info('NLTK tokens required: ' + str(config['symbols']))
         logger.info('NLTK tokens ignored: ' + str(config['sentiment_analyzer']['ignore_words']))
         logger.info('Twitter Feeds: ' + str(twitter_feeds))
         logger.info('Twitter User Ids: ' + str(useridlist))

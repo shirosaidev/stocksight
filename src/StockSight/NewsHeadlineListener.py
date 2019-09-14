@@ -70,8 +70,8 @@ class NewsHeadlineListener(ABC):
                         continue
 
                 nltk_tokens = []
-                if self.symbol in config['tickers']:
-                    nltk_tokens = config['tickers'][self.symbol]
+                if self.symbol in config['symbols']:
+                    nltk_tokens = config['symbols'][self.symbol]
 
                 # check required tokens from config
                 tokenspass = False

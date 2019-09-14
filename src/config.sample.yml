@@ -46,7 +46,7 @@ stock_price:
   hour_end      : 17
   timezone_str  : America/Toronto
 
-tickers:
+symbols:
   tsla:
     - tesla
     - tsla

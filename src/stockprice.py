@@ -79,7 +79,7 @@ if __name__ == '__main__':
         requestslogger.disabled = True
 
     try:
-        for symbol in config['tickers']:
+        for symbol in config['symbols']:
             try:
                 logger.info('Creating new Price index or using existing ' + symbol)
                 es.indices.create(index=config['elasticsearch']['table_prefix']['price']+symbol.lower(),

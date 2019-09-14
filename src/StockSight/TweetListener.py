@@ -113,9 +113,9 @@ class TweetStreamListener(StreamListener):
                     return True
             # check required tokens from config
             tokenspass = False
-            for key in config['tickers']:
+            for key in config['symbols']:
                 self.symbol = key
-                for t in config['tickers'][key]:
+                for t in config['symbols'][key]:
                     if t in tokens:
                         tokenspass = True
                         break

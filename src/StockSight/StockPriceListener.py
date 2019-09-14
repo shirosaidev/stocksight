@@ -35,7 +35,7 @@ class StockPriceListener:
         if self.index_name is None:
             self.index_name = config['elasticsearch']['table_prefix']['price']+symbol.lower()
 
-        tick_time = int(os.getenv('tick_time', 900)) / 60
+        tick_time = int(int(os.getenv('tick_time', 900)) / 60)
         url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=%sm&range=2d&corsDomain=finance.yahoo.com&.tsrc=finance" % tick_time
 
         current_timezone = timezone(config['stock_price']['timezone_str'])

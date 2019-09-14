@@ -11,6 +11,7 @@ LICENSE for the full license text.
 """
 import requests
 import sys
+import os
 from StockSight.Initializer.ConfigReader import *
 
 if __name__ == '__main__':
@@ -20,7 +21,7 @@ if __name__ == '__main__':
         import_template = template_file.read()
         template_file.close()
 
-        for symbol in config['tickers']:
+        for symbol in config['symbols']:
             try:
                 print("Starting %s Kibana Dashboard Import" % symbol)
                 ndjson_file_path = 'kibana_export/'+symbol+'_exports.ndjson'
@@ -30,9 +31,15 @@ if __name__ == '__main__':
                 ndjson_file.close()
 
                 kibana_import_url = 'http://kibana:5601/api/saved_objects/_import'
-                payload = {'overwrite': 'false'}
+
+                overwrite = os.getenv('KIBANA_OVERWRITE', False)
+                if overwrite is False:
+                    payload = {}
+                else:
+                    payload = {'overwrite': 'true'}
+
                 headers = {'kbn-xsrf': 'True'}
-                post = requests.request('POST', kibana_import_url, headers=headers, files={'file': open(ndjson_file_path, "rt", encoding='utf-8')})
+                post = requests.request('POST', kibana_import_url, params=payload, headers=headers, files={'file': open(ndjson_file_path, "rt", encoding='utf-8')})
                 print("Imported %s Kibana Dashboard" % symbol)
                 print(ndjson_file_path)
                 print(post.text)
