@@ -105,7 +105,8 @@ class StockPriceListener:
                 raise
 
             # check before adding to ES
-            if D['last'] is not None and D['high'] is not None and D['low'] is not None:
+            if D['last'] is not None and D['high'] is not None and D['low'] is not None \
+                    and D['open'] is not None and D['close'] is not None:
                 logger.info("Adding stock data to Elasticsearch...")
                 # add stock price info to elasticsearch
                 es.index(index=self.index_name,
