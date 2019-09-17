@@ -11,11 +11,9 @@ stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
-import argparse
+
 import sys
 import threading
-import time
-from random import randint
 
 from StockSight.YahooFinanceListener import *
 from StockSight.SeekAlphaListener import *
@@ -27,31 +25,6 @@ __version__ = STOCKSIGHT_VERSION
 
 
 if __name__ == '__main__':
-    # parse cli args
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--verbose", action="store_true",
-                        help="Increase output verbosity")
-    parser.add_argument("--debug", action="store_true",
-                        help="Debug message output")
-    parser.add_argument("-q", "--quiet", action="store_true",
-                        help="Run quiet with no message output")
-    parser.add_argument("-V", "--version", action="version",
-                        version="stocksight v%s" % STOCKSIGHT_VERSION,
-                        help="Prints version and exits")
-    args = parser.parse_args()
-
-    if args.verbose:
-        logger.setLevel(logging.INFO)
-        eslogger.setLevel(logging.INFO)
-        requestslogger.setLevel(logging.INFO)
-    if args.debug:
-        logger.setLevel(logging.DEBUG)
-        eslogger.setLevel(logging.DEBUG)
-        requestslogger.setLevel(logging.DEBUG)
-    if args.quiet:
-        logger.disabled = True
-        eslogger.disabled = True
-        requestslogger.disabled = True
 
     try:
         for symbol in config['symbols']:

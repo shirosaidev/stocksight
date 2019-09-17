@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""stockprice.py - get stock price from Yahoo and add to
-Elasticsearch.
-See README.md or https://github.com/shirosaidev/stocksight
-for more information.
+"""
+Global Loggers
 
-Copyright (C) Chris Park 2018
+Copyright (C) Chris Park 2018-2019
 Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
 import logging
-
+from StockSight.Initializer.ConfigReader import config
 
 # set up logging
 logger = logging.getLogger('stocksight')
@@ -36,3 +34,17 @@ logging.addLevelName(
 logformatter = '%(asctime)s [%(levelname)s][%(name)s] %(message)s'
 loglevel = logging.INFO
 logging.basicConfig(format=logformatter, level=loglevel)
+
+
+if config['console_output_mode'] is 'verbose':
+    logger.setLevel(logging.INFO)
+    eslogger.setLevel(logging.INFO)
+    requestslogger.setLevel(logging.INFO)
+elif config['console_output_mode'] is 'debug':
+    logger.setLevel(logging.DEBUG)
+    eslogger.setLevel(logging.DEBUG)
+    requestslogger.setLevel(logging.DEBUG)
+elif config['console_output_mode'] is 'quiet':
+    logger.disabled = True
+    eslogger.disabled = True
+    requestslogger.disabled = True

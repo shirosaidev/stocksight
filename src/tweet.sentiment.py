@@ -5,7 +5,7 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Chris Park 2018
+Copyright (C) Chris Park 2018-2019
 Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
@@ -15,7 +15,6 @@ import argparse
 import sys
 from random import randint
 
-from StockSight.Initializer.ConfigReader import *
 from StockSight.TweetListener import *
 from StockSight.EsMap.Sentiment import *
 from tweepy import API, Stream, OAuthHandler, TweepError
@@ -26,31 +25,7 @@ __version__ = STOCKSIGHT_VERSION
 
 
 if __name__ == '__main__':
-    # parse cli args
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--verbose", action="store_true",
-                        help="Increase output verbosity")
-    parser.add_argument("--debug", action="store_true",
-                        help="Debug message output")
-    parser.add_argument("-q", "--quiet", action="store_true",
-                        help="Run quiet with no message output")
-    parser.add_argument("-V", "--version", action="version",
-                        version="stocksight v%s" % STOCKSIGHT_VERSION,
-                        help="Prints version and exits")
-    args = parser.parse_args()
 
-    if args.verbose:
-        logger.setLevel(logging.INFO)
-        eslogger.setLevel(logging.INFO)
-        requestslogger.setLevel(logging.INFO)
-    if args.debug:
-        logger.setLevel(logging.DEBUG)
-        eslogger.setLevel(logging.DEBUG)
-        requestslogger.setLevel(logging.DEBUG)
-    if args.quiet:
-        logger.disabled = True
-        eslogger.disabled = True
-        requestslogger.disabled = True
 
     consumer_key = config['twitter']['consumer_key']
     consumer_secret = config['twitter']['consumer_secret']
@@ -62,7 +37,7 @@ if __name__ == '__main__':
        not consumer_secret or \
        not access_token or \
        not access_token_secret:
-        logger.warning("Invalid Twitter API cred")
+        logger.error("Invalid Twitter API cred")
         sys.exit(1)
 
     try:

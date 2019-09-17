@@ -1,6 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""SeekAlphaListener.py - get headline sentiment from SeekingAlpha and add to
+Elasticsearch.
+See README.md or https://github.com/shirosaidev/stocksight
+for more information.
+
+Copyright (C) Chris Park 2018-2019
+Copyright (C) Allen (Jian Feng) Xie 2019
+stocksight is released under the Apache 2.0 license. See
+LICENSE for the full license text.
+"""
 from StockSight.NewsHeadlineListener import *
-import time
-from random import randint
 
 
 class YahooFinanceListener(NewsHeadlineListener):

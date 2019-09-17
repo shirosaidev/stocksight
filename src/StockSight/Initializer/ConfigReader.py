@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Global Config Reader
+
+Copyright (C) Allen (Jian Feng) Xie 2019
+stocksight is released under the Apache 2.0 license. See
+LICENSE for the full license text.
+"""
 import yaml
 from definitions import PROJECT_SRC_PATH
 

@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Yahoo Finance News Test
+
+Copyright (C) Allen (Jian Feng) Xie 2019
+stocksight is released under the Apache 2.0 license. See
+LICENSE for the full license text.
+"""
 import unittest
 from StockSight.YahooFinanceListener import *
 from StockSight.EsMap.Sentiment import mapping
@@ -49,7 +57,7 @@ class YahooFinanceListenerTest(unittest.TestCase):
     def test_execute(self):
         self.mainClass.index_name = self.index_name
         self.mainClass.execute()
-        time.sleep(1)
+        time.sleep(5)
         logs = es.search(index=self.index_name,body="{}")
         message = logs['hits']['hits'][0]['_source']
         self.assertIsNotNone(message['title'], "Title is empty")

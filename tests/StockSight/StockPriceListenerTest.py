@@ -1,5 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+""" Stock Price listener test
+
+Copyright (C) Allen (Jian Feng) Xie 2019
+stocksight is released under the Apache 2.0 license. See
+LICENSE for the full license text.
+"""
+
 import unittest
-import time
 from StockSight.StockPriceListener import *
 from StockSight.EsMap.StockPrice import mapping
 

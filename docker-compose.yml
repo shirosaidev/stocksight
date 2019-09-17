@@ -24,15 +24,15 @@ services:
         soft: 4096
         hard: 4096
     #expose this port for local dev only!
-    #ports:
-    #  - "9200:9200"
+    ports:
+      - "9200:9200"
     restart: unless-stopped
   redis:
     build:
       context: ./redis-docker
     #expose this port for local dev only!
-    #ports:
-    #  - "6379:6379"
+    ports:
+      - "6379:6379"
     restart: unless-stopped
   kibana:
     image: docker.elastic.co/kibana/kibana:7.3.1
@@ -45,10 +45,10 @@ services:
     build:
       context: ./python-docker
     environment:
-      #interval for getting stock price (in seconds)
-      - tick_time=900
-      #interval for getting stock news (tick_time * news_cycle)
-      - news_cycle=4
+      #interval for getting stock price in seconds
+      - stockprice_tick_time=120
+      #interval for getting stock news in seconds
+      - news_sentiment_tick_time=3600
     depends_on:
       - elasticsearch
       - redis

@@ -5,7 +5,7 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Chris Park 2018
+Copyright (C) Chris Park 2018-2019
 Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
@@ -14,7 +14,6 @@ import time
 import datetime
 import re
 import requests
-import os
 from pytz import timezone
 
 from StockSight.Initializer.ConfigReader import *
@@ -35,8 +34,7 @@ class StockPriceListener:
         if self.index_name is None:
             self.index_name = config['elasticsearch']['table_prefix']['price']+symbol.lower()
 
-        tick_time = int(int(os.getenv('tick_time', 900)) / 60)
-        url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=%sm&range=2d&corsDomain=finance.yahoo.com&.tsrc=finance" % tick_time
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=2m&range=2d&corsDomain=finance.yahoo.com&.tsrc=finance"
 
         current_timezone = timezone(config['stock_price']['timezone_str'])
 
@@ -66,19 +64,19 @@ class StockPriceListener:
                 if D['last'] is None:
                     D['last'] = data['chart']['result'][0]['indicators']['quote'][0]['close'][-2]
                 D['date'] = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())  # time now in gmt (utc)
+
                 try:
                     D['change'] = (data['chart']['result'][0]['indicators']['quote'][0]['close'][-1] -
-                                   data['chart']['result'][0]['indicators']['quote'][0]['open'][-1]) / \
-                                    data['chart']['result'][0]['indicators']['quote'][0]['open'][-1] * 100
+                                   data['chart']['result'][0]['indicators']['quote'][0]['close'][-2]) / \
+                                    data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] * 100
                 except TypeError:
-                    if data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] is not None and \
-                       data['chart']['result'][0]['indicators']['quote'][0]['open'][-2] is not None:
+                    if(data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] is not None and \
+                       data['chart']['result'][0]['indicators']['quote'][0]['open'][-3] is not None):
                         D['change'] = (data['chart']['result'][0]['indicators']['quote'][0]['close'][-2] -
-                                       data['chart']['result'][0]['indicators']['quote'][0]['open'][-2]) / \
-                                      data['chart']['result'][0]['indicators']['quote'][0]['open'][-2] * 100
+                                       data['chart']['result'][0]['indicators']['quote'][0]['close'][-3]) / \
+                                      data['chart']['result'][0]['indicators']['quote'][0]['close'][-3] * 100
                     else:
-                        D['change'] = 0
-
+                        D['change'] = 0;
                     pass
 
                 D['high'] = data['chart']['result'][0]['indicators']['quote'][0]['high'][-1]

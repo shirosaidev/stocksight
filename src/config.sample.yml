@@ -1,8 +1,8 @@
 elasticsearch:
   host      : elasticsearch
   port      : 9200
-  user      : your_cred
-  password  : your_cred
+  user      : elastic
+  password  : changeme
   table_prefix:
     sentiment : stocksight_sentiment_
     price     : stocksight_price_
@@ -18,14 +18,16 @@ sentiment_analyzer:
     - giveaway
     - vs
 
+console_output_mode: normal #normal, verbose, debug, quiet
+
 news:
-    follow_link: false
+    follow_link: true
 
 twitter:
-  consumer_key        : your_cred
-  consumer_secret     : your_cred
-  access_token        : your_cred
-  access_token_secret : your_cred
+  consumer_key        :
+  consumer_secret     :
+  access_token        :
+  access_token_secret :
   min_followers       : 1000
   feeds               :
     - '@elonmusk'
@@ -39,8 +41,8 @@ twitter:
     - '@reutersbiz'
 
 stock_price:
-  time_check    : true  #True, fetch the price only within the below time range
-  weekday_start : 0
+  time_check    : false  #True, fetch the price only within the below time range
+  weekday_start : 0 #0 is Monday, 6 is Sunday
   weekday_end   : 4
   hour_start    : 9
   hour_end      : 17

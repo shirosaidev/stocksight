@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+""" Seeking Alpha Listener Tests
+
+Copyright (C) Allen (Jian Feng) Xie 2019
+stocksight is released under the Apache 2.0 license. See
+LICENSE for the full license text.
+"""
+
 import unittest
 from StockSight.SeekAlphaListener import *
 from StockSight.EsMap.Sentiment import mapping
@@ -33,7 +42,7 @@ class SeekAlphaListenerTest(unittest.TestCase):
         self.assertIsNotNone(headlines[0].url, "URL is empty")
         self.assertIsNotNone(headlines[0].referer_url, "Refer URL is empty")
 
-    #always fails b/c of 403.
+    #always fails b/c of 403 requests.
     def test_get_news_headlines_with_body(self):
         config['news']['follow_link'] = True
         headlines = self.mainClass.get_news_headlines()
@@ -54,7 +63,7 @@ class SeekAlphaListenerTest(unittest.TestCase):
     def test_execute(self):
         self.mainClass.index_name = self.index_name
         self.mainClass.execute()
-        time.sleep(1)
+        time.sleep(5)
         logs = es.search(index=self.index_name,body="{}")
         message = logs['hits']['hits'][0]['_source']
         self.assertIsNotNone(message['title'], "Title is empty")

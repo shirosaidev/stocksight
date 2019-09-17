@@ -55,26 +55,30 @@ echo "Copy kibana dashboard if they don't exist";
 python import.kibana.py &
 
 tick=0
-let sentiment_time=$tick_time*$news_cycle
+stockprice_tick_time=${stockprice_tick_time:-120}
+news_sentiment_tick_time=${news_sentiment_tick_time:-3600}
+news_cycle=$(($news_sentiment_tick_time/$stockprice_tick_time))
+news_cycle=${news_cycle%%.*}
 
-#echo "Spawning Tweet Sentiment receiver instance";
-#python tweet.sentiment.py &
+echo "Spawning Tweet Sentiment receiver instance";
+python tweet.sentiment.py &
 
 while true
 do
     echo "Spawning stock price receiver instance";
     python stockprice.py &
-    echo "Will get stock data again in ${tick_time} sec...";
-    let tick_mod=tick%$news_cycle
+    echo "Will get stock data again in ${stockprice_tick_time} sec...";
+
+    tick_mod=$((tick%$news_cycle))
 
     if [ $tick_mod -eq 0 ]
     then
         echo "Spawning News Headline Sentiment receiver instance";
         python news.sentiment.py &
-        echo "Will get sentiment data again in ${sentiment_time} sec...";
+        echo "Will get sentiment data again in ${news_sentiment_tick_time} sec...";
         let tick=0;
     fi
 
-    sleep $tick_time
+    sleep $stockprice_tick_time
     let tick++
 done

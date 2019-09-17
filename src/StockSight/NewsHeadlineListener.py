@@ -5,7 +5,7 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Chris Park 2018
+Copyright (C) Chris Park 2018-2019
 Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
@@ -24,7 +24,6 @@ try:
 except ImportError:
     import urlparse
 
-from StockSight.Initializer.ConfigReader import config
 from StockSight.Initializer.ElasticSearch import es
 from StockSight.Initializer.Redis import rds
 from StockSight.Helper.Sentiment import *
@@ -139,8 +138,9 @@ class NewsHeadlineListener(ABC):
         return article is not None and rds.exists(article.msg_id) is 0
 
     def get_soup(self, url):
+        #try not to spam the server, but if you run with 100 stock symbols, it's probably going to spam it anyway lol.
         time.sleep(randint(1,3))
-        req = requests.get(self.url)
+        req = requests.get(url)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')
         return soup

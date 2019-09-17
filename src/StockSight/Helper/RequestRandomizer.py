@@ -1,7 +1,14 @@
-#  implement random proxy
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+implement random proxy / random user agent
+
+Copyright (C) Allen (Jian Feng) Xie 2019
+stocksight is released under the Apache 2.0 license. See
+LICENSE for the full license text.
+"""
 
 #https://github.com/hellysmile/fake-useragent    implement random user-agent
-
 from fake_useragent import UserAgent
 import requests
 from random import randint
@@ -10,6 +17,7 @@ from StockSight.Initializer.Redis import rds
 
 class RequestRandomizer:
 
+    # It doesn't test validate the proxy server.  That should be handled by the requests in the caller method
     @staticmethod
     def get_a_proxy():
         ip_list = RequestRandomizer.get_raw_ip_list()
@@ -39,7 +47,7 @@ class RequestRandomizer:
 
         return ip_list
 
-
+    # Get a fake user agent.  It may need some work to implement newer browsers.
     @staticmethod
     def get_a_user_agent():
         ua = UserAgent()
