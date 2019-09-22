@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """ Seeking Alpha Listener Tests
 
+Copyright (C) Chris Park 2018-2019
 Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
@@ -63,7 +64,7 @@ class SeekAlphaListenerTest(unittest.TestCase):
     def test_execute(self):
         self.mainClass.index_name = self.index_name
         self.mainClass.execute()
-        time.sleep(5)
+        time.sleep(3)
         logs = es.search(index=self.index_name,body="{}")
         message = logs['hits']['hits'][0]['_source']
         self.assertIsNotNone(message['title'], "Title is empty")

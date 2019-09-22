@@ -35,7 +35,7 @@ class YahooFinanceListener(NewsHeadlineListener):
                     if self.can_process(article):
                         if config['news']['follow_link']:
                             body_url = article.url
-                            for p in self.get_page_text(body_url):
+                            for p in self.get_page_text(body_url, 'p'):
                                 article.body += str(p)+" "
 
                         article.referer_url = self.url
@@ -47,11 +47,11 @@ class YahooFinanceListener(NewsHeadlineListener):
 
         return articles
 
-    def get_page_text(self, url):
-        max_paragraphs = 5
+    def get_page_text(self, url, selector):
+        max_paragraphs = 10
         try:
             soup = self.get_soup(url)
-            html_p = soup.findAll('p')
+            html_p = soup.findAll(selector)
 
             if html_p:
                 n = 1

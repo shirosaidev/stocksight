@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""stockprice.py - get stock price from Yahoo and add to
-Elasticsearch.
+"""NewsHeadlineListener.py - Base class for new sentiment listener
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
@@ -139,7 +138,7 @@ class NewsHeadlineListener(ABC):
 
     def get_soup(self, url):
         #try not to spam the server, but if you run with 100 stock symbols, it's probably going to spam it anyway lol.
-        time.sleep(randint(1,3))
+        time.sleep(randint(config['spawn_intervals']['request_min'], config['spawn_intervals']['request_max']))
         req = requests.get(url)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')

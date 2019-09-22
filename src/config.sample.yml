@@ -17,6 +17,7 @@ sentiment_analyzer:
     - win
     - giveaway
     - vs
+    - vs.
 
 console_output_mode: normal #normal, verbose, debug, quiet
 
@@ -28,7 +29,7 @@ twitter:
   consumer_secret     :
   access_token        :
   access_token_secret :
-  min_followers       : 1000
+  min_followers       : 1000  #Min number of followers is required to process the tweet.
   feeds               :
     - '@elonmusk'
     - '@stockwits'
@@ -46,7 +47,21 @@ stock_price:
   weekday_end   : 4
   hour_start    : 9
   hour_end      : 17
-  timezone_str  : America/Toronto
+  timezone_str  : America/New_York
+
+
+# Thread / Request timer to limit spamming the server.
+# but if you have tons of symbols, it's probably not going to matter much.
+spawn_intervals:
+  #Stock price listener spawn timer
+  stockprice_min: 2
+  stockprice_max: 5
+  #News Sentiment listen spawn timer
+  news_min: 5
+  news_max: 10
+  #Request timer
+  request_min: 1
+  request_max: 3
 
 symbols:
   tsla:

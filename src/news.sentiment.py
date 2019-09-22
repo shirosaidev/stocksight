@@ -20,7 +20,7 @@ from StockSight.SeekAlphaListener import *
 from StockSight.EsMap.Sentiment import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.6'
+STOCKSIGHT_VERSION = '0.2'
 __version__ = STOCKSIGHT_VERSION
 
 
@@ -35,15 +35,15 @@ if __name__ == '__main__':
                 logger.info('NLTK tokens required: ' + str(config['symbols'][symbol]))
                 logger.info('NLTK tokens ignored: ' + str(config['sentiment_analyzer']['ignore_words']))
 
-                yahooListener = YahooFinanceListener(symbol)
-                yahooThread = threading.Thread(target=yahooListener.execute)
-                yahooThread.start()
+                yahoo_listener = YahooFinanceListener(symbol)
+                yahoo_thread = threading.Thread(target=yahoo_listener.execute)
+                yahoo_thread.start()
 
-                seekAlphaListener = SeekAlphaListener(symbol)
-                seekAlphaThread = threading.Thread(target=seekAlphaListener.execute)
-                seekAlphaThread.start()
+                seekalpha_listener = SeekAlphaListener(symbol)
+                seekalpha_thread = threading.Thread(target=seekalpha_listener.execute)
+                seekalpha_thread.start()
 
-                time.sleep(randint(5, 10))
+                time.sleep(randint(config['spawn_intervals']['news_min'], config['spawn_intervals']['news_max']))
             except Exception as e:
                 logger.warning("%s" % e)
                 pass

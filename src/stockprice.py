@@ -10,8 +10,7 @@ Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
-import argparse
-import logging
+
 import sys
 import threading
 import time
@@ -23,7 +22,7 @@ from StockSight.EsMap.StockPrice import mapping
 from StockSight.StockPriceListener import StockPriceListener
 
 
-STOCKSIGHT_VERSION = '0.1-b.5'
+STOCKSIGHT_VERSION = '0.2'
 __version__ = STOCKSIGHT_VERSION
 
 
@@ -38,10 +37,10 @@ if __name__ == '__main__':
 
                 stockprice = StockPriceListener()
 
-                priceThread = threading.Thread(target=stockprice.get_price,args=(symbol,))
-                priceThread.start()
+                price_thread = threading.Thread(target=stockprice.get_price,args=(symbol,))
+                price_thread.start()
 
-                time.sleep(randint(2,5))
+                time.sleep(randint(config['spawn_intervals']['stockprice_min'], config['spawn_intervals']['stockprice_max']))
 
             except Exception as e:
                 logger.warning("%s" % e)

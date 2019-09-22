@@ -15,6 +15,9 @@ import argparse
 from StockSight.Initializer.ElasticSearch import es
 from StockSight.Initializer.Logger import *
 
+STOCKSIGHT_VERSION = '0.2'
+__version__ = STOCKSIGHT_VERSION
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()

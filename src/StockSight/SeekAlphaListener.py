@@ -5,14 +5,16 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
+ISSUE:
+SeekingAlpha block frequent access with 403.  Follow_link disabled.
+
+Copyright (C) Chris Park 2018-2019
 Copyright (C) Allen (Jian Feng) Xie 2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
 from StockSight.NewsHeadlineListener import *
-import time
-from random import randint
 
 class SeekAlphaListener(NewsHeadlineListener):
     def __init__(self, symbol):
@@ -38,7 +40,7 @@ class SeekAlphaListener(NewsHeadlineListener):
 
                         # if config['news']['follow_link']:
                         #     body_url = article.url
-                        #     for p in self.get_analysis_summary(body_url, 'p.bullets_li'):
+                        #     for p in self.get_page_text(body_url, 'p.bullets_li'):
                         #         article.body += str(p)+" "
 
                         article.referer_url = self.url
@@ -51,7 +53,7 @@ class SeekAlphaListener(NewsHeadlineListener):
 
                         # if config['news']['follow_link']:
                         #     body_url = article.url
-                        #     for p in self.get_summary(body_url, 'div.a-sum p'):
+                        #     for p in self.get_page_text(body_url, 'div.a-sum p'):
                         #         article.body += str(p)+" "
 
                         article.referer_url = self.url
@@ -63,10 +65,7 @@ class SeekAlphaListener(NewsHeadlineListener):
 
         return articles
 
-    def get_page_text(self, url):
-        pass
-
-    def get_summary(self, url, selector):
+    def get_page_text(self, url, selector):
         try:
             soup = self.get_soup(url)
             html_p = soup.select(selector)
@@ -81,3 +80,4 @@ class SeekAlphaListener(NewsHeadlineListener):
         except requests.exceptions.RequestException as exce:
             logger.warning("Exception: can't crawl web site (%s)" % exce)
             pass
+

@@ -20,7 +20,7 @@ from StockSight.EsMap.Sentiment import *
 from tweepy import API, Stream, OAuthHandler, TweepError
 
 
-STOCKSIGHT_VERSION = '0.1-b.6'
+STOCKSIGHT_VERSION = '0.2'
 __version__ = STOCKSIGHT_VERSION
 
 
