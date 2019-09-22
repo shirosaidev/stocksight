@@ -52,6 +52,7 @@ done
 
 #Copy kibana dashboards
 echo "Copy kibana dashboard if they don't exist";
+mkdir -p ./kibana_export/tmp
 python import.kibana.py &
 
 tick=0
