@@ -24,7 +24,7 @@ Each user running stocksight has a unique fingerprint: specific stocks they are 
 ### Upgrade From 0.1
 Version 0.2 went through an architectural revamp.  You will have to COPY the v0.1 data from Elastic 5.6 to Elastic 7.3 if you wish to retain your previous data.
 
-The ElasticSearch index mappings are also different between two versions. Please see "src/StockSight/EsMap" files for details. 
+The ElasticSearch index mappings are also different between two versions. New version records additional data for sentiment and stock prices. Please see "src/StockSight/EsMap" files for details.
 
 Differences:
 1. Each symbol have its own set of price and sentiment indexes.
