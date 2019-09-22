@@ -138,7 +138,9 @@ class NewsHeadlineListener(ABC):
 
     def get_soup(self, url):
         #try not to spam the server, but if you run with 100 stock symbols, it's probably going to spam it anyway lol.
-        time.sleep(randint(config['spawn_intervals']['request_min'], config['spawn_intervals']['request_max']))
+        if(config['spawn_intervals']['request_min'] > 0):
+            time.sleep(randint(config['spawn_intervals']['request_min'], config['spawn_intervals']['request_max']))
+
         req = requests.get(url)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')

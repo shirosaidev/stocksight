@@ -54,8 +54,8 @@ stock_price:
 # but if you have tons of symbols, it's probably not going to matter much.
 spawn_intervals:
   #Stock price listener spawn timer
-  stockprice_min: 2
-  stockprice_max: 5
+  stockprice_min: 0
+  stockprice_max: 0
   #News Sentiment listen spawn timer
   news_min: 5
   news_max: 10

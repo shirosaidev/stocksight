@@ -40,7 +40,8 @@ if __name__ == '__main__':
                 price_thread = threading.Thread(target=stockprice.get_price,args=(symbol,))
                 price_thread.start()
 
-                time.sleep(randint(config['spawn_intervals']['stockprice_min'], config['spawn_intervals']['stockprice_max']))
+                if(config['spawn_intervals']['stockprice_min'] > 0):
+                    time.sleep(randint(config['spawn_intervals']['stockprice_min'], config['spawn_intervals']['stockprice_max']))
 
             except Exception as e:
                 logger.warning("%s" % e)

@@ -43,7 +43,8 @@ if __name__ == '__main__':
                 seekalpha_thread = threading.Thread(target=seekalpha_listener.execute)
                 seekalpha_thread.start()
 
-                time.sleep(randint(config['spawn_intervals']['news_min'], config['spawn_intervals']['news_max']))
+                if(config['spawn_intervals']['news_min'] > 0):
+                    time.sleep(randint(config['spawn_intervals']['news_min'], config['spawn_intervals']['news_max']))
             except Exception as e:
                 logger.warning("%s" % e)
                 pass
