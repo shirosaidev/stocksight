@@ -63,8 +63,8 @@ def sentiment_analysis(text, online = False):
     could be made better :)
     :param text:
     """
-    sentiment_url = None;
-    if online == True:
+    sentiment_url = None
+    if online:
         sentiment_url = 'http://text-processing.com/api/sentiment/'
         # pass text into sentiment url
         sentiment_url = get_sentiment_from_url(text, sentiment_url)
