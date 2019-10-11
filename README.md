@@ -11,10 +11,7 @@ Crowd-sourced stock analyzer and stock predictor using Elasticsearch, Twitter, N
 ## About
 stocksight is a crowd-sourced stock analysis open source software that uses Elasticsearch to store Twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine how the author "feels" about a stock. stocksight makes an aggregated analysis of all collected data from all sources.
 
-Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to search. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis results from other stocksight user app results and a combined aggregated view of all.
-
-## Stocksight web site coming soon
-If you are interested in joining the web site beta sign up, please email c p a r k 1 6 @ g m a i l . c o m
+Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to search. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website (coming soon) will allow each user to see other sentiment analysis results from other stocksight user app results and a combined aggregated view of all.
 
 ## Requirements
 - Python 3. (tested with Python 3.6.5)
