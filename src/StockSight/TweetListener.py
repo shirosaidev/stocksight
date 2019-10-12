@@ -142,7 +142,7 @@ class TweetStreamListener(StreamListener):
             es.index(index=self.index_name,
                      doc_type="_doc",
                      body={
-                           "_id": redis_id,
+                           "msg_id": redis_id,
                            "author": screen_name,
                            "location": location,
                            "date": created_date,

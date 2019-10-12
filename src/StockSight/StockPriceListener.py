@@ -58,7 +58,7 @@ class StockPriceListener:
                 raise
             # build dict to store stock info
             try:
-                D = []
+                D = {}
                 D['symbol'] = symbol
                 D['last'] = data['chart']['result'][0]['indicators']['quote'][0]['close'][-1]
                 if D['last'] is None:
