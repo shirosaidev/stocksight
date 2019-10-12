@@ -6,20 +6,25 @@ Crowd-sourced stock analyzer and stock predictor using Elasticsearch, Twitter, N
 [![License](https://img.shields.io/github/license/shirosaidev/stocksight.svg?label=License&maxAge=86400)](./LICENSE)
 [![Release](https://img.shields.io/github/release/shirosaidev/stocksight.svg?label=Release&maxAge=60)](https://github.com/shirosaidev/stocksight/releases/latest)
 
-### Authors
-Chris Park
-[![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
-[![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
-
-Allen Jian Feng Xie
-[![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/paypalme2/heyqule)
-
 ## About
 stocksight is a crowd-sourced stock analysis open source software that uses Elasticsearch to store Twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine how the author "feels" about a stock. stocksight makes an aggregated analysis of all collected data from all sources.
 
-Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to search. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis results from other stocksight user app results and a combined aggregated view of all.
+Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to search. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website (coming soon) will allow each user to see other sentiment analysis results from other stocksight user app results and a combined aggregated view of all.
 
-<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_diagram.png?raw=true" alt="stocksight diagram" />
+
+## Screenshot
+Stocksight Kibana dashboard
+<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
+
+### Author
+Chris Park 2018-2019
+[![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
+[![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
+
+### Contributors
+Allen Jian Feng Xie 2019
+[![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/paypalme2/heyqule)
+
 
 ### Upgrade From 0.1
 Version 0.2 went through an architectural revamp.  You will have to COPY the v0.1 data from Elastic 5.6 to Elastic 7.3 if you wish to retain your previous data.
@@ -32,16 +37,34 @@ Differences:
 3. Each sentiment record have sentiment value for its title and sentiment value for its message.
     - Title sentiment and message sentiment are no longer mixed together.
 4. Stock Price open and close values are also saved in price index.    
-    
 
-### Requirement
+### Requirements / Tech Stack
 
-Install Docker on your system
+- Docker
+- Python 3. (tested with Python 3.6.8 and 3.7.4)
+- Elasticsearch 7.3.1.
+- Kibana 7.3.1.
+- Redis 5
+- Python module
+    - elasticsearch 
+    - nltk
+    - requests
+    - tweepy
+    - beautifulsoup4
+    - textblob
+    - vaderSentiment
+    - pytz
+    - redis
+    - pyyaml
+    - fake-useragent
+
+### Download
 
 ```shell
 $ git clone https://github.com/shirosaidev/stocksight.git
 $ cd stocksight
 ```
+[Download latest version](https://github.com/shirosaidev/stocksight/releases/latest)
 
 ### How to setup
 - Copy src/config.yml to src/config.yml
@@ -91,21 +114,3 @@ http://localhost:5601
 ###### Delete Elastic Indexes
 1. Log into python docker console
 2. Run "python delindex.py --delindex {index_name}"
-
-### Tech Stack
-- Python 3. (tested with Python 3.6.8 and 3.7.4)
-- Elasticsearch 7.3.1.
-- Kibana 7.3.1.
-- Redis 5
-- Python module
-    - elasticsearch 
-    - nltk
-    - requests
-    - tweepy
-    - beautifulsoup4
-    - textblob
-    - vaderSentiment
-    - pytz
-    - redis
-    - pyyaml
-    - fake-useragent
