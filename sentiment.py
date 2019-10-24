@@ -460,10 +460,13 @@ def sentiment_analysis(text):
 
     # calculate average and upload to sentiment website
     if args.upload:
-        neg_avg = (text_vs['neg'] + neg_url) / 2
-        pos_avg = (text_vs['pos'] + pos_url) / 2
-        neutral_avg = (text_vs['neu'] + neu_url) / 2
-        upload_sentiment(neg_avg, pos_avg, neutral_avg)
+        if sentiment_url:
+            neg_avg = (text_vs['neg'] + neg_url) / 2
+            pos_avg = (text_vs['pos'] + pos_url) / 2
+            neutral_avg = (text_vs['neu'] + neu_url) / 2
+            upload_sentiment(neg_avg, pos_avg, neutral_avg)
+        else:
+            upload_sentiment(text_vs['neg'], text_vs['pos'], text_vs['neu'])
 
     # calculate average polarity from TextBlob and VADER
     polarity = (text_tb.sentiment.polarity + text_vs['compound']) / 2
@@ -531,14 +534,14 @@ def upload_sentiment(neg, pos, neu):
     # upload sentiment to stocksight website
     global prev_time
     global sentiment_avg
-    sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
-    sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
-    sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
-    payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
     # don't upload more than once every 10 seconds
     time_now = time.time()
     if time_now - prev_time > 10:
         prev_time = time_now
+        sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
+        sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
+        sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
+        payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
         try:
             post = requests.post(stocksightURL, data=payload)
         except requests.exceptions.RequestException as re:
