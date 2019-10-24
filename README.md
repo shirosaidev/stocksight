@@ -41,6 +41,9 @@ $ cd stocksight
 Stocksight Kibana dashboard
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight-dashboard-kibana.png?raw=true" alt="stocksight kibana dashboard" />
 
+Stocksight website
+<img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_website_screenshot.png?raw=true" alt="stocksight website dashboard" />
+
 ## How to use
 
 Install python requirements using pip
