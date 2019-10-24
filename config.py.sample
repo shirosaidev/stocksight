@@ -17,3 +17,4 @@ twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits",
                  "@MorganStanley", "@ianbremmer", "@GoldmanSachs", "@Wu_Tang_Finance",
                  "@Schuldensuehner", "@NorthmanTrader", "@Frances_Coppola", "@bySamRo",
                  "@BuzzFeed","@nytimes"]
+stocksight_token = ""

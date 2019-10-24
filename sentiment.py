@@ -6,7 +6,7 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Chris Park 2018
+Copyright (C) Chris Park 2018-2019
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
@@ -40,20 +40,20 @@ from datetime import datetime
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.6'
+STOCKSIGHT_VERSION = '0.1-b.7'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
 
-if IS_PY3:
-    unicode = str
-
-# create instance of elasticsearch
-es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
-                   http_auth=(elasticsearch_user, elasticsearch_password))
+if not IS_PY3:
+    print("Sorry, stocksight does not work with Python 2.")
+    sys.exit(1)
 
 # sentiment text-processing url
 sentimentURL = 'http://text-processing.com/api/sentiment/'
+
+# stocksight website url data collector
+stocksightURL = 'https://stocksight.diskoverspace.com/data_collector.php'
 
 # tweet id list
 tweet_ids = []
@@ -61,17 +61,27 @@ tweet_ids = []
 # file to hold twitter user ids
 twitter_users_file = './twitteruserids.txt'
 
+prev_time = time.time()
+sentiment_avg = [0.0,0.0,0.0]
+
 
 class TweetStreamListener(StreamListener):
 
+    def __init__(self):
+        self.count = 0
+        self.count_filtered = 0
+        self.filter_ratio = 0
+
     # on success
     def on_data(self, data):
-
         try:
+            self.count+=1
             # decode json
             dict_data = json.loads(data)
 
-            logger.debug(dict_data)
+            print("\n------------------------------> (tweets: %s, filtered: %s, filter-ratio: %s)" \
+                % (self.count, self.count_filtered, str(round(self.count_filtered/self.count*100,2))+"%"))
+            logger.debug('tweet data: ' + str(dict_data))
 
             # clean up tweet text
             #text = unicodedata.normalize(
@@ -79,6 +89,7 @@ class TweetStreamListener(StreamListener):
             text = dict_data["text"]
             if text is None:
                 logger.info("Tweet has no relevant text, skipping")
+                self.count_filtered+=1
                 return True
 
             # grab html links from tweet
@@ -106,10 +117,10 @@ class TweetStreamListener(StreamListener):
             statuses = int(dict_data.get("user", {}).get("statuses_count"))
             text_filtered = str(text)
             tweetid = int(dict_data.get("id"))
-            text_raw = unicode(dict_data.get("text"))
+            text_raw = str(dict_data.get("text"))
 
             # output twitter data
-            print("\n------------------------------")
+            print("\n<------------------------------")
             print("Tweet Date: " + created_date)
             print("Screen Name: " + screen_name)
             print("Location: " + location)
@@ -127,6 +138,12 @@ class TweetStreamListener(StreamListener):
             tokens = nltk.word_tokenize(text_for_tokens)
             print("NLTK Tokens: " + str(tokens))
 
+            # check for min token length
+            if len(tokens) < 5:
+                logger.info("Tweet does not contain min. number of tokens, not adding")
+                self.count_filtered+=1
+                return True
+
             # do some checks before adding to elasticsearch and crawling urls in tweet
             if friends == 0 or \
                             followers == 0 or \
@@ -134,12 +151,14 @@ class TweetStreamListener(StreamListener):
                             text == "" or \
                             tweetid in tweet_ids:
                 logger.info("Tweet doesn't meet min requirements, not adding")
+                self.count_filtered+=1
                 return True
 
             # check ignored tokens from config
             for t in nltk_tokens_ignored:
                 if t in tokens:
                     logger.info("Tweet contains token from ignore list, not adding")
+                    self.count_filtered+=1
                     return True
             # check required tokens from config
             tokenspass = False
@@ -149,37 +168,42 @@ class TweetStreamListener(StreamListener):
                     break
             if not tokenspass:
                 logger.info("Tweet does not contain token from required list, not adding")
+                self.count_filtered+=1
                 return True
 
             # strip out hashtags for language processing
-            tweet = re.sub(r"[#|@|\$]\S+", "", text)
-            tweet.strip()
+            text_clean = re.sub(r"[#|@|\$]\S+", "", text_filtered)
+            text_clean = text_clean.strip()
+
+            # check if tweet has no valid text
+            if text_clean == "":
+                logger.info("Tweet does not cotain any valid text, not adding")
+                self.count_filtered+=1
+                return True
 
             # get sentiment values
-            polarity, subjectivity, sentiment = sentiment_analysis(tweet)
+            polarity, subjectivity, sentiment = sentiment_analysis(text_clean)
 
             # add tweet_id to list
             tweet_ids.append(dict_data["id"])
 
-            # remove hashtags for elasticsearch
-            #text_filtered = re.sub(r"[#|@|\$]\S+", "", text_filtered)
-
-            logger.info("Adding tweet to elasticsearch")
-            # add twitter data and sentiment info to elasticsearch
-            es.index(index=args.index,
-                     doc_type="tweet",
-                     body={"author": screen_name,
-                           "location": location,
-                           "language": language,
-                           "friends": friends,
-                           "followers": followers,
-                           "statuses": statuses,
-                           "date": created_date,
-                           "message": text_filtered,
-                           "tweet_id": tweetid,
-                           "polarity": polarity,
-                           "subjectivity": subjectivity,
-                           "sentiment": sentiment})
+            if not args.noelasticsearch:
+                logger.info("Adding tweet to elasticsearch")
+                # add twitter data and sentiment info to elasticsearch
+                es.index(index=args.index,
+                        doc_type="tweet",
+                        body={"author": screen_name,
+                            "location": location,
+                            "language": language,
+                            "friends": friends,
+                            "followers": followers,
+                            "statuses": statuses,
+                            "date": created_date,
+                            "message": text_filtered,
+                            "tweet_id": tweetid,
+                            "polarity": polarity,
+                            "subjectivity": subjectivity,
+                            "sentiment": sentiment})
 
             return True
 
@@ -199,11 +223,15 @@ class TweetStreamListener(StreamListener):
 
 
 class NewsHeadlineListener:
+
     def __init__(self, url=None, frequency=120):
         self.url = url
         self.headlines = []
         self.followedlinks = []
         self.frequency = frequency
+        self.count = 0
+        self.count_filtered = 0
+        self.filter_ratio = 0
 
         while True:
             new_headlines = self.get_news_headlines(self.url)
@@ -212,10 +240,12 @@ class NewsHeadlineListener:
             for htext, htext_url in new_headlines:
                 if htext not in self.headlines:
                     self.headlines.append(htext)
+                    self.count+=1
 
                     datenow = datetime.utcnow().isoformat()
                     # output news data
-                    print("\n------------------------------")
+                    print("\n------------------------------> (tweets: %s, filtered: %s, filter-ratio: %s)" \
+                        % (self.count, self.count_filtered, str(round(self.count_filtered/self.count*100,2))+"%"))
                     print("Date: " + datenow)
                     print("News Headline: " + htext)
                     print("Location (url): " + htext_url)
@@ -226,10 +256,17 @@ class NewsHeadlineListener:
                     tokens = nltk.word_tokenize(text_for_tokens)
                     print("NLTK Tokens: " + str(tokens))
 
+                    # check for min token length
+                    if len(tokens) < 5:
+                        logger.info("Text does not contain min. number of tokens, not adding")
+                        self.count_filtered+=1
+                        continue
+
                     # check ignored tokens from config
                     for t in nltk_tokens_ignored:
                         if t in tokens:
                             logger.info("Text contains token from ignore list, not adding")
+                            self.count_filtered+=1
                             continue
                     # check required tokens from config
                     tokenspass = False
@@ -239,21 +276,23 @@ class NewsHeadlineListener:
                             break
                     if not tokenspass:
                         logger.info("Text does not contain token from required list, not adding")
+                        self.count_filtered+=1
                         continue
 
                     # get sentiment values
                     polarity, subjectivity, sentiment = sentiment_analysis(htext)
 
-                    logger.info("Adding news headline to elasticsearch")
-                    # add news headline data and sentiment info to elasticsearch
-                    es.index(index=args.index,
-                             doc_type="newsheadline",
-                             body={"date": datenow,
-                                   "location": htext_url,
-                                   "message": htext,
-                                   "polarity": polarity,
-                                   "subjectivity": subjectivity,
-                                   "sentiment": sentiment})
+                    if not args.noelasticsearch:
+                        logger.info("Adding news headline to elasticsearch")
+                        # add news headline data and sentiment info to elasticsearch
+                        es.index(index=args.index,
+                                doc_type="newsheadline",
+                                body={"date": datenow,
+                                    "location": htext_url,
+                                    "message": htext,
+                                    "polarity": polarity,
+                                    "subjectivity": subjectivity,
+                                    "sentiment": sentiment})
 
             logger.info("Will get news headlines again in %s sec..." % self.frequency)
             time.sleep(self.frequency)
@@ -332,12 +371,14 @@ def get_page_text(url):
 
 
 def get_sentiment_from_url(text, sentimentURL):
+    # get sentiment from text processing website
     payload = {'text': text}
 
     try:
+        #logger.debug(text)
         post = requests.post(sentimentURL, data=payload)
-        logger.debug(post.status_code)
-        logger.debug(post.text)
+        #logger.debug(post.status_code)
+        #logger.debug(post.text)
     except requests.exceptions.RequestException as re:
         logger.error("Exception: requests exception getting sentiment from url caused by %s" % re)
         raise
@@ -348,11 +389,11 @@ def get_sentiment_from_url(text, sentimentURL):
         return None
 
     response = post.json()
-    logger.debug(response)
+    logger.debug('sentiment url: ' + str(response))
 
-    # neg = response['probability']['neg']
-    # neutral = response['probability']['neutral']
-    # pos = response['probability']['pos']
+    neg = response['probability']['neg']
+    pos = response['probability']['pos']
+    neu = response['probability']['neutral']
     label = response['label']
 
     # determine if sentiment is positive, negative, or neutral
@@ -363,7 +404,7 @@ def get_sentiment_from_url(text, sentimentURL):
     else:
         sentiment = "positive"
 
-    return sentiment
+    return sentiment, neg, pos, neu
 
 
 def sentiment_analysis(text):
@@ -372,18 +413,26 @@ def sentiment_analysis(text):
     uses sentiment polarity from TextBlob, VADER Sentiment and
     sentiment from text-processing URL
     could be made better :)
+    Uploads sentiment to stocksight website.
     """
 
     # pass text into sentiment url
-    sentiment_url = get_sentiment_from_url(text, sentimentURL)
+    ret = get_sentiment_from_url(text, sentimentURL)
+    if ret is None:
+        sentiment_url = None
+    else:
+        sentiment_url, neg_url, pos_url, neu_url = ret
 
     # pass text into TextBlob
     text_tb = TextBlob(text)
+    logger.debug('textblob: ' + str(text_tb.sentiment))
 
     # pass text into VADER Sentiment
     analyzer = SentimentIntensityAnalyzer()
     text_vs = analyzer.polarity_scores(text)
+    logger.debug('vader: ' + str(text_vs))
 
+    # determine sentiment from our sources
     if sentiment_url is None:
         if text_tb.sentiment.polarity <= 0 and text_vs['compound'] <= -0.5:
             sentiment = "negative"  # very negative
@@ -409,9 +458,17 @@ def sentiment_analysis(text):
         else:
             sentiment = "neutral"
 
+    # calculate average and upload to sentiment website
+    if args.upload:
+        neg_avg = (text_vs['neg'] + neg_url) / 2
+        pos_avg = (text_vs['pos'] + pos_url) / 2
+        neutral_avg = (text_vs['neu'] + neu_url) / 2
+        upload_sentiment(neg_avg, pos_avg, neutral_avg)
+
     # calculate average polarity from TextBlob and VADER
     polarity = (text_tb.sentiment.polarity + text_vs['compound']) / 2
     # output sentiment polarity
+    print("************")
     print("Sentiment Polarity: " + str(polarity))
 
     # output sentiment subjectivity (TextBlob)
@@ -420,6 +477,7 @@ def sentiment_analysis(text):
     # output sentiment
     print("Sentiment (url): " + str(sentiment_url))
     print("Sentiment (algorithm): " + str(sentiment))
+    print("************")
 
     return polarity, text_tb.sentiment.subjectivity, sentiment
 
@@ -469,6 +527,29 @@ def get_twitter_users_from_file(file):
     return twitter_users
 
 
+def upload_sentiment(neg, pos, neu):
+    # upload sentiment to stocksight website
+    global prev_time
+    global sentiment_avg
+    sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
+    sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
+    sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
+    payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
+    # don't upload more than once every 10 seconds
+    time_now = time.time()
+    if time_now - prev_time > 10:
+        prev_time = time_now
+        try:
+            post = requests.post(stocksightURL, data=payload)
+        except requests.exceptions.RequestException as re:
+            logger.error("Exception: requests exception uploading sentiment to stocksight caused by %s" % re)
+            raise
+        if post.status_code == 200:
+            logger.info("Uploaded stock sentiment to stocksight website")
+        else:
+            logger.warning("Can't upload sentiment to stocksight website caused by %s" % post.status_code)
+
+
 if __name__ == '__main__':
     # parse cli args
     parser = argparse.ArgumentParser()
@@ -476,20 +557,33 @@ if __name__ == '__main__':
                         help="Index name for Elasticsearch (default: stocksight)")
     parser.add_argument("-d", "--delindex", action="store_true",
                         help="Delete existing Elasticsearch index first")
+    parser.add_argument("-s", "--symbol", metavar="SYMBOL", required=True,
+                        help="Stock symbol you are interesed in searching for, example: TSLA")
     parser.add_argument("-k", "--keywords", metavar="KEYWORDS",
                         help="Use keywords to search for in Tweets instead of feeds. "
                              "Separated by comma, case insensitive, spaces are ANDs commas are ORs. "
-                             "Example: TSLA,'Elon Musk',Musk,Tesla,SpaceX")
+                             "Stock symbol from -s will be added to these."
+                             "Example: 'Elon Musk',Musk,Tesla,SpaceX")
+    parser.add_argument("-a", "--addtokens", action="store_true",
+                        help="Add nltk tokens required from config to keywords")
     parser.add_argument("-u", "--url", metavar="URL",
                         help="Use twitter users from any links in web page at url")
     parser.add_argument("-f", "--file", metavar="FILE",
                         help="Use twitter user ids from file")
-    parser.add_argument("-n", "--newsheadlines", metavar="SYMBOL",
-                        help="Get news headlines instead of Twitter using stock symbol, example: TSLA")
+    parser.add_argument("-n", "--newsheadlines", action="store_true",
+                        help="Get news headlines instead of Twitter using stock symbol from -s")
     parser.add_argument("--frequency", metavar="FREQUENCY", default=120, type=int,
                         help="How often in seconds to retrieve news headlines (default: 120 sec)")
     parser.add_argument("--followlinks", action="store_true",
                         help="Follow links on news headlines and scrape relevant text from landing page")
+    parser.add_argument("-U", "--upload", action="store_true",
+                        help="Upload sentiment to stocksight website (BETA)")                   
+    parser.add_argument("--noelasticsearch", action="store_true",
+                        help="Don't connect or add new docs to Elasticsearch")
+    parser.add_argument("--overridetokensreq", metavar="TOKEN", nargs="+",
+                        help="Override nltk required tokens from config, separate with space")
+    parser.add_argument("--overridetokensignore", metavar="TOKEN", nargs="+",
+                        help="Override nltk ignore tokens from config, separate with space")
     parser.add_argument("-v", "--verbose", action="store_true",
                        help="Increase output verbosity")
     parser.add_argument("--debug", action="store_true",
@@ -569,136 +663,148 @@ if __name__ == '__main__':
         \033[0m""" % (color, STOCKSIGHT_VERSION)
         print(banner + '\n')
 
-    # set up elasticsearch mappings and create index
-    mappings = {
-        "mappings": {
-            "tweet": {
-                "properties": {
-                    "author": {
-                        "type": "string",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
+    if not args.noelasticsearch:
+        # create instance of elasticsearch
+        es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
+                   http_auth=(elasticsearch_user, elasticsearch_password))
+
+        # set up elasticsearch mappings and create index
+        mappings = {
+            "mappings": {
+                "tweet": {
+                    "properties": {
+                        "author": {
+                            "type": "string",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
-                        }
-                    },
-                    "location": {
-                        "type": "string",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
+                        },
+                        "location": {
+                            "type": "string",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
-                        }
-                    },
-                    "language": {
-                        "type": "string",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
+                        },
+                        "language": {
+                            "type": "string",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
-                        }
-                    },
-                    "friends": {
-                        "type": "long"
-                    },
-                    "followers": {
-                        "type": "long"
-                    },
-                    "statuses": {
-                        "type": "long"
-                    },
-                    "date": {
-                        "type": "date"
-                    },
-                    "message": {
-                        "type": "string",
-                        "fields": {
-                            "english": {
-                                "type": "string",
-                                "analyzer": "english"
-                            },
-                            "keyword": {
-                                "type": "keyword"
+                        },
+                        "friends": {
+                            "type": "long"
+                        },
+                        "followers": {
+                            "type": "long"
+                        },
+                        "statuses": {
+                            "type": "long"
+                        },
+                        "date": {
+                            "type": "date"
+                        },
+                        "message": {
+                            "type": "string",
+                            "fields": {
+                                "english": {
+                                    "type": "string",
+                                    "analyzer": "english"
+                                },
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
-                        }
-                    },
-                    "tweet_id": {
-                        "type": "long"
-                    },
-                    "polarity": {
-                        "type": "float"
-                    },
-                    "subjectivity": {
-                        "type": "float"
-                    },
-                    "sentiment": {
-                        "type": "string",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
+                        },
+                        "tweet_id": {
+                            "type": "long"
+                        },
+                        "polarity": {
+                            "type": "float"
+                        },
+                        "subjectivity": {
+                            "type": "float"
+                        },
+                        "sentiment": {
+                            "type": "string",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
                         }
                     }
-                }
-            },
-            "newsheadline": {
-                "properties": {
-                    "date": {
-                        "type": "date"
-                    },
-                    "location": {
-                        "type": "string",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
+                },
+                "newsheadline": {
+                    "properties": {
+                        "date": {
+                            "type": "date"
+                        },
+                        "location": {
+                            "type": "string",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
-                        }
-                    },
-                    "message": {
-                        "type": "string",
-                        "fields": {
-                            "english": {
-                                "type": "string",
-                                "analyzer": "english"
-                            },
-                            "keyword": {
-                                "type": "keyword"
+                        },
+                        "message": {
+                            "type": "string",
+                            "fields": {
+                                "english": {
+                                    "type": "string",
+                                    "analyzer": "english"
+                                },
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
-                        }
-                    },
-                    "polarity": {
-                        "type": "float"
-                    },
-                    "subjectivity": {
-                        "type": "float"
-                    },
-                    "sentiment": {
-                        "type": "string",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
+                        },
+                        "polarity": {
+                            "type": "float"
+                        },
+                        "subjectivity": {
+                            "type": "float"
+                        },
+                        "sentiment": {
+                            "type": "string",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword"
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-    if args.delindex:
-        logger.info('Deleting existing Elasticsearch index ' + args.index)
-        es.indices.delete(index=args.index, ignore=[400, 404])
+    
+        if args.delindex:
+            logger.info('Deleting existing Elasticsearch index ' + args.index)
+            es.indices.delete(index=args.index, ignore=[400, 404])
 
-    logger.info('Creating new Elasticsearch index or using existing ' + args.index)
-    es.indices.create(index=args.index, body=mappings, ignore=[400, 404])
+        logger.info('Creating new Elasticsearch index or using existing ' + args.index)
+        es.indices.create(index=args.index, body=mappings, ignore=[400, 404])
+
+    # check if we need to override any tokens
+    if args.overridetokensreq:
+        nltk_tokens_required = tuple(args.overridetokensreq)
+    if args.overridetokensignore:
+        nltk_tokens_ignored = tuple(args.overridetokensignore)
 
     # are we grabbing news headlines from yahoo finance or twitter
     if args.newsheadlines:
         try:
-            url = "https://finance.yahoo.com/quote/%s/?p=%s" % (args.newsheadlines, args.newsheadlines)
+            url = "https://finance.yahoo.com/quote/%s/?p=%s" % (args.symbol, args.symbol)
 
             logger.info('NLTK tokens required: ' + str(nltk_tokens_required))
             logger.info('NLTK tokens ignored: ' + str(nltk_tokens_ignored))
-            logger.info("Scraping news for %s from %s ..." % (args.newsheadlines, url))
+            logger.info("Scraping news for %s from %s ..." % (args.symbol, url))
 
             # create instance of NewsHeadlineListener
             newslistener = NewsHeadlineListener(url, args.frequency)
@@ -778,21 +884,27 @@ if __name__ == '__main__':
 
         try:
             # search twitter for keywords
+            logger.info('Stock symbol: ' + str(args.symbol))
             logger.info('NLTK tokens required: ' + str(nltk_tokens_required))
             logger.info('NLTK tokens ignored: ' + str(nltk_tokens_ignored))
             logger.info('Twitter Feeds: ' + str(twitter_feeds))
             logger.info('Twitter User Ids: ' + str(useridlist))
-            logger.info('Twitter keywords: ' + str(args.keywords))
             logger.info('Listening for Tweets (ctrl-c to exit)...')
             if args.keywords is None:
+                logger.info('No keywords entered, following Twitter users')
                 stream.filter(follow=useridlist, languages=['en'])
             else:
                 # keywords to search on twitter
                 # add keywords to list
                 keywords = args.keywords.split(',')
-                # add tokens to keywords to list
-                for f in nltk_tokens_required:
-                    keywords.append(f)
+                # add stock symbol to keywords
+                #keywords.append(args.symbol)
+                if args.addtokens:
+                    # add tokens to keywords to list
+                    for f in nltk_tokens_required:
+                        keywords.append(f)
+                logger.info('Twitter keywords: ' + str(keywords))
+                logger.info('Searching Twitter for keywords')
                 stream.filter(track=keywords, languages=['en'])
         except TweepError as te:
             logger.debug("Tweepy Exception: Failed to get tweets caused by: %s" % te)

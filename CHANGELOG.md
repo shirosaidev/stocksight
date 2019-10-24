@@ -1,5 +1,21 @@
 # stocksight Change Log
 
+## [0.1-b.7] = 2019-10-23
+### added
+- check if running Python 3
+- -U --upload - uploads sentiment to stocksight website (BETA) https://stocksight.diskoverspace.com/
+- stocksight_token in config.py.sample, used for auth to upload to stocksight website
+- tweet/news headline count/filtered/ratio log output
+- --noelasticsearch cli arg for not adding new docs to Elasticsearch
+- -s stock symbol cli arg (required arg)
+- --overridetokensreq and --overridetokensignore cli args
+- -a --addtokens cli arg to add nltk required tokens from config to keywords
+### changed
+- --newsheadlines no longer requires stock symbol, use -s to provide stock symbol
+- nltk required tokens from config now do not automatically get added to keywords, use -a or --addtokens to add them
+### fixed
+- 'NoneType' object is not iterable Can't get sentiment from url caused by 400 Form Validation Errors text: This field is required traceback error when tweet with no text passed to sentiment_analysis
+
 ## [0.1-b.6] = 2019-07-15
 ### fixed
 - "TypeError: sequence item 0: expected str instance, int found" traceback error when running with -f twitteruserids.txt
