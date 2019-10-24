@@ -1,0 +1,79 @@
+elasticsearch:
+  host      : elasticsearch
+  port      : 9200
+  user      : elastic
+  password  : changeme
+  table_prefix:
+    sentiment : stocksight_sentiment_
+    price     : stocksight_price_
+
+redis:
+  host      : redis
+  port      : 6379
+  db        : 0
+
+sentiment_analyzer:
+  ignore_words:
+    - win
+    - giveaway
+    - vs
+    - vs.
+
+console_output_mode: normal #normal, verbose, debug, quiet
+
+news:
+    follow_link: true
+
+twitter:
+  consumer_key        :
+  consumer_secret     :
+  access_token        :
+  access_token_secret :
+  min_followers       : 1000  #Min number of followers is required to process the tweet.
+  feeds               :
+    - '@elonmusk'
+    - '@stockwits'
+    - '@nytimes'
+    - '@MorganStanley'
+    - '@GoldmanSachs'
+    - '@WSJmarkets'
+    - '@WashingtonPost'
+    - '@nytimesbusiness'
+    - '@reutersbiz'
+
+stock_price:
+  time_check    : false  #True, fetch the price only within the below time range
+  weekday_start : 0 #0 is Monday, 6 is Sunday
+  weekday_end   : 4
+  hour_start    : 9
+  hour_end      : 17
+  timezone_str  : America/New_York
+
+
+# Thread / Request timer to limit spamming the server.
+# but if you have tons of symbols, it's probably not going to matter much.
+spawn_intervals:
+  #Stock price listener spawn timer
+  stockprice_min: 0
+  stockprice_max: 0
+  #News Sentiment listen spawn timer
+  news_min: 5
+  news_max: 10
+  #Request timer
+  request_min: 1
+  request_max: 3
+
+symbols:
+  tsla:
+    - tesla
+    - tsla
+    - elonmusk
+    - elon
+    - musk
+  amd:
+    - amd
+    - ryzen
+    - epyc
+    - radeon
+    - crossfire
+    - threadripper

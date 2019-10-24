@@ -97,6 +97,15 @@ ENV/
 # mkdocs documentation
 /site
 
+#Custom files
+data/
+config.py
+.git
+.idea
+twitteruserids.txt
+*_export.json
+config.yml
+
 # mypy
 .mypy_cache/
 .DS_Store

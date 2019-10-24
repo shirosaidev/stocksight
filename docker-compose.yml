@@ -1,0 +1,61 @@
+# ./docker-compose.yml
+#
+#Copyright (C) Chris Park 2018-2019
+#Copyright (C) Allen (Jian Feng) Xie 2019
+#stocksight is released under the Apache 2.0 license. See
+#LICENSE for the full license text.
+version: '3'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    environment:
+      - cluster.name=elasticsearch
+      - node.name=stockdata
+      - cluster.initial_master_nodes=stockdata
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+      nproc:
+        soft: 4096
+        hard: 4096
+    #expose this port for local dev only!
+    #ports:
+    #  - "9200:9200"
+    restart: unless-stopped
+  redis:
+    build:
+      context: ./redis-docker
+    #expose this port for local dev only!
+    #ports:
+    #  - "6379:6379"
+    restart: unless-stopped
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.3.1
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    restart: unless-stopped
+  python3:
+    build:
+      context: ./python-docker
+    environment:
+      #interval for getting stock price in seconds
+      - stockprice_tick_time=120
+      #interval for getting stock news in seconds
+      - news_sentiment_tick_time=3600
+    depends_on:
+      - elasticsearch
+      - redis
+    volumes:
+      - ./src:/usr/src/app
+    restart: unless-stopped
