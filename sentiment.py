@@ -534,13 +534,14 @@ def upload_sentiment(neg, pos, neu):
     # upload sentiment to stocksight website
     global prev_time
     global sentiment_avg
+    # update averages
+    sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
+    sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
+    sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
     # don't upload more than once every 10 seconds
     time_now = time.time()
     if time_now - prev_time > 10:
         prev_time = time_now
-        sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
-        sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
-        sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
         payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
         try:
             post = requests.post(stocksightURL, data=payload)
