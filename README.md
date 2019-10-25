@@ -58,6 +58,10 @@ Install python requirements using pip
 
 `pip install -r requirements.txt`
 
+Download nltk python data
+
+`python -c "import nltk; nltk.download('punkt')"`
+
 Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
