@@ -668,6 +668,7 @@ if __name__ == '__main__':
                                                                  /$$  \ $$                    
                        :) = +$   :( = -$                        |  $$$$$$/                    
                                                                  \______/  v%s
+    Join the StockSight website https://stocksight.diskoverspace.com
         \033[0m""" % (color, STOCKSIGHT_VERSION)
         print(banner + '\n')
 
