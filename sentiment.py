@@ -566,11 +566,14 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--delindex", action="store_true",
                         help="Delete existing Elasticsearch index first")
     parser.add_argument("-s", "--symbol", metavar="SYMBOL", required=True,
-                        help="Stock symbol you are interesed in searching for, example: TSLA")
+                        help="Stock symbol you are interesed in searching for, example: TSLA "
+                             "This is used as the symbol tag on stocksight website. " 
+                             "Could also be set to a tag name like 'elonmusk' or 'elon' etc. " 
+                             "Cannot contain spaces and more than 25 characters.")
     parser.add_argument("-k", "--keywords", metavar="KEYWORDS",
                         help="Use keywords to search for in Tweets instead of feeds. "
                              "Separated by comma, case insensitive, spaces are ANDs commas are ORs. "
-                             "Stock symbol from -s will be added to these."
+                             "Stock symbol / tag name from -s will be added to these. "
                              "Example: 'Elon Musk',Musk,Tesla,SpaceX")
     parser.add_argument("-a", "--addtokens", action="store_true",
                         help="Add nltk tokens required from config to keywords")
@@ -602,6 +605,12 @@ if __name__ == '__main__':
                         version="stocksight v%s" % STOCKSIGHT_VERSION,
                         help="Prints version and exits")
     args = parser.parse_args()
+
+    # check symbol for illegal characters and length
+    if ' ' in args.symbol:
+        sys.exit("Symbol cannot contain any spaces")
+    if len(args.symbol) > 25:
+        sys.exit("Symbol cannot be more than 25 characters")
 
     # set up logging
     logger = logging.getLogger('stocksight')

@@ -8,7 +8,7 @@
 - nltk_min_tokens in config.py.sample, used to set minimum number of tokens required, copy to your config
 - tweet/news headline count/filtered/ratio log output
 - --noelasticsearch cli arg for not adding new docs to Elasticsearch
-- -s stock symbol cli arg (required arg)
+- -s stock symbol cli arg (required arg), this is the stock symbol name and also used as the "tag name" on the stocksight webiste when uploading sentiment data
 - --overridetokensreq and --overridetokensignore cli args
 - -a --addtokens cli arg to add nltk required tokens from config to keywords
 ### changed
