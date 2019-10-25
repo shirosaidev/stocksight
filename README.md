@@ -19,6 +19,11 @@ Currently in BETA. Free signup. Once you are registered and login, you will be g
 
 `stocksight_token = "<your auth token>"`
 
+## Slack workspace
+Join the conversation, get support, etc on Slack.
+https://join.slack.com/t/stocksightworkspace/shared_invite/enQtNzk1ODI0NjA3MTM4LTA3ZDA0YzllOGNiM2I5ZjAzYWM2MjNmMjI0OTRlY2ZjYTk1NmM5YmEwMmMwOTE2OTNiMGZlNzdjZmZkM2RjM2U
+
+
 ## Requirements
 - Python 3. (tested with Python 3.6.5)
 - Elasticsearch 5.
