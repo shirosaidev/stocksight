@@ -25,6 +25,7 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 
 ## Requirements
 - Python 3. (tested with Python 3.6.5)
+- elasticsearch python module
 - nltk python module
 - requests python module
 - tweepy python module
@@ -35,7 +36,6 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 ## Optional installs
 - Elasticsearch 5.  (Elasticsearch is recommended but can be not used with --noelasticsearch)
 - Kibana 5.  (Kibana is recommended for searching/visualizing the Elasticsearch indices)
-- elasticsearch python module
 
 ### Download
 
@@ -58,7 +58,7 @@ Install python requirements using pip
 
 `pip install -r requirements.txt`
 
-Download nltk python data
+Install python nltk data
 
 `python -c "import nltk; nltk.download('punkt')"`
 
