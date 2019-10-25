@@ -69,13 +69,13 @@ Edit config.py and modify NLTK tokens required/ignored and twitter feeds you wan
 
 ### Examples
 
-Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets using keywords
+Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets using keywords and the stock symbol TSLA
 
 ```sh
 $ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX --debug
 ```
 
-Start mining and analyzing Tweets using keywords and upload sentiment results to stocksight website (requires website auth token)
+Start mining and analyzing Tweets using keywords and upload sentiment results to stocksight website (requires website auth token) using the stock symbol and stocksight website symbol TSLA. The website symbol is the "tag name" for the sentiment data being uploaded
 
 ```sh
 $ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX --debug -U
@@ -118,12 +118,16 @@ optional arguments:
   -d, --delindex        Delete existing Elasticsearch index first
   -s SYMBOL, --symbol SYMBOL
                         Stock symbol you are interesed in searching for,
-                        example: TSLA
+                        example: TSLA This is used as the symbol tag on
+                        stocksight website. Could also be set to a tag name
+                        like 'elonmusk' or 'elon' etc. Cannot contain spaces
+                        and more than 25 characters.
   -k KEYWORDS, --keywords KEYWORDS
                         Use keywords to search for in Tweets instead of feeds.
                         Separated by comma, case insensitive, spaces are ANDs
-                        commas are ORs. Stock symbol from -s will be added to
-                        these.Example: 'Elon Musk',Musk,Tesla,SpaceX
+                        commas are ORs. Stock symbol / tag name from -s will
+                        be added to these. Example: 'Elon
+                        Musk',Musk,Tesla,SpaceX
   -a, --addtokens       Add nltk tokens required from config to keywords
   -u URL, --url URL     Use twitter users from any links in web page at url
   -f FILE, --file FILE  Use twitter user ids from file
