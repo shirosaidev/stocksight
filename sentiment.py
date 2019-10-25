@@ -162,12 +162,15 @@ class TweetStreamListener(StreamListener):
                     return True
             # check required tokens from config
             tokenspass = False
+            tokensfound = 0
             for t in nltk_tokens_required:
                 if t in tokens:
-                    tokenspass = True
-                    break
+                    tokensfound += 1
+                    if tokensfound == nltk_min_tokens:
+                        tokenspass = True
+                        break
             if not tokenspass:
-                logger.info("Tweet does not contain token from required list, not adding")
+                logger.info("Tweet does not contain token from required list or min required, not adding")
                 self.count_filtered+=1
                 return True
 
@@ -244,7 +247,7 @@ class NewsHeadlineListener:
 
                     datenow = datetime.utcnow().isoformat()
                     # output news data
-                    print("\n------------------------------> (tweets: %s, filtered: %s, filter-ratio: %s)" \
+                    print("\n------------------------------> (news headlines: %s, filtered: %s, filter-ratio: %s)" \
                         % (self.count, self.count_filtered, str(round(self.count_filtered/self.count*100,2))+"%"))
                     print("Date: " + datenow)
                     print("News Headline: " + htext)
@@ -538,20 +541,21 @@ def upload_sentiment(neg, pos, neu):
     sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
     sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
     sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
-    # don't upload more than once every 10 seconds
+    # don't upload more than once every 10 seconds for tweets
     time_now = time.time()
-    if time_now - prev_time > 10:
-        prev_time = time_now
-        payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
-        try:
-            post = requests.post(stocksightURL, data=payload)
-        except requests.exceptions.RequestException as re:
-            logger.error("Exception: requests exception uploading sentiment to stocksight caused by %s" % re)
-            raise
-        if post.status_code == 200:
-            logger.info("Uploaded stock sentiment to stocksight website")
-        else:
-            logger.warning("Can't upload sentiment to stocksight website caused by %s" % post.status_code)
+    if not args.newsheadlines and time_now - prev_time < 10:
+        return
+    prev_time = time_now
+    payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
+    try:
+        post = requests.post(stocksightURL, data=payload)
+    except requests.exceptions.RequestException as re:
+        logger.error("Exception: requests exception uploading sentiment to stocksight caused by %s" % re)
+        raise
+    if post.status_code == 200:
+        logger.info("Uploaded stock sentiment to stocksight website")
+    else:
+        logger.warning("Can't upload sentiment to stocksight website caused by %s" % post.status_code)
 
 
 if __name__ == '__main__':

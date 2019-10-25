@@ -1,10 +1,11 @@
 # stocksight Change Log
 
-## [0.1-b.7] = 2019-10-23
+## [0.1-b.7] = 2019-10-24
 ### added
 - check if running Python 3
 - -U --upload - uploads sentiment to stocksight website (BETA) https://stocksight.diskoverspace.com/
-- stocksight_token in config.py.sample, used for auth to upload to stocksight website
+- stocksight_token in config.py.sample, used for auth to upload to stocksight website, copy to your config
+- nltk_min_tokens in config.py.sample, used to set minimum number of tokens required, copy to your config
 - tweet/news headline count/filtered/ratio log output
 - --noelasticsearch cli arg for not adding new docs to Elasticsearch
 - -s stock symbol cli arg (required arg)
