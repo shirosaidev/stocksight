@@ -15,7 +15,13 @@ Each user running stocksight has a unique fingerprint: specific stocks they are 
 
 ## Stocksight website
 https://stocksight.diskoverspace.com
-Currently in BETA. Free signup. Once you are registered and login, you will be given a token which you need to add to your stocksight config file to upload your stocksight results to the website.
+Currently in BETA. Free signup. Once you are registered and login, you will be given a token which you need to add to your stocksight config file to upload your stocksight results to the website. Edit config.py and add the line
+
+`stocksight_token = "<your auth token>"`
+
+## Slack workspace
+Join the conversation, get support, etc on [stocksight Slack](https://join.slack.com/t/stocksightworkspace/shared_invite/enQtNzk1ODI0NjA3MTM4LTA3ZDA0YzllOGNiM2I5ZjAzYWM2MjNmMjI0OTRlY2ZjYTk1NmM5YmEwMmMwOTE2OTNiMGZlNzdjZmZkM2RjM2U).
+
 
 ## Requirements
 - Python 3. (tested with Python 3.6.5)
