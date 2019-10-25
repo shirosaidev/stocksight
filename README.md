@@ -69,13 +69,13 @@ Edit config.py and modify NLTK tokens required/ignored and twitter feeds you wan
 
 ### Examples
 
-Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets using keywords and the stock symbol TSLA
+Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets using keywords and the stock symbol TSLA (`-s <symbol>`)
 
 ```sh
 $ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX --debug
 ```
 
-Start mining and analyzing Tweets using keywords and upload sentiment results to stocksight website (requires website auth token) using the stock symbol and stocksight website symbol TSLA (-s <symbol>). The website symbol is the tag name for the sentiment data being uploaded
+Start mining and analyzing Tweets using keywords and upload sentiment results to stocksight website (requires website auth token) using the stock symbol and stocksight website symbol TSLA. The website symbol is the tag name for the sentiment data being uploaded
 
 ```sh
 $ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX --debug -U
