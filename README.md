@@ -25,8 +25,6 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 
 ## Requirements
 - Python 3. (tested with Python 3.6.5)
-- Elasticsearch 5.
-- Kibana 5.
 - elasticsearch python module
 - nltk python module
 - requests python module
@@ -34,6 +32,10 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 - beautifulsoup4 python module
 - textblob python module
 - vaderSentiment python module
+
+## Optional installs
+- Elasticsearch 5.  (Elasticsearch is recommended but can be not used with --noelasticsearch)
+- Kibana 5.  (Kibana is recommended for searching/visualizing the Elasticsearch indices)
 
 ### Download
 
@@ -55,6 +57,10 @@ Stocksight website
 Install python requirements using pip
 
 `pip install -r requirements.txt`
+
+Install python nltk data
+
+`python -c "import nltk; nltk.download('punkt')"`
 
 Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
