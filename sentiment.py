@@ -40,7 +40,7 @@ from datetime import datetime
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.7'
+STOCKSIGHT_VERSION = '0.1-b.8'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
@@ -83,9 +83,6 @@ class TweetStreamListener(StreamListener):
                 % (self.count, self.count_filtered, str(round(self.count_filtered/self.count*100,2))+"%"))
             logger.debug('tweet data: ' + str(dict_data))
 
-            # clean up tweet text
-            #text = unicodedata.normalize(
-            #    'NFKD', dict_data["text"]).encode('ascii', 'ignore')
             text = dict_data["text"]
             if text is None:
                 logger.info("Tweet has no relevant text, skipping")
@@ -95,14 +92,14 @@ class TweetStreamListener(StreamListener):
             # grab html links from tweet
             #tweet_urls = re.search("http\S+", text)
 
-            # clean up tweet text more
-            text = text.replace("\n", " ")
-            text = re.sub(r"http\S+", "", text)
-            text = re.sub(r"&.*?;", "", text)
-            text = re.sub(r"<.*?>", "", text)
-            text = text.replace("RT", "")
-            text = text.replace(u"…", "")
-            text = text.strip()
+            # clean up tweet text
+            textclean = clean_text(text)
+
+            # check if tweet has no valid text
+            if textclean == "":
+                logger.info("Tweet does not cotain any valid text after cleaning, not adding")
+                self.count_filtered+=1
+                return True
 
             # get date when tweet was created
             created_date = time.strftime(
@@ -115,7 +112,7 @@ class TweetStreamListener(StreamListener):
             friends = int(dict_data.get("user", {}).get("friends_count"))
             followers = int(dict_data.get("user", {}).get("followers_count"))
             statuses = int(dict_data.get("user", {}).get("statuses_count"))
-            text_filtered = str(text)
+            text_filtered = str(textclean)
             tweetid = int(dict_data.get("id"))
             text_raw = str(dict_data.get("text"))
 
@@ -136,6 +133,19 @@ class TweetStreamListener(StreamListener):
             text_for_tokens = re.sub(
                 r"[\%|\$|\.|\,|\!|\:|\@]|\(|\)|\#|\+|(``)|('')|\?|\-", "", text_filtered)
             tokens = nltk.word_tokenize(text_for_tokens)
+            # convert to lower case
+            tokens = [w.lower() for w in tokens]
+            # remove punctuation from each word
+            import string
+            table = str.maketrans('', '', string.punctuation)
+            stripped = [w.translate(table) for w in tokens]
+            # remove remaining tokens that are not alphabetic
+            tokens = [w for w in stripped if w.isalpha()]
+            # filter out stop words
+            stop_words = set(nltk.corpus.stopwords.words('english'))
+            tokens = [w for w in tokens if not w in stop_words]
+            # remove words less than 3 characters
+            tokens = [w for w in tokens if not len(w) < 3]
             print("NLTK Tokens: " + str(tokens))
 
             # check for min token length
@@ -174,15 +184,16 @@ class TweetStreamListener(StreamListener):
                 self.count_filtered+=1
                 return True
 
-            # strip out hashtags for language processing
-            text_clean = re.sub(r"[#|@|\$]\S+", "", text_filtered)
-            text_clean = text_clean.strip()
+            # clean text for sentiment analysis
+            text_clean = clean_text_sentiment(text_filtered)
 
             # check if tweet has no valid text
             if text_clean == "":
-                logger.info("Tweet does not cotain any valid text, not adding")
+                logger.info("Tweet does not cotain any valid text after cleaning, not adding")
                 self.count_filtered+=1
                 return True
+
+            print("Tweet Clean Text (sentiment): " + text_clean)
 
             # get sentiment values
             polarity, subjectivity, sentiment = sentiment_analysis(text_clean)
@@ -373,6 +384,25 @@ def get_page_text(url):
         pass
 
 
+def clean_text(text):
+    # clean up text
+    text = text.replace("\n", " ")
+    text = re.sub(r"https?\S+", "", text)
+    text = re.sub(r"&.*?;", "", text)
+    text = re.sub(r"<.*?>", "", text)
+    text = text.replace("RT", "")
+    text = text.replace(u"…", "")
+    text = text.strip()
+    return text
+
+
+def clean_text_sentiment(text):
+    # clean up text for sentiment analysis
+    text = re.sub(r"[#|@]\S+", "", text)
+    text = text.strip()
+    return text
+
+
 def get_sentiment_from_url(text, sentimentURL):
     # get sentiment from text processing website
     payload = {'text': text}
@@ -392,7 +422,6 @@ def get_sentiment_from_url(text, sentimentURL):
         return None
 
     response = post.json()
-    logger.debug('sentiment url: ' + str(response))
 
     neg = response['probability']['neg']
     pos = response['probability']['pos']
@@ -420,44 +449,35 @@ def sentiment_analysis(text):
     """
 
     # pass text into sentiment url
-    ret = get_sentiment_from_url(text, sentimentURL)
-    if ret is None:
-        sentiment_url = None
+    if args.websentiment:
+        ret = get_sentiment_from_url(text, sentimentURL)
+        if ret is None:
+            sentiment_url = None
+        else:
+            sentiment_url, neg_url, pos_url, neu_url = ret
     else:
-        sentiment_url, neg_url, pos_url, neu_url = ret
+        sentiment_url = None
 
     # pass text into TextBlob
     text_tb = TextBlob(text)
-    logger.debug('textblob: ' + str(text_tb.sentiment))
 
     # pass text into VADER Sentiment
     analyzer = SentimentIntensityAnalyzer()
     text_vs = analyzer.polarity_scores(text)
-    logger.debug('vader: ' + str(text_vs))
 
     # determine sentiment from our sources
     if sentiment_url is None:
-        if text_tb.sentiment.polarity <= 0 and text_vs['compound'] <= -0.5:
-            sentiment = "negative"  # very negative
-        elif text_tb.sentiment.polarity <= 0 and text_vs['compound'] <= -0.1:
-            sentiment = "negative"  # somewhat negative
-        elif text_tb.sentiment.polarity == 0 and text_vs['compound'] > -0.1 and text_vs['compound'] < 0.1:
-            sentiment = "neutral"
-        elif text_tb.sentiment.polarity >= 0 and text_vs['compound'] >= 0.1:
-            sentiment = "positive"  # somewhat positive
-        elif text_tb.sentiment.polarity > 0 and text_vs['compound'] >= 0.1:
-            sentiment = "positive"  # very positive
+        if text_tb.sentiment.polarity < 0 and text_vs['compound'] <= -0.05:
+            sentiment = "negative"
+        elif text_tb.sentiment.polarity > 0 and text_vs['compound'] >= 0.05:
+            sentiment = "positive"
         else:
             sentiment = "neutral"
     else:
-        if text_tb.sentiment.polarity < 0 and text_vs['compound'] <= -0.1 and sentiment_url == "negative":
-            sentiment = "negative"  # very negative
-        elif text_tb.sentiment.polarity <= 0 and text_vs['compound'] < 0 and sentiment_url == "neutral":
-            sentiment = "negative"  # somewhat negative
-        elif text_tb.sentiment.polarity >= 0 and text_vs['compound'] > 0 and sentiment_url == "neutral":
-            sentiment = "positive"  # somewhat positive
-        elif text_tb.sentiment.polarity > 0 and text_vs['compound'] >= 0.1 and sentiment_url == "positive":
-            sentiment = "positive"  # very positive
+        if text_tb.sentiment.polarity < 0 and text_vs['compound'] <= -0.05 and sentiment_url == "negative":
+            sentiment = "negative"
+        elif text_tb.sentiment.polarity > 0 and text_vs['compound'] >= 0.05 and sentiment_url == "positive":
+            sentiment = "positive"
         else:
             sentiment = "neutral"
 
@@ -469,10 +489,14 @@ def sentiment_analysis(text):
             neutral_avg = (text_vs['neu'] + neu_url) / 2
             upload_sentiment(neg_avg, pos_avg, neutral_avg)
         else:
-            upload_sentiment(text_vs['neg'], text_vs['pos'], text_vs['neu'])
+            neg_avg = text_vs['neg']
+            pos_avg = text_vs['pos']
+            neutral_avg = text_vs['neu']
+            upload_sentiment(neg_avg, pos_avg, neutral_avg)
 
     # calculate average polarity from TextBlob and VADER
     polarity = (text_tb.sentiment.polarity + text_vs['compound']) / 2
+
     # output sentiment polarity
     print("************")
     print("Sentiment Polarity: " + str(polarity))
@@ -483,6 +507,11 @@ def sentiment_analysis(text):
     # output sentiment
     print("Sentiment (url): " + str(sentiment_url))
     print("Sentiment (algorithm): " + str(sentiment))
+    print("Overall sentiment (textblob): ", text_tb.sentiment) 
+    print("Overall sentiment (vader): ", text_vs) 
+    print("sentence was rated as ", text_vs['neg']*100, "% Negative") 
+    print("sentence was rated as ", text_vs['neu']*100, "% Neutral") 
+    print("sentence was rated as ", text_vs['pos']*100, "% Positive") 
     print("************")
 
     return polarity, text_tb.sentiment.subjectivity, sentiment
@@ -573,8 +602,7 @@ if __name__ == '__main__':
     parser.add_argument("-k", "--keywords", metavar="KEYWORDS",
                         help="Use keywords to search for in Tweets instead of feeds. "
                              "Separated by comma, case insensitive, spaces are ANDs commas are ORs. "
-                             "Stock symbol / tag name from -s will be added to these. "
-                             "Example: 'Elon Musk',Musk,Tesla,SpaceX")
+                             "Example: TSLA,'Elon Musk',Musk,Tesla,SpaceX")
     parser.add_argument("-a", "--addtokens", action="store_true",
                         help="Add nltk tokens required from config to keywords")
     parser.add_argument("-u", "--url", metavar="URL",
@@ -588,7 +616,9 @@ if __name__ == '__main__':
     parser.add_argument("--followlinks", action="store_true",
                         help="Follow links on news headlines and scrape relevant text from landing page")
     parser.add_argument("-U", "--upload", action="store_true",
-                        help="Upload sentiment to stocksight website (BETA)")                   
+                        help="Upload sentiment to stocksight website (BETA)")   
+    parser.add_argument("-w", "--websentiment", action="store_true",
+                        help="Get sentiment results from text processing website")                  
     parser.add_argument("--noelasticsearch", action="store_true",
                         help="Don't connect or add new docs to Elasticsearch")
     parser.add_argument("--overridetokensreq", metavar="TOKEN", nargs="+",
@@ -915,8 +945,6 @@ if __name__ == '__main__':
                 # keywords to search on twitter
                 # add keywords to list
                 keywords = args.keywords.split(',')
-                # add stock symbol to keywords
-                #keywords.append(args.symbol)
                 if args.addtokens:
                     # add tokens to keywords to list
                     for f in nltk_tokens_required:
