@@ -113,8 +113,8 @@ Load 'stocksight' index in Kibana and import export.json file for visuals/dashbo
 
 ```
 usage: sentiment.py [-h] [-i INDEX] [-d] -s SYMBOL [-k KEYWORDS] [-a] [-u URL]
-                    [-f FILE] [-n] [--frequency FREQUENCY] [--followlinks]
-                    [-U] [--noelasticsearch]
+                    [-f FILE] [-l] [-n] [--frequency FREQUENCY]
+                    [--followlinks] [-U] [-w] [--noelasticsearch]
                     [--overridetokensreq TOKEN [TOKEN ...]]
                     [--overridetokensignore TOKEN [TOKEN ...]] [-v] [--debug]
                     [-q] [-V]
@@ -133,12 +133,13 @@ optional arguments:
   -k KEYWORDS, --keywords KEYWORDS
                         Use keywords to search for in Tweets instead of feeds.
                         Separated by comma, case insensitive, spaces are ANDs
-                        commas are ORs. Stock symbol / tag name from -s will
-                        be added to these. Example: 'Elon
+                        commas are ORs. Example: TSLA,'Elon
                         Musk',Musk,Tesla,SpaceX
   -a, --addtokens       Add nltk tokens required from config to keywords
   -u URL, --url URL     Use twitter users from any links in web page at url
   -f FILE, --file FILE  Use twitter user ids from file
+  -l, --linksentiment   Follow any link url in tweets and analyze sentiment on
+                        web page
   -n, --newsheadlines   Get news headlines instead of Twitter using stock
                         symbol from -s
   --frequency FREQUENCY
@@ -147,6 +148,7 @@ optional arguments:
   --followlinks         Follow links on news headlines and scrape relevant
                         text from landing page
   -U, --upload          Upload sentiment to stocksight website (BETA)
+  -w, --websentiment    Get sentiment results from text processing website
   --noelasticsearch     Don't connect or add new docs to Elasticsearch
   --overridetokensreq TOKEN [TOKEN ...]
                         Override nltk required tokens from config, separate
