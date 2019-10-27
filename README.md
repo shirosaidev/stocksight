@@ -32,6 +32,7 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 - beautifulsoup4 python module
 - textblob python module
 - vaderSentiment python module
+- newspaper3k python module
 
 ## Optional installs
 - Elasticsearch 5.  (Elasticsearch is recommended but can be not used with --noelasticsearch)
@@ -86,10 +87,16 @@ $ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX --debug
 Start mining and analyzing Tweets using keywords and upload sentiment results to stocksight website (requires website auth token) using the stock symbol and stocksight website symbol TSLA. The website symbol is the "tag name" for the sentiment data being uploaded
 
 ```sh
-$ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX --debug -U
+$ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX -U --debug
 ```
 
-Start mining and analyzing Tweets from feeds in config using cached user ids from file
+Start mining and analyzing Tweets using keywords and the stock symbol TSLA and follow any url links in tweets and performing sentiment analysis on the link web page as well as the tweet
+
+```sh
+$ python sentiment.py -s TSLA -k 'Elon Musk',Musk,Tesla,SpaceX -l -U --debug
+```
+
+Start mining and analyzing Tweets from feeds in config using cached user ids from file (if you change any of the twitter  feeds in the config file, you need to delete this file and recreate it without -f)
 
 ```sh
 $ python sentiment.py -s TSLA -f twitteruserids.txt --debug
