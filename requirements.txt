@@ -5,3 +5,4 @@ tweepy
 beautifulsoup4
 textblob
 vaderSentiment
+newspaper3k

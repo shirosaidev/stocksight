@@ -1,5 +1,19 @@
 # stocksight Change Log
 
+## [0.1-b.9] = 2019-10-27
+### added
+- -l --linksentiment cli arg - follow any tweet link urls and run sentiment analysis on those web pages
+- requirement for newspaper3k python module to requirements.txt, install with pip
+
+## [0.1-b.8] = 2019-10-25
+### added
+- -w --websentiment cli arg - Get sentiment results from text processing website
+- improved nltk token processing - no longed needed to provide multiple case in nltk tokens in config
+- requirement for nltk stopwords, install with python -c "import nltk; nltk.download('stopwords')"
+### changed
+- getting web sentiment results from text processing website is no longer default
+- improved tweet text cleaning, sentiment algorithm and stocksight sentiment upload values
+
 ## [0.1-b.7] = 2019-10-24
 ### added
 - check if running Python 3

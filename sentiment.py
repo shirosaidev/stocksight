@@ -20,6 +20,7 @@ import requests
 import nltk
 import argparse
 import logging
+import string
 try:
     import urllib.parse as urlparse
 except ImportError:
@@ -35,12 +36,13 @@ except ImportError:
     from elasticsearch import Elasticsearch
 from random import randint
 from datetime import datetime
+from newspaper import Article, ArticleException
 
 # import elasticsearch host, twitter keys and tokens
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.8'
+STOCKSIGHT_VERSION = '0.1-b.9'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
@@ -90,7 +92,9 @@ class TweetStreamListener(StreamListener):
                 return True
 
             # grab html links from tweet
-            #tweet_urls = re.search("http\S+", text)
+            tweet_urls = []
+            if args.linksentiment:
+                tweet_urls = re.findall(r'(https?://[^\s]+)', text)
 
             # clean up tweet text
             textclean = clean_text(text)
@@ -136,7 +140,6 @@ class TweetStreamListener(StreamListener):
             # convert to lower case
             tokens = [w.lower() for w in tokens]
             # remove punctuation from each word
-            import string
             table = str.maketrans('', '', string.punctuation)
             stripped = [w.translate(table) for w in tokens]
             # remove remaining tokens that are not alphabetic
@@ -200,6 +203,31 @@ class TweetStreamListener(StreamListener):
 
             # add tweet_id to list
             tweet_ids.append(dict_data["id"])
+
+            # get sentiment for tweet 
+            if len(tweet_urls) > 0:
+                tweet_urls_polarity = 0
+                tweet_urls_subjectivity = 0
+                for url in tweet_urls:
+                    res = tweeklink_sentiment_analysis(url)
+                    if res is None:
+                        continue
+                    pol, sub, sen = res
+                    tweet_urls_polarity = (tweet_urls_polarity + pol) / 2
+                    tweet_urls_subjectivity = (tweet_urls_subjectivity + sub) / 2
+                    if sentiment == "positive" or sen == "positive":
+                        sentiment = "positive"
+                    elif sentiment == "negative" or sen == "negative":
+                        sentiment = "negative"
+                    else:
+                        sentiment = "neutral"
+
+                # calculate average polarity and subjectivity from tweet and tweet links
+                if tweet_urls_polarity > 0:
+                    polarity = (polarity + tweet_urls_polarity) / 2
+                if tweet_urls_subjectivity > 0:
+                    subjectivity = (subjectivity + tweet_urls_subjectivity) / 2
+            
 
             if not args.noelasticsearch:
                 logger.info("Adding tweet to elasticsearch")
@@ -517,6 +545,59 @@ def sentiment_analysis(text):
     return polarity, text_tb.sentiment.subjectivity, sentiment
 
 
+def tweeklink_sentiment_analysis(url):
+    # get text summary of tweek link web page and run sentiment analysis on it
+    try:
+        logger.info('Following tweet link %s to get sentiment..' % url)
+        article = Article(url)
+        article.download()
+        article.parse()
+        # check if twitter web page
+        if "Tweet with a location" in article.text:
+            logger.info('Link to Twitter web page, skipping')
+            return None
+        article.nlp()
+        tokens = article.keywords
+        print("Tweet link nltk tokens:", tokens)
+
+        # check for min token length
+        if len(tokens) < 5:
+            logger.info("Tweet link does not contain min. number of tokens, not adding")
+            return None
+        # check ignored tokens from config
+        for t in nltk_tokens_ignored:
+            if t in tokens:
+                logger.info("Tweet link contains token from ignore list, not adding")
+                return None
+        # check required tokens from config
+        tokenspass = False
+        tokensfound = 0
+        for t in nltk_tokens_required:
+            if t in tokens:
+                tokensfound += 1
+                if tokensfound == nltk_min_tokens:
+                    tokenspass = True
+                    break
+        if not tokenspass:
+            logger.info("Tweet link does not contain token from required list or min required, not adding")
+            return None
+
+        summary = article.summary
+        if summary == '':
+            logger.info('No text found in tweet link url web page')
+            return None
+        summary_clean = clean_text(summary)
+        summary_clean = clean_text_sentiment(summary_clean)
+        print("Tweet link Clean Summary (sentiment): " + summary_clean)
+        polarity, subjectivity, sentiment = sentiment_analysis(summary_clean)
+        
+        return polarity, subjectivity, sentiment
+
+    except ArticleException as e:
+        logger.warning('Exception: error getting text on Twitter link caused by: %s' % e)
+        return None
+
+
 def get_twitter_users_from_url(url):
     twitter_users = []
     logger.info("Grabbing any twitter users from url %s" % url)
@@ -609,6 +690,8 @@ if __name__ == '__main__':
                         help="Use twitter users from any links in web page at url")
     parser.add_argument("-f", "--file", metavar="FILE",
                         help="Use twitter user ids from file")
+    parser.add_argument("-l", "--linksentiment", action="store_true",
+                        help="Follow any link url in tweets and analyze sentiment on web page")
     parser.add_argument("-n", "--newsheadlines", action="store_true",
                         help="Get news headlines instead of Twitter using stock symbol from -s")
     parser.add_argument("--frequency", metavar="FREQUENCY", default=120, type=int,
