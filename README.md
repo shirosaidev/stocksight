@@ -71,7 +71,9 @@ Set elasticsearch settings in config.py for your env
 
 Add twitter consumer key/access token and secrets to config.py
 
-Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch (blacklist).
+Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch and uploaded to StockSight website (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch and uploaded to StockSight website (blacklist).
+
+These settings (tokens, feeds) and optional keywords for tweets, are what creates your unique fingerprint and helps with the crowd-sourcing of the stock symbol data mining and sentiment accuracy on StockSight website. The higher number of unique and valid data sources, the more accurate the sentiment analysis average should be.
 
 ### Examples
 
