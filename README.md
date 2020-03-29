@@ -53,7 +53,21 @@ Stocksight Kibana dashboard
 Stocksight website
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_website_screenshot.png?raw=true" alt="stocksight website dashboard" />
 
-## How to use
+## Install - Docker
+
+Set up stocksight, elasticsearch and kibana containers using Docker compose
+```
+cd stocksight
+docker-compose build && docker-compose up
+```
+
+Once all the containers have started up, shell into the container
+
+`docker exec -it stocksight_stocksight_1 bash`
+
+See examples below for running stocksight.
+
+## Install - local
 
 Install python requirements using pip
 
@@ -63,12 +77,14 @@ Install python nltk data
 
 `python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"`
 
+
+## How to use
 Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
 Copy config.py.sample to config.py
 
-Set elasticsearch settings in config.py for your env
+Set elasticsearch settings in config.py for your env (for Docker, set elasticsearch_host to elasticsearch)
 
 Add twitter consumer key/access token and secrets to config.py
 
