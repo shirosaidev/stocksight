@@ -55,6 +55,8 @@ Stocksight website
 
 ## Install - Docker
 
+*See how to use below before building the Docker containers
+
 Set up stocksight, elasticsearch and kibana containers using Docker compose
 ```
 cd stocksight
