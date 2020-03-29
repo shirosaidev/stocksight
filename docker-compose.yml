@@ -1,0 +1,31 @@
+version: '3'
+services:
+  stocksight:
+    build: .
+    environment:
+      - ES_HOST=elasticsearch
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./config.py:/app/config.py
+      - ./twitteruserids.txt:/app/twitteruserids.txt
+  elasticsearch:
+    image: elasticsearch:5.6.16
+    volumes:
+      - ./esdata:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+  kibana:
+    image: kibana:5.6.16
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch

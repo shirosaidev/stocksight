@@ -6,7 +6,7 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Chris Park 2018-2019
+Copyright (C) Chris Park 2018-2020
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
@@ -15,7 +15,6 @@ import sys
 import json
 import time
 import re
-import unicodedata
 import requests
 import nltk
 import argparse
@@ -34,7 +33,7 @@ try:
     from elasticsearch5 import Elasticsearch
 except ImportError:
     from elasticsearch import Elasticsearch
-from random import randint
+from random import randint, randrange
 from datetime import datetime
 from newspaper import Article, ArticleException
 
@@ -42,7 +41,7 @@ from newspaper import Article, ArticleException
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.9'
+STOCKSIGHT_VERSION = '0.1-b.10'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
@@ -247,6 +246,8 @@ class TweetStreamListener(StreamListener):
                             "subjectivity": subjectivity,
                             "sentiment": sentiment})
 
+            # randomly sleep to stagger request time
+            time.sleep(randrange(2,5))
             return True
 
         except Exception as e:
@@ -255,12 +256,16 @@ class TweetStreamListener(StreamListener):
 
     # on failure
     def on_error(self, status_code):
-        logger.error("Got an error with status code: %s" % status_code)
+        logger.error("Got an error with status code: %s (will try again later)" % status_code)
+        # randomly sleep to stagger request time
+        time.sleep(randrange(2,30))
         return True
 
     # on timeout
     def on_timeout(self):
-        logger.warning("Timeout...")
+        logger.warning("Timeout... (will try again later)")
+        # randomly sleep to stagger request time
+        time.sleep(randrange(2,30))
         return True
 
 
@@ -527,19 +532,19 @@ def sentiment_analysis(text):
 
     # output sentiment polarity
     print("************")
-    print("Sentiment Polarity: " + str(polarity))
+    print("Sentiment Polarity: " + str(round(polarity, 3)))
 
     # output sentiment subjectivity (TextBlob)
-    print("Sentiment Subjectivity: " + str(text_tb.sentiment.subjectivity))
+    print("Sentiment Subjectivity: " + str(round(text_tb.sentiment.subjectivity, 3)))
 
     # output sentiment
     print("Sentiment (url): " + str(sentiment_url))
     print("Sentiment (algorithm): " + str(sentiment))
     print("Overall sentiment (textblob): ", text_tb.sentiment) 
     print("Overall sentiment (vader): ", text_vs) 
-    print("sentence was rated as ", text_vs['neg']*100, "% Negative") 
-    print("sentence was rated as ", text_vs['neu']*100, "% Neutral") 
-    print("sentence was rated as ", text_vs['pos']*100, "% Positive") 
+    print("sentence was rated as ", round(text_vs['neg']*100, 3), "% Negative") 
+    print("sentence was rated as ", round(text_vs['neu']*100, 3), "% Neutral") 
+    print("sentence was rated as ", round(text_vs['pos']*100, 3), "% Positive") 
     print("************")
 
     return polarity, text_tb.sentiment.subjectivity, sentiment
@@ -778,20 +783,16 @@ if __name__ == '__main__':
             color = '35m'
 
         banner = """\033[%s
-        
-             /$$                         /$$                 /$$           /$$         /$$    
-            | $$                        | $$                |__/          | $$        | $$    
-  /$$$$$$$ /$$$$$$    /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$$ /$$  /$$$$$$ | $$$$$$$  /$$$$$$  
- /$$_____/|_  $$_/   /$$__  $$ /$$_____/| $$  /$$/ /$$_____/| $$ /$$__  $$| $$__  $$|_  $$_/  
-|  $$$$$$   | $$    | $$  \ $$| $$      | $$$$$$/ |  $$$$$$ | $$| $$  \ $$| $$  \ $$  | $$    
- \____  $$  | $$ /$$| $$  | $$| $$      | $$_  $$  \____  $$| $$| $$  | $$| $$  | $$  | $$ /$$
- /$$$$$$$/  |  $$$$/|  $$$$$$/|  $$$$$$$| $$ \  $$ /$$$$$$$/| $$|  $$$$$$$| $$  | $$  |  $$$$/
-|_______/    \___/   \______/  \_______/|__/  \__/|_______/ |__/ \____  $$|__/  |__/   \___/  
-                                                                 /$$  \ $$                    
-                       :) = +$   :( = -$                        |  $$$$$$/                    
-                                                                 \______/  v%s
-    Join the StockSight website https://stocksight.diskoverspace.com
-        \033[0m""" % (color, STOCKSIGHT_VERSION)
+       _                     _                 
+     _| |_ _           _   _| |_ _     _   _   
+    |   __| |_ ___ ___| |_|   __|_|___| |_| |_ 
+    |__   |  _| . |  _| '_|__   | | . |   |  _|
+    |_   _|_| |___|___|_,_|_   _|_|_  |_|_|_|  
+      |_|                   |_|   |___|                
+          :) = +$   :( = -$    v%s
+    GitHub repo https://github.com/shirosaidev/stocksight
+    StockSight website https://stocksight.diskoverspace.com
+            \033[0m""" % (color, STOCKSIGHT_VERSION)
         print(banner + '\n')
 
     if not args.noelasticsearch:
@@ -972,24 +973,24 @@ if __name__ == '__main__':
             else:
                 logger.info("No twitter users found in file, exiting")
                 sys.exit(1)
-        else:
+        elif args.keywords is None:
             # build user id list from user names
-            logger.info("Looking up Twitter user ids from usernames...")
+            logger.info("Looking up Twitter user ids from usernames... (use -f twitteruserids.txt for cached user ids)")
             useridlist = []
             while True:
                 for u in twitter_feeds:
                     try:
                         # get user id from screen name using twitter api
                         user = api.get_user(screen_name=u)
-                        uid = int(user.id)
+                        uid = str(user.id)
                         if uid not in useridlist:
                             useridlist.append(uid)
-                        time.sleep(randint(0, 2))
+                        time.sleep(randrange(2, 5))
                     except TweepError as te:
                         # sleep a bit in case twitter suspends us
                         logger.warning("Tweepy exception: twitter api error caused by: %s" % te)
                         logger.info("Sleeping for a random amount of time and retrying...")
-                        time.sleep(randint(1,10))
+                        time.sleep(randrange(2,30))
                         continue
                     except KeyboardInterrupt:
                         logger.info("Ctrl-c keyboard interrupt, exiting...")
@@ -1018,11 +1019,11 @@ if __name__ == '__main__':
             logger.info('Stock symbol: ' + str(args.symbol))
             logger.info('NLTK tokens required: ' + str(nltk_tokens_required))
             logger.info('NLTK tokens ignored: ' + str(nltk_tokens_ignored))
-            logger.info('Twitter Feeds: ' + str(twitter_feeds))
-            logger.info('Twitter User Ids: ' + str(useridlist))
             logger.info('Listening for Tweets (ctrl-c to exit)...')
             if args.keywords is None:
-                logger.info('No keywords entered, following Twitter users')
+                logger.info('No keywords entered, following Twitter users...')
+                logger.info('Twitter Feeds: ' + str(twitter_feeds))
+                logger.info('Twitter User Ids: ' + str(useridlist))
                 stream.filter(follow=useridlist, languages=['en'])
             else:
                 # keywords to search on twitter
@@ -1032,8 +1033,8 @@ if __name__ == '__main__':
                     # add tokens to keywords to list
                     for f in nltk_tokens_required:
                         keywords.append(f)
+                logger.info('Searching Twitter for keywords...')
                 logger.info('Twitter keywords: ' + str(keywords))
-                logger.info('Searching Twitter for keywords')
                 stream.filter(track=keywords, languages=['en'])
         except TweepError as te:
             logger.debug("Tweepy Exception: Failed to get tweets caused by: %s" % te)

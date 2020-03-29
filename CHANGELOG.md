@@ -1,5 +1,14 @@
 # stocksight Change Log
 
+## [0.1-b.10] = 2020-03-29
+### added
+- Dockerfile and docker-compose.yml for running in docker
+### changed
+- added random time delay between fetching tweets to reduce chance of getting Twitter 420 code (throttled/backoff)
+### fixed
+- using -k keywords no longer causes twitter user id's to be looked up
+- fatal error when looking up and using twitter user ids
+
 ## [0.1-b.9] = 2019-10-27
 ### added
 - -l --linksentiment cli arg - follow any tweet link urls and run sentiment analysis on those web pages

@@ -5,7 +5,7 @@ Elasticsearch.
 See README.md or https://github.com/shirosaidev/stocksight
 for more information.
 
-Copyright (C) Chris Park 2018-2019
+Copyright (C) Chris Park 2018-2020
 stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
@@ -183,19 +183,15 @@ if __name__ == '__main__':
             color = '35m'
 
         banner = """\033[%s
-
-                 /$$                         /$$                 /$$           /$$         /$$    
-                | $$                        | $$                |__/          | $$        | $$    
-      /$$$$$$$ /$$$$$$    /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$$ /$$  /$$$$$$ | $$$$$$$  /$$$$$$  
-     /$$_____/|_  $$_/   /$$__  $$ /$$_____/| $$  /$$/ /$$_____/| $$ /$$__  $$| $$__  $$|_  $$_/  
-    |  $$$$$$   | $$    | $$  \ $$| $$      | $$$$$$/ |  $$$$$$ | $$| $$  \ $$| $$  \ $$  | $$    
-     \____  $$  | $$ /$$| $$  | $$| $$      | $$_  $$  \____  $$| $$| $$  | $$| $$  | $$  | $$ /$$
-     /$$$$$$$/  |  $$$$/|  $$$$$$/|  $$$$$$$| $$ \  $$ /$$$$$$$/| $$|  $$$$$$$| $$  | $$  |  $$$$/
-    |_______/    \___/   \______/  \_______/|__/  \__/|_______/ |__/ \____  $$|__/  |__/   \___/  
-                                                                     /$$  \ $$                    
-                           :) = +$   :( = -$                        |  $$$$$$/                    
-                                                                     \______/  v%s
-        Join the StockSight website https://stocksight.diskoverspace.com
+       _                     _                 
+     _| |_ _           _   _| |_ _     _   _   
+    |   __| |_ ___ ___| |_|   __|_|___| |_| |_ 
+    |__   |  _| . |  _| '_|__   | | . |   |  _|
+    |_   _|_| |___|___|_,_|_   _|_|_  |_|_|_|  
+      |_|                   |_|   |___|                
+          :) = +$   :( = -$    v%s
+    GitHub repo https://github.com/shirosaidev/stocksight
+    StockSight website https://stocksight.diskoverspace.com
             \033[0m""" % (color, STOCKSIGHT_VERSION)
         print(banner + '\n')
 
