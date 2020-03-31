@@ -89,7 +89,7 @@ https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens
 
 2) Copy config.py.sample to config.py
 
-3) Set elasticsearch settings in config.py for your env (for Docker, set elasticsearch_host to elasticsearch)
+3) Set elasticsearch settings in config.py for your env (for Docker, set `elasticsearch_host = "elasticsearch"`)
 
 4) Add twitter consumer key/access token and secrets to config.py
 
