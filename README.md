@@ -57,40 +57,43 @@ Stocksight website
 
 *See how to use below before building the Docker containers
 
-Set up stocksight, elasticsearch and kibana containers using Docker compose
+1) Download/clone stocksight repo with git.
+2) Set up stocksight, elasticsearch and kibana containers using Docker compose
 ```
 cd stocksight
 docker-compose build && docker-compose up
 ```
 
-Once all the containers have started up, shell into the container
+3) Once all the containers have started up, shell into the container
 
 `docker exec -it stocksight_stocksight_1 bash`
 
-See examples below for running stocksight.
+4) See examples below for running stocksight.
 
 ## Install - local
 
-Install python requirements using pip
+*Recommended to install Elasticsearch and Kibana in local machine or other machine/vm/docker
+
+1) Install python requirements using pip
 
 `pip install -r requirements.txt`
 
-Install python nltk data
+2) Install python nltk data
 
 `python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"`
 
 
 ## How to use
-Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
+1) Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
-Copy config.py.sample to config.py
+2) Copy config.py.sample to config.py
 
-Set elasticsearch settings in config.py for your env (for Docker, set elasticsearch_host to elasticsearch)
+3) Set elasticsearch settings in config.py for your env (for Docker, set elasticsearch_host to elasticsearch)
 
-Add twitter consumer key/access token and secrets to config.py
+4) Add twitter consumer key/access token and secrets to config.py
 
-Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch and uploaded to StockSight website (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch and uploaded to StockSight website (blacklist).
+5) Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch and uploaded to StockSight website (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch and uploaded to StockSight website (blacklist).
 
 These settings (tokens, feeds) and optional keywords for tweets, are what creates your unique fingerprint and helps with the crowd-sourcing of the stock symbol data mining and sentiment accuracy on StockSight website. The higher number of unique and valid data sources, the more accurate the sentiment analysis average should be.
 
