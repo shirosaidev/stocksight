@@ -61,6 +61,7 @@ Stocksight website
 2) Set up stocksight, elasticsearch and kibana containers using Docker compose
 ```
 cd stocksight
+cp config.py.sample config.py
 docker-compose build && docker-compose up
 ```
 *This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory
