@@ -55,7 +55,7 @@ Stocksight website
 
 ## Install - Docker
 
-*See how to use below before building the Docker containers
+** *See how to use below before building the Docker containers**
 
 1) Download/clone stocksight repo with git.
 2) Set up stocksight, elasticsearch and kibana containers using Docker compose
@@ -64,7 +64,7 @@ cd stocksight
 cp config.py.sample config.py
 docker-compose build && docker-compose up
 ```
-*This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory
+** *This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory **
 
 3) Once all the containers have started up, shell into the container
 
