@@ -63,7 +63,7 @@ Stocksight website
 cd stocksight
 docker-compose build && docker-compose up
 ```
-***this will volume mount the two files config.py (stocksight settings) and twitteruserids.txt to the files in your local git cloned "stocksight' directory.***
+*This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory
 
 3) Once all the containers have started up, shell into the container
 
