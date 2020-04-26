@@ -55,7 +55,7 @@ Stocksight website
 
 ## Install - Docker
 
-* **See how to use below before building the Docker containers**
+*** **See [how to use](#how-to-use) below before building the Docker containers** ***
 
 1) Download/clone stocksight repo with git.
 2) Set up stocksight, elasticsearch and kibana containers using Docker compose
