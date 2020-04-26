@@ -62,7 +62,7 @@ Stocksight website
 ```
 cd stocksight
 cp config.py.sample config.py
-*edit config.py and set elasticsearch_host = "elasticsearch"
+***see how to use below for config.py (stocksight config) changes***
 docker-compose build && docker-compose up
 ```
 **This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory**
@@ -90,7 +90,7 @@ docker-compose build && docker-compose up
 1) Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
-2) Copy config.py.sample to config.py
+2) Copy config.py.sample to config.py (stocksight config file)
 
 3) Set elasticsearch settings in config.py for your env (for Docker, set `elasticsearch_host = "elasticsearch"`)
 
