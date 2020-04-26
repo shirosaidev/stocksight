@@ -62,6 +62,7 @@ Stocksight website
 ```
 cd stocksight
 cp config.py.sample config.py
+*edit config.py and set elasticsearch_host = "elasticsearch"
 docker-compose build && docker-compose up
 ```
 **This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory**
