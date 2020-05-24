@@ -8,7 +8,7 @@ header:
   cta_label: "<i class='fa fa-download' aria-hidden='true'></i> Download"
   cta_url: "https://github.com/shirosaidev/stocksight/releases/latest"
   caption:
-excerpt: "Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis.<br /> <small><a href='https://github.com/shirosaidev/stocksight/releases/tag/v0.1-b.9'>Latest release v0.1-b.9</a></small><br /><br />
+excerpt: "Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis.<br /> <small><a href='https://github.com/shirosaidev/stocksight/releases/tag/v0.1-b.9'>Latest release v0.1-b.11</a></small><br /><br />
 {::nomarkdown}<iframe style='display: inline-block;' src='https://ghbtns.com/github-btn.html?user=shirosaidev&repo=stocksight&type=star&count=true&size=large' frameborder='0' scrolling='0' width='160px' height='30px'></iframe> <iframe style='display: inline-block;' src='https://ghbtns.com/github-btn.html?user=shirosaidev&repo=diskover&type=fork&count=true&size=large' frameborder='0' scrolling='0' width='158px' height='30px'></iframe>{:/nomarkdown}"
 github:
   - excerpt: '{::nomarkdown}<iframe style="display: inline-block;" src="https://ghbtns.com/github-btn.html?user=shirosaidev&repo=stocksight&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe> <iframe style="display: inline-block;" src="https://ghbtns.com/github-btn.html?user=shirosaidev&repo=stocksight&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
