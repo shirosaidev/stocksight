@@ -41,7 +41,7 @@ from newspaper import Article, ArticleException
 from config import *
 
 
-STOCKSIGHT_VERSION = '0.1-b.10'
+STOCKSIGHT_VERSION = '0.1-b.11'
 __version__ = STOCKSIGHT_VERSION
 
 IS_PY3 = sys.version_info >= (3, 0)
@@ -52,9 +52,6 @@ if not IS_PY3:
 
 # sentiment text-processing url
 sentimentURL = 'http://text-processing.com/api/sentiment/'
-
-# stocksight website url data collector
-stocksightURL = 'https://stocksight.diskoverspace.com/data_collector.php'
 
 # tweet id list
 tweet_ids = []
@@ -478,7 +475,6 @@ def sentiment_analysis(text):
     uses sentiment polarity from TextBlob, VADER Sentiment and
     sentiment from text-processing URL
     could be made better :)
-    Uploads sentiment to stocksight website.
     """
 
     # pass text into sentiment url
@@ -513,19 +509,6 @@ def sentiment_analysis(text):
             sentiment = "positive"
         else:
             sentiment = "neutral"
-
-    # calculate average and upload to sentiment website
-    if args.upload:
-        if sentiment_url:
-            neg_avg = (text_vs['neg'] + neg_url) / 2
-            pos_avg = (text_vs['pos'] + pos_url) / 2
-            neutral_avg = (text_vs['neu'] + neu_url) / 2
-            upload_sentiment(neg_avg, pos_avg, neutral_avg)
-        else:
-            neg_avg = text_vs['neg']
-            pos_avg = text_vs['pos']
-            neutral_avg = text_vs['neu']
-            upload_sentiment(neg_avg, pos_avg, neutral_avg)
 
     # calculate average polarity from TextBlob and VADER
     polarity = (text_tb.sentiment.polarity + text_vs['compound']) / 2
@@ -648,31 +631,6 @@ def get_twitter_users_from_file(file):
     return twitter_users
 
 
-def upload_sentiment(neg, pos, neu):
-    # upload sentiment to stocksight website
-    global prev_time
-    global sentiment_avg
-    # update averages
-    sentiment_avg[0] = (sentiment_avg[0] + neg) / 2
-    sentiment_avg[1] = (sentiment_avg[1] + pos) / 2
-    sentiment_avg[2] = (sentiment_avg[2] + neu) / 2
-    # don't upload more than once every 10 seconds for tweets
-    time_now = time.time()
-    if not args.newsheadlines and time_now - prev_time < 10:
-        return
-    prev_time = time_now
-    payload = {'token':stocksight_token, 'symbol':args.symbol, 'neg':sentiment_avg[0], 'pos':sentiment_avg[1], 'neu':sentiment_avg[2]}
-    try:
-        post = requests.post(stocksightURL, data=payload)
-    except requests.exceptions.RequestException as re:
-        logger.error("Exception: requests exception uploading sentiment to stocksight caused by %s" % re)
-        raise
-    if post.status_code == 200:
-        logger.info("Uploaded stock sentiment to stocksight website")
-    else:
-        logger.warning("Can't upload sentiment to stocksight website caused by %s" % post.status_code)
-
-
 if __name__ == '__main__':
     # parse cli args
     parser = argparse.ArgumentParser()
@@ -681,10 +639,7 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--delindex", action="store_true",
                         help="Delete existing Elasticsearch index first")
     parser.add_argument("-s", "--symbol", metavar="SYMBOL", required=True,
-                        help="Stock symbol you are interesed in searching for, example: TSLA "
-                             "This is used as the symbol tag on stocksight website. " 
-                             "Could also be set to a tag name like 'elonmusk' or 'elon' etc. " 
-                             "Cannot contain spaces and more than 25 characters.")
+                        help="Stock symbol you are interesed in searching for, example: TSLA")
     parser.add_argument("-k", "--keywords", metavar="KEYWORDS",
                         help="Use keywords to search for in Tweets instead of feeds. "
                              "Separated by comma, case insensitive, spaces are ANDs commas are ORs. "
@@ -702,9 +657,7 @@ if __name__ == '__main__':
     parser.add_argument("--frequency", metavar="FREQUENCY", default=120, type=int,
                         help="How often in seconds to retrieve news headlines (default: 120 sec)")
     parser.add_argument("--followlinks", action="store_true",
-                        help="Follow links on news headlines and scrape relevant text from landing page")
-    parser.add_argument("-U", "--upload", action="store_true",
-                        help="Upload sentiment to stocksight website (BETA)")   
+                        help="Follow links on news headlines and scrape relevant text from landing page") 
     parser.add_argument("-w", "--websentiment", action="store_true",
                         help="Get sentiment results from text processing website")                  
     parser.add_argument("--noelasticsearch", action="store_true",
@@ -723,12 +676,6 @@ if __name__ == '__main__':
                         version="stocksight v%s" % STOCKSIGHT_VERSION,
                         help="Prints version and exits")
     args = parser.parse_args()
-
-    # check symbol for illegal characters and length
-    if ' ' in args.symbol:
-        sys.exit("Symbol cannot contain any spaces")
-    if len(args.symbol) > 25:
-        sys.exit("Symbol cannot be more than 25 characters")
 
     # set up logging
     logger = logging.getLogger('stocksight')

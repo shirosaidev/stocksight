@@ -1,5 +1,9 @@
 # stocksight Change Log
 
+## [0.1-b.11] = 2020-05-24
+### changed
+- removed stocksight web site uploading capability, site has been removed
+
 ## [0.1-b.10] = 2020-03-29
 ### added
 - Dockerfile and docker-compose.yml for running in docker
