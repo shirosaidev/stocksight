@@ -1,15 +1,15 @@
 <img src="/docs/stocksight.png?raw=true" alt="stocksight" />
 
-# stocksight
-Crowd-sourced stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis. How much do emotions on Twitter and news headlines affect a stock's price? Let's find out ...
-
 [![License](https://img.shields.io/github/license/shirosaidev/stocksight.svg?label=License&maxAge=86400)](./LICENSE)
 [![Release](https://img.shields.io/github/release/shirosaidev/stocksight.svg?label=Release&maxAge=60)](https://github.com/shirosaidev/stocksight/releases/latest)
 [![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
 [![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
 
+# stocksight
+Crowd-sourced stock market analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis. How much do emotions on Twitter and news headlines affect a stock's price? Let's find out...
+
 ## About
-stocksight is a crowd-sourced stock analysis open source software that uses Elasticsearch to store Twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine how the author "feels" about a stock. stocksight makes an aggregated analysis of all collected data from all sources.
+stocksight is a crowd-sourced stock market analysis open source software that uses Elasticsearch to store Twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine how the author "feels" about a stock. stocksight makes an aggregated analysis of all collected data from all sources.
 
 Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to search. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis results from other stocksight user app results and a combined aggregated view of all.
 
@@ -53,26 +53,50 @@ Stocksight Kibana dashboard
 Stocksight website
 <img src="https://github.com/shirosaidev/stocksight/blob/master/docs/stocksight_website_screenshot.png?raw=true" alt="stocksight website dashboard" />
 
-## How to use
+## Install - Docker
 
-Install python requirements using pip
+*** **See [how to use](#how-to-use) below before building the Docker containers** ***
+
+1) Download/clone stocksight repo with git.
+2) Set up stocksight, elasticsearch and kibana containers using Docker compose
+```
+cd stocksight
+cp config.py.sample config.py
+***see how to use below for config.py (stocksight config) changes***
+docker-compose build && docker-compose up
+```
+**This will volume mount config.py (stocksight settings) and twitteruserids.txt to those files in your local git cloned "stocksight" directory**
+
+3) Once all the containers have started up, shell into the container
+
+`docker exec -it stocksight_stocksight_1 bash`
+
+4) See examples below for running stocksight.
+
+## Install - local
+
+**Recommended to install Elasticsearch and Kibana in local machine or other machine/vm/docker**
+
+1) Install python requirements using pip
 
 `pip install -r requirements.txt`
 
-Install python nltk data
+2) Install python nltk data
 
 `python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"`
 
-Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
+
+## How to use
+1) Create a new twitter application and generate your consumer key and access token. https://developer.twitter.com/en/docs/basics/developer-portal/guides/apps.html
 https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
 
-Copy config.py.sample to config.py
+2) Copy config.py.sample to config.py (stocksight config file)
 
-Set elasticsearch settings in config.py for your env
+3) Set elasticsearch settings in config.py for your env (for Docker, set `elasticsearch_host = "elasticsearch"`)
 
-Add twitter consumer key/access token and secrets to config.py
+4) Add twitter consumer key/access token and secrets to config.py
 
-Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch and uploaded to StockSight website (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch and uploaded to StockSight website (blacklist).
+5) Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch and uploaded to StockSight website (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch and uploaded to StockSight website (blacklist).
 
 These settings (tokens, feeds) and optional keywords for tweets, are what creates your unique fingerprint and helps with the crowd-sourcing of the stock symbol data mining and sentiment accuracy on StockSight website. The higher number of unique and valid data sources, the more accurate the sentiment analysis average should be.
 
@@ -114,7 +138,12 @@ Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
 $ python stockprice.py -s TSLA --debug
 ```
 
-Load 'stocksight' index in Kibana and import export.json file for visuals/dashboard.
+### Kibana
+
+Load 'stocksight' index in Kibana. For index pattern you can use 'stocksight' if you only have the single index or 'stocksight-*', etc. For time-field name you will want to use the date/time field 'date'.
+
+To import the saved exported visualizations/dashboard, go to Kibana, click on management, click on saved objects, click on the import button and import the export.json file.
+
 
 ### CLI options
 
