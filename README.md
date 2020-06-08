@@ -87,7 +87,7 @@ https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens
 
 4) Add twitter consumer key/access token and secrets to config.py
 
-5) Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch and uploaded to StockSight website (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch and uploaded to StockSight website (blacklist).
+5) Edit config.py and modify NLTK tokens required/ignored and twitter feeds you want to mine. NLTK tokens required are keywords which must be in tweet before adding it to Elasticsearch (whitelist). NLTK tokens ignored are keywords which if are found in tweet, it will not be added to Elasticsearch (blacklist).
 
 ### Examples
 
