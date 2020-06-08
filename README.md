@@ -17,7 +17,9 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 
 
 ## Requirements
-- Python 3. (tested with Python 3.6.5)
+- Python 3.x
+- Elasticsearch 5.x
+- Kibana 5.x
 - elasticsearch python module
 - nltk python module
 - requests python module
@@ -26,10 +28,6 @@ Join the conversation, get support, etc on [stocksight Slack](https://join.slack
 - textblob python module
 - vaderSentiment python module
 - newspaper3k python module
-
-## Optional installs
-- Elasticsearch 5.  (Elasticsearch is recommended but can be not used with --noelasticsearch)
-- Kibana 5.  (Kibana is recommended for searching/visualizing the Elasticsearch indices)
 
 ### Download
 
