@@ -133,7 +133,7 @@ To import the saved exported visualizations/dashboard, go to Kibana, click on ma
 ```
 usage: sentiment.py [-h] [-i INDEX] [-d] -s SYMBOL [-k KEYWORDS] [-a] [-u URL]
                     [-f FILE] [-l] [-n] [--frequency FREQUENCY]
-                    [--followlinks] [-w] [--noelasticsearch]
+                    [--followlinks] [-w]
                     [--overridetokensreq TOKEN [TOKEN ...]]
                     [--overridetokensignore TOKEN [TOKEN ...]] [-v] [--debug]
                     [-q] [-V]
@@ -164,7 +164,6 @@ optional arguments:
   --followlinks         Follow links on news headlines and scrape relevant
                         text from landing page
   -w, --websentiment    Get sentiment results from text processing website
-  --noelasticsearch     Don't connect or add new docs to Elasticsearch
   --overridetokensreq TOKEN [TOKEN ...]
                         Override nltk required tokens from config, separate
                         with space
