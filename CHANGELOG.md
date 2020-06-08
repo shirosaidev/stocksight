@@ -1,5 +1,9 @@
 # stocksight Change Log
 
+## [0.1-b.12] = 2020-06-08
+### changed
+- removed --noelasticsearch cli arg option
+
 ## [0.1-b.11] = 2020-05-24
 ### changed
 - removed stocksight web site uploading capability, site has been removed

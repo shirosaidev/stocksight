@@ -16,10 +16,7 @@ import re
 import argparse
 import logging
 import sys
-try:
-    from elasticsearch5 import Elasticsearch
-except ImportError:
-    from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch
 from random import randint
 
 # import elasticsearch host
@@ -190,8 +187,7 @@ if __name__ == '__main__':
     |_   _|_| |___|___|_,_|_   _|_|_  |_|_|_|  
       |_|                   |_|   |___|                
           :) = +$   :( = -$    v%s
-    GitHub repo https://github.com/shirosaidev/stocksight
-    StockSight website https://stocksight.diskoverspace.com
+     https://github.com/shirosaidev/stocksight
             \033[0m""" % (color, STOCKSIGHT_VERSION)
         print(banner + '\n')
 
