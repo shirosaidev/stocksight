@@ -8,7 +8,7 @@ header:
   cta_label: "<i class='fa fa-download' aria-hidden='true'></i> Download"
   cta_url: "https://github.com/shirosaidev/stocksight/releases/latest"
   caption:
-excerpt: "Crowd-sourced stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis.<br /> <small><a href='https://github.com/shirosaidev/stocksight/releases/tag/v0.1-b.9'>Latest release v0.1-b.9</a></small><br /><br />
+excerpt: "Stock analyzer and stock predictor using Elasticsearch, Twitter, News headlines and Python natural language processing and sentiment analysis.<br /> <small><a href='https://github.com/shirosaidev/stocksight/releases/tag/v0.1-b.9'>Latest release v0.1-b.11</a></small><br /><br />
 {::nomarkdown}<iframe style='display: inline-block;' src='https://ghbtns.com/github-btn.html?user=shirosaidev&repo=stocksight&type=star&count=true&size=large' frameborder='0' scrolling='0' width='160px' height='30px'></iframe> <iframe style='display: inline-block;' src='https://ghbtns.com/github-btn.html?user=shirosaidev&repo=diskover&type=fork&count=true&size=large' frameborder='0' scrolling='0' width='158px' height='30px'></iframe>{:/nomarkdown}"
 github:
   - excerpt: '{::nomarkdown}<iframe style="display: inline-block;" src="https://ghbtns.com/github-btn.html?user=shirosaidev&repo=stocksight&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe> <iframe style="display: inline-block;" src="https://ghbtns.com/github-btn.html?user=shirosaidev&repo=stocksight&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
@@ -19,5 +19,4 @@ intro:
 
 {% include feature_row id="intro" type="center" %}
 
-<p><strong>stocksight</strong> is a crowd-sourced stock analysis open source software that uses <strong>Elasticsearch</strong> to store Twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine how the author "feels" about a stock. stocksight makes an aggregated analysis of all collected data from all sources.</p>
-<p>Each user running stocksight has a unique fingerprint: specific stocks they are following, news sites and twitter users they follow to find information for those stocks. This creates a unique sentiment analysis for each user, based on what data sources they are getting stocksight to search. Users can have the same stocks, but their data sources could vary significantly creating different sentiment analysis for the same stock. stocksight website will allow each user to see other sentiment analysis results from other stocksight user app results and a combined aggregated view of all.</p>
+<p><strong>stocksight</strong> is an open source stock analysis software that uses <strong>Elasticsearch</strong> to store Twitter and news headlines data for stocks. stocksight analyzes the emotions of what the author writes and does sentiment analysis on the text to determine how the author "feels" about a stock.</p>
