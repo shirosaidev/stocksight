@@ -89,8 +89,9 @@ class GetStock:
                     logger.info("Adding stock data to Elasticsearch...")
                     # add stock price info to elasticsearch
                     es.index(index=args.index,
-                             doc_type="stock",
+                             doc_type="_doc",
                              body={"symbol": D['symbol'],
+                                   "type": "stock",
                                    "price_last": D['last'],
                                    "date": D['date'],
                                    "change": D['change'],
@@ -194,29 +195,28 @@ if __name__ == '__main__':
     # set up elasticsearch mappings and create index
     mappings = {
         "mappings": {
-            "stock": {
-                "properties": {
-                    "symbol": {
-                        "type": "keyword"
-                    },
-                    "price_last": {
-                        "type": "float"
-                    },
-                    "date": {
-                        "type": "date"
-                    },
-                    "change": {
-                        "type": "float"
-                    },
-                    "price_high": {
-                        "type": "float"
-                    },
-                    "price_low": {
-                        "type": "float"
-                    },
-                    "vol": {
-                        "type": "integer"
-                    }
+            "properties": {
+                "type": { "type": "keyword" },
+                "symbol": {
+                    "type": "keyword"
+                },
+                "price_last": {
+                    "type": "float"
+                },
+                "date": {
+                    "type": "date"
+                },
+                "change": {
+                    "type": "float"
+                },
+                "price_high": {
+                    "type": "float"
+                },
+                "price_low": {
+                    "type": "float"
+                },
+                "vol": {
+                    "type": "integer"
                 }
             }
         }
