@@ -287,12 +287,12 @@ class NewsHeadlineListener:
                     print("\n------------------------------> (news headlines: %s, filtered: %s, filter-ratio: %s)" \
                         % (self.count, self.count_filtered, str(round(self.count_filtered/self.count*100,2))+"%"))
                     print("Date: " + datenow)
-                    print("News Headline: " + htext)
+                    print("News Headline: " + htext.string)
                     print("Location (url): " + htext_url)
 
                     # create tokens of words in text using nltk
                     text_for_tokens = re.sub(
-                        r"[\%|\$|\.|\,|\!|\:|\@]|\(|\)|\#|\+|(``)|('')|\?|\-", "", htext)
+                        r"[\%|\$|\.|\,|\!|\:|\@]|\(|\)|\#|\+|(``)|('')|\?|\-", "", htext.string)
                     tokens = nltk.word_tokenize(text_for_tokens)
                     print("NLTK Tokens: " + str(tokens))
 
@@ -320,8 +320,8 @@ class NewsHeadlineListener:
                         continue
 
                     # get sentiment values
-                    polarity, subjectivity, sentiment = sentiment_analysis(htext)
-
+                    polarity, subjectivity, sentiment = sentiment_analysis(htext.string)
+                    
                     logger.info("Adding news headline to elasticsearch")
                     # add news headline data and sentiment info to elasticsearch
                     es.index(index=args.index,
