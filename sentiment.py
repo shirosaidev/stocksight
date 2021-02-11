@@ -308,16 +308,18 @@ class NewsHeadlineListener:
                             logger.info("Text contains token from ignore list, not adding")
                             self.count_filtered+=1
                             continue
-                    # check required tokens from config
-                    tokenspass = False
-                    for t in nltk_tokens_required:
-                        if t in tokens:
-                            tokenspass = True
-                            break
-                    if not tokenspass:
-                        logger.info("Text does not contain token from required list, not adding")
-                        self.count_filtered+=1
-                        continue
+                    
+                    # Comment reason: for headlines, filtering based on the tokens is not required since the URL is already queried using the given symbol
+                    # # check required tokens from config
+                    # tokenspass = False
+                    # for t in nltk_tokens_required:
+                    #     if t in tokens:
+                    #         tokenspass = True
+                    #         break
+                    # if not tokenspass:
+                    #     logger.info("Text does not contain token from required list, not adding")
+                    #     self.count_filtered+=1
+                    #     continue
 
                     # get sentiment values
                     polarity, subjectivity, sentiment = sentiment_analysis(htext.string)
