@@ -10,8 +10,7 @@ cat << EndOfBanner
     |_   _|_| |___|___|_,_|_   _|_|_  |_|_|_|  
       |_|                   |_|   |___|                 
           :) = +$   :( = -$
-    GitHub repo https://github.com/shirosaidev/stocksight
-    StockSight website https://stocksight.diskoverspace.com    
+    GitHub repo https://github.com/shirosaidev/stocksight   
 
 EndOfBanner
 
