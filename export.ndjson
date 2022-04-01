@@ -1,0 +1,244 @@
+{
+  "attributes": {
+    "fields": "[{\"count\":0,\"name\":\"_id\",\"type\":\"string\",\"esTypes\":[\"_id\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"count\":0,\"name\":\"_index\",\"type\":\"string\",\"esTypes\":[\"_index\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"count\":0,\"name\":\"_score\",\"type\":\"number\",\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"_source\",\"type\":\"_source\",\"esTypes\":[\"_source\"],\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"_type\",\"type\":\"string\",\"esTypes\":[\"_type\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"count\":0,\"name\":\"author\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"author.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"subType\":{\"multi\":{\"parent\":\"author\"}}},{\"count\":0,\"name\":\"change\",\"type\":\"number\",\"esTypes\":[\"float\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"date\",\"type\":\"date\",\"esTypes\":[\"date\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"followers\",\"type\":\"number\",\"esTypes\":[\"long\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"friends\",\"type\":\"number\",\"esTypes\":[\"long\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"language\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"language.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"subType\":{\"multi\":{\"parent\":\"language\"}}},{\"count\":0,\"name\":\"location\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"location.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"subType\":{\"multi\":{\"parent\":\"location\"}}},{\"count\":0,\"name\":\"message\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"message.english\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false,\"subType\":{\"multi\":{\"parent\":\"message\"}}},{\"count\":0,\"name\":\"message.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"subType\":{\"multi\":{\"parent\":\"message\"}}},{\"count\":0,\"name\":\"polarity\",\"type\":\"number\",\"esTypes\":[\"float\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"price_high\",\"type\":\"number\",\"esTypes\":[\"float\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"price_last\",\"type\":\"number\",\"esTypes\":[\"float\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"price_low\",\"type\":\"number\",\"esTypes\":[\"float\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"sentiment\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"sentiment.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"subType\":{\"multi\":{\"parent\":\"sentiment\"}}},{\"count\":0,\"name\":\"statuses\",\"type\":\"number\",\"esTypes\":[\"long\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"subjectivity\",\"type\":\"number\",\"esTypes\":[\"float\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"symbol\",\"type\":\"string\",\"esTypes\":[\"text\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"count\":0,\"name\":\"symbol.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"subType\":{\"multi\":{\"parent\":\"symbol\"}}},{\"count\":0,\"name\":\"tweet_id\",\"type\":\"number\",\"esTypes\":[\"long\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"type\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"count\":0,\"name\":\"vol\",\"type\":\"number\",\"esTypes\":[\"long\"],\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true}]",
+    "timeFieldName": "date",
+    "title": "stocksight*"
+  },
+  "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+  "migrationVersion": {
+    "index-pattern": "7.6.0"
+  },
+  "references": [],
+  "type": "index-pattern",
+  "updated_at": "2020-12-23T09:12:14.889Z",
+  "version": "WzU0NSwzXQ=="
+} {
+  "attributes": {
+    "columns": ["author", "location", "message", "polarity", "subjectivity", "sentiment"],
+    "description": "",
+    "hits": 0,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"highlightAll\":true,\"version\":true,\"query\":{\"query\":{\"match_all\":{}},\"language\":\"lucene\"},\"filter\":[{\"meta\":{\"negate\":false,\"disabled\":false,\"alias\":null,\"type\":\"phrase\",\"key\":\"type\",\"value\":\"tweet\",\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index\"},\"query\":{\"match\":{\"type\":{\"query\":\"tweet\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+    },
+    "sort": [
+      ["date", "desc"]
+    ],
+    "title": "stocksight_savesearch",
+    "version": 1
+  },
+  "id": "AWZO_6iv0rkQl37xrvXt",
+  "migrationVersion": {
+    "search": "7.9.3"
+  },
+  "references": [{
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }, {
+    "id": "stocksight",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }],
+  "type": "search",
+  "updated_at": "2020-12-23T09:20:32.852Z",
+  "version": "WzU5NCwzXQ=="
+} {
+  "attributes": {
+    "description": "",
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"key\":\"type\",\"negate\":false,\"params\":{\"query\":\"tweet\"},\"type\":\"phrase\",\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index\"},\"query\":{\"match_phrase\":{\"type\":\"tweet\"}}}],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+    },
+    "title": "stocksight_sentinel",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "visState": "{\"title\":\"stocksight_sentinel\",\"type\":\"pie\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"sentiment.keyword\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"segment\"}],\"params\":{\"addLegend\":true,\"addTooltip\":true,\"isDonut\":false,\"legendPosition\":\"bottom\",\"type\":\"pie\",\"labels\":{\"show\":false,\"values\":true,\"last_level\":true,\"truncate\":100}}}"
+  },
+  "id": "AWZO7a1n0rkQl37xrvXK",
+  "migrationVersion": {
+    "visualization": "7.10.0"
+  },
+  "references": [{
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }],
+  "type": "visualization",
+  "updated_at": "2020-12-23T09:22:21.123Z",
+  "version": "WzY2OCwzXQ=="
+} {
+  "attributes": {
+    "description": "",
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"key\":\"type\",\"negate\":false,\"params\":{\"query\":\"tweet\"},\"type\":\"phrase\",\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index\"},\"query\":{\"match_phrase\":{\"type\":\"tweet\"}}}],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+    },
+    "title": "stocksight_tweets",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "visState": "{\"title\":\"stocksight_tweets\",\"type\":\"line\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{\"customLabel\":\"\"},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"params\":{\"field\":\"date\",\"timeRange\":{\"from\":\"now-15m\",\"to\":\"now\"},\"useNormalizedEsInterval\":true,\"scaleMetricValues\":false,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{}},\"schema\":\"segment\"}],\"params\":{\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{\"text\":\"date per 30 seconds\"}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"line\",\"mode\":\"normal\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"showCircles\":true,\"interpolate\":\"linear\"}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"type\":\"line\",\"labels\":{},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}"
+  },
+  "id": "AWZO8wUR0rkQl37xrvXV",
+  "migrationVersion": {
+    "visualization": "7.10.0"
+  },
+  "references": [{
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }],
+  "type": "visualization",
+  "updated_at": "2020-12-23T09:21:28.922Z",
+  "version": "WzYxMSwzXQ=="
+} {
+  "attributes": {
+    "description": "",
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"key\":\"type\",\"negate\":false,\"params\":{\"query\":\"tweet\"},\"type\":\"phrase\",\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index\"},\"query\":{\"match_phrase\":{\"type\":\"tweet\"}}}],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+    },
+    "title": "stocksight_wordcloud",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "visState": "{\"title\":\"stocksight_wordcloud\",\"type\":\"tagcloud\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"message.keyword\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":25,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"segment\"}],\"params\":{\"scale\":\"linear\",\"orientation\":\"single\",\"minFontSize\":14,\"maxFontSize\":36,\"type\":\"tagcloud\",\"showLabel\":true}}"
+  },
+  "id": "AWZW6DNS0rkQl37xrvcg",
+  "migrationVersion": {
+    "visualization": "7.10.0"
+  },
+  "references": [{
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }],
+  "type": "visualization",
+  "updated_at": "2020-12-23T09:22:49.214Z",
+  "version": "WzY3NCwzXQ=="
+} {
+  "attributes": {
+    "description": "",
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[{\"meta\":{\"negate\":false,\"disabled\":false,\"alias\":null,\"type\":\"phrase\",\"key\":\"type\",\"value\":\"stock\",\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index\"},\"query\":{\"match\":{\"type\":{\"query\":\"stock\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+    },
+    "title": "stocksight_stockprice",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "visState": "{\"title\":\"stocksight_stockprice\",\"type\":\"line\",\"params\":{\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{\"text\":\"date per 30 seconds\"}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Sum of price_last\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"line\",\"mode\":\"normal\",\"data\":{\"label\":\"Sum of price_last\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"showCircles\":true},{\"show\":true,\"mode\":\"normal\",\"type\":\"line\",\"drawLinesBetweenPoints\":true,\"showCircles\":true,\"data\":{\"id\":\"3\",\"label\":\"Sum of price_high\"},\"valueAxis\":\"ValueAxis-1\"},{\"show\":true,\"mode\":\"normal\",\"type\":\"line\",\"drawLinesBetweenPoints\":true,\"showCircles\":true,\"data\":{\"id\":\"4\",\"label\":\"Sum of price_low\"},\"valueAxis\":\"ValueAxis-1\"}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"type\":\"line\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"price_last\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"date\",\"interval\":\"auto\",\"min_doc_count\":1,\"extended_bounds\":{}}},{\"id\":\"3\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"price_high\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"price_low\"}}],\"listeners\":{}}"
+  },
+  "id": "AWZYOrcih4RzKn4w3M7J",
+  "migrationVersion": {
+    "visualization": "7.10.0"
+  },
+  "references": [{
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }, {
+    "id": "stocksight",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "stocksight",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }],
+  "type": "visualization",
+  "updated_at": "2020-12-23T09:20:35.695Z",
+  "version": "WzU5NywzXQ=="
+} {
+  "attributes": {
+    "description": "",
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"key\":\"type\",\"negate\":false,\"params\":{\"query\":\"tweet\"},\"type\":\"phrase\",\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index\"},\"query\":{\"match_phrase\":{\"type\":\"tweet\"}}}],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+    },
+    "title": "stocksight_polarity",
+    "uiStateJSON": "{\"vis\":{\"defaultColors\":{\"0 - 1\":\"rgb(0,104,55)\"}}}",
+    "version": 1,
+    "visState": "{\"title\":\"stocksight_polarity\",\"type\":\"metric\",\"aggs\":[{\"id\":\"5\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"1\",\"enabled\":true,\"type\":\"avg\",\"params\":{\"field\":\"polarity\"},\"schema\":\"metric\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"median\",\"params\":{\"field\":\"polarity\"},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"min\",\"params\":{\"field\":\"polarity\"},\"schema\":\"metric\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"max\",\"params\":{\"field\":\"polarity\"},\"schema\":\"metric\"}],\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"colorSchema\":\"Green to Red\",\"useRange\":false,\"colorsRange\":[{\"from\":0,\"to\":1}],\"invertColors\":false,\"labels\":{\"show\":true,\"color\":\"black\"},\"style\":{\"fontSize\":\"24\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\"},\"extendRange\":false,\"metricColorMode\":\"None\"}}}"
+  },
+  "id": "AWZY6Xtjh4RzKn4w3NXT",
+  "migrationVersion": {
+    "visualization": "7.10.0"
+  },
+  "references": [{
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+    "type": "index-pattern"
+  }, {
+    "id": "f2af5190-44fe-11eb-acc2-71900c91bd37",
+    "name": "kibanaSavedObjectMeta.searchSourceJSON.filter[0].meta.index",
+    "type": "index-pattern"
+  }],
+  "type": "visualization",
+  "updated_at": "2020-12-23T09:22:03.816Z",
+  "version": "WzY2NSwzXQ=="
+} {
+  "attributes": {
+    "description": "",
+    "hits": 0,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{\"highlightAll\":true,\"version\":true,\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+    },
+    "optionsJSON": "{\"darkTheme\":true}",
+    "panelsJSON": "[{\"panelIndex\":\"1\",\"panelRefName\":\"panel_0\",\"version\":\"7.3.0\",\"gridData\":{\"x\":0,\"y\":8,\"w\":12,\"h\":12,\"i\":\"1\"},\"embeddableConfig\":{}},{\"panelIndex\":\"2\",\"panelRefName\":\"panel_1\",\"version\":\"7.3.0\",\"gridData\":{\"x\":32,\"y\":8,\"w\":16,\"h\":12,\"i\":\"2\"},\"embeddableConfig\":{}},{\"panelIndex\":\"3\",\"panelRefName\":\"panel_2\",\"version\":\"7.3.0\",\"gridData\":{\"x\":0,\"y\":20,\"w\":48,\"h\":16,\"i\":\"3\"},\"embeddableConfig\":{\"columns\":[\"author\",\"location\",\"message\",\"polarity\",\"subjectivity\",\"sentiment\"],\"sort\":[\"date\",\"desc\"]}},{\"panelIndex\":\"4\",\"panelRefName\":\"panel_3\",\"version\":\"7.3.0\",\"gridData\":{\"x\":0,\"y\":36,\"w\":48,\"h\":16,\"i\":\"4\"},\"embeddableConfig\":{}},{\"panelIndex\":\"5\",\"panelRefName\":\"panel_4\",\"version\":\"7.3.0\",\"gridData\":{\"x\":12,\"y\":8,\"w\":20,\"h\":12,\"i\":\"5\"},\"embeddableConfig\":{}},{\"panelIndex\":\"6\",\"panelRefName\":\"panel_5\",\"version\":\"7.3.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":8,\"i\":\"6\"},\"embeddableConfig\":{}}]",
+    "timeRestore": false,
+    "title": "stocksight_dashboard",
+    "version": 1
+  },
+  "id": "AWZPAfg50rkQl37xrvXw",
+  "migrationVersion": {
+    "dashboard": "7.9.3"
+  },
+  "references": [{
+    "id": "AWZO7a1n0rkQl37xrvXK",
+    "name": "panel_0",
+    "type": "visualization"
+  }, {
+    "id": "AWZO8wUR0rkQl37xrvXV",
+    "name": "panel_1",
+    "type": "visualization"
+  }, {
+    "id": "AWZO_6iv0rkQl37xrvXt",
+    "name": "panel_2",
+    "type": "search"
+  }, {
+    "id": "AWZW6DNS0rkQl37xrvcg",
+    "name": "panel_3",
+    "type": "visualization"
+  }, {
+    "id": "AWZYOrcih4RzKn4w3M7J",
+    "name": "panel_4",
+    "type": "visualization"
+  }, {
+    "id": "AWZY6Xtjh4RzKn4w3NXT",
+    "name": "panel_5",
+    "type": "visualization"
+  }],
+  "type": "dashboard",
+  "updated_at": "2020-12-23T09:20:22.719Z",
+  "version": "WzU5MywzXQ=="
+} {
+  "exportedCount": 8,
+  "missingRefCount": 1,
+  "missingReferences": [{
+    "id": "stocksight",
+    "type": "index-pattern"
+  }]
+}
