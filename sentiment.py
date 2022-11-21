@@ -11,6 +11,8 @@ stocksight is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
 
+#Just a comment to check for excerise :0
+
 import sys
 import json
 import time
