@@ -1,7 +1,7 @@
 elasticsearch>=5.0.0,<6.0.0
 requests
 nltk
-tweepy
+tweepy<=3.10.1
 beautifulsoup4
 textblob
 vaderSentiment
