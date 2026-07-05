@@ -36,6 +36,7 @@ from newspaper import Article, ArticleException
 
 # import elasticsearch host, twitter keys and tokens
 from config import *
+from xquik_import import index_xquik_tweets
 
 
 STOCKSIGHT_VERSION = '0.1-b.12'
@@ -626,6 +627,29 @@ def get_twitter_users_from_file(file):
     return twitter_users
 
 
+def index_xquik_json(file_path):
+    try:
+        with open(file_path, "rt", encoding="utf-8") as input_file:
+            payload = json.load(input_file)
+    except (IOError, OSError, ValueError) as e:
+        logger.error("Exception: error reading Xquik JSON caused by: %s" % e)
+        raise
+
+    def index_document(document):
+        es.index(index=args.index, doc_type="tweet", body=document)
+
+    indexed, skipped = index_xquik_tweets(
+        payload,
+        index_document,
+        clean_text,
+        clean_text_sentiment,
+        sentiment_analysis,
+    )
+
+    logger.info("Indexed %s Xquik tweets from %s (%s skipped)" % (indexed, file_path, skipped))
+    return indexed, skipped
+
+
 if __name__ == '__main__':
     # parse cli args
     parser = argparse.ArgumentParser()
@@ -649,6 +673,8 @@ if __name__ == '__main__':
                         help="Follow any link url in tweets and analyze sentiment on web page")
     parser.add_argument("-n", "--newsheadlines", action="store_true",
                         help="Get news headlines instead of Twitter using stock symbol from -s")
+    parser.add_argument("--xquik-json", metavar="FILE",
+                        help="Import Xquik tweet search/export JSON instead of streaming Twitter")
     parser.add_argument("--frequency", metavar="FREQUENCY", default=120, type=int,
                         help="How often in seconds to retrieve news headlines (default: 120 sec)")
     parser.add_argument("--followlinks", action="store_true",
@@ -866,6 +892,15 @@ if __name__ == '__main__':
         nltk_tokens_required = tuple(args.overridetokensreq)
     if args.overridetokensignore:
         nltk_tokens_ignored = tuple(args.overridetokensignore)
+
+    # import saved Xquik tweet payloads without opening a Twitter stream
+    if args.xquik_json:
+        try:
+            index_xquik_json(args.xquik_json)
+        except KeyboardInterrupt:
+            print("Ctrl-c keyboard interrupt, exiting...")
+            sys.exit(0)
+        sys.exit(0)
 
     # are we grabbing news headlines from yahoo finance or twitter
     if args.newsheadlines:
