@@ -113,6 +113,35 @@ Start mining and analyzing News headlines and following headline links and scrap
 $ python sentiment.py -s TSLA --followlinks --debug
 ```
 
+StockSight's legacy Twitter stream can fail against current X endpoints. As an opt-in alternative,
+save a page from [Xquik Search Tweets](https://docs.xquik.com/api-reference/x/search-tweets):
+
+```bash
+$ read -s XQUIK_API_KEY
+$ printf '\n'
+$ printf 'header = "x-api-key: %s"\n' "$XQUIK_API_KEY" | \
+  curl --config - --get 'https://xquik.com/api/v1/x/tweets/search' \
+    --data-urlencode 'q=TSLA' \
+    --output xquik-tweets.json
+```
+
+This keeps the API key out of the command arguments and saved response. Then index the tweets with
+the existing StockSight sentiment pipeline:
+
+```sh
+$ python sentiment.py -s TSLA --xquik-json xquik-tweets.json --debug
+```
+
+The importer accepts the documented top-level `tweets` response or its plain tweet array. It maps
+the REST response and [normalized MCP](https://docs.xquik.com/mcp/tools) fields, including Unix
+timestamps. Invalid records are skipped instead of receiving fabricated dates.
+
+If `has_next_page` is true, repeat the search with `next_cursor` as the `cursor` parameter. Keep the
+same query and filters. Cursors are opaque, so never construct or edit one. Import each saved page.
+
+Xquik is an independent third-party service. Not affiliated with X Corp.
+"Twitter" and "X" are trademarks of X Corp.
+
 Run stockprice.py to add stock prices to 'stocksight' index in Elasticsearch
 
 ```sh
@@ -156,6 +185,8 @@ optional arguments:
                         web page
   -n, --newsheadlines   Get news headlines instead of Twitter using stock
                         symbol from -s
+  --xquik-json FILE     Import Xquik tweet search/export JSON instead of
+                        streaming Twitter
   --frequency FREQUENCY
                         How often in seconds to retrieve news headlines
                         (default: 120 sec)

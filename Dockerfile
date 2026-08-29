@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
 
 COPY sentiment.py ./
+COPY xquik_import.py ./
 COPY stockprice.py ./
 COPY startup.sh ./
 
