@@ -1,4 +1,4 @@
-elasticsearch>=5.0.0,<6.0.0
+elasticsearch>=5.0.0
 requests
 nltk
 tweepy
@@ -6,3 +6,4 @@ beautifulsoup4
 textblob
 vaderSentiment
 newspaper3k
+google-genai>=2.0.0

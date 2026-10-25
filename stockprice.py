@@ -19,8 +19,14 @@ import sys
 from elasticsearch import Elasticsearch
 from random import randint
 
-# import elasticsearch host
-from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password
+# import elasticsearch host with fallback
+try:
+    from config import elasticsearch_host, elasticsearch_port, elasticsearch_user, elasticsearch_password
+except ImportError:
+    elasticsearch_host = "localhost"
+    elasticsearch_port = 9200
+    elasticsearch_user = ""
+    elasticsearch_password = ""
 
 from sentiment import STOCKSIGHT_VERSION
 __version__ = STOCKSIGHT_VERSION
@@ -29,8 +35,11 @@ __version__ = STOCKSIGHT_VERSION
 url = "https://query1.finance.yahoo.com/v8/finance/chart/SYMBOL?region=US&lang=en-US&includePrePost=false&interval=2m&range=5d&corsDomain=finance.yahoo.com&.tsrc=finance"
 
 # create instance of elasticsearch
-es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
-                   http_auth=(elasticsearch_user, elasticsearch_password))
+try:
+    es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
+                       http_auth=(elasticsearch_user, elasticsearch_password))
+except Exception:
+    es = None
 
 class GetStock:
 
@@ -47,7 +56,8 @@ class GetStock:
                 url = re.sub("SYMBOL", symbol, url)
                 # get stock data (json) from url
                 try:
-                    r = requests.get(url)
+                    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+                    r = requests.get(url, headers=headers)
                     data = r.json()
                 except (requests.HTTPError, requests.ConnectionError, requests.ConnectTimeout) as re:
                     logger.error("Exception: exception getting stock data from url caused by %s" % re)
@@ -86,18 +96,21 @@ class GetStock:
 
                 # check before adding to ES
                 if D['last'] is not None and D['high'] is not None and D['low'] is not None:
-                    logger.info("Adding stock data to Elasticsearch...")
-                    # add stock price info to elasticsearch
-                    es.index(index=args.index,
-                             doc_type="stock",
-                             body={"symbol": D['symbol'],
-                                   "price_last": D['last'],
-                                   "date": D['date'],
-                                   "change": D['change'],
-                                   "price_high": D['high'],
-                                   "price_low": D['low'],
-                                   "vol": D['vol']
-                                   })
+                    if es is not None:
+                        logger.info("Adding stock data to Elasticsearch...")
+                        # add stock price info to elasticsearch
+                        es.index(index=args.index,
+                                 doc_type="stock",
+                                 body={"symbol": D['symbol'],
+                                       "price_last": D['last'],
+                                       "date": D['date'],
+                                       "change": D['change'],
+                                       "price_high": D['high'],
+                                       "price_low": D['low'],
+                                       "vol": D['vol']
+                                       })
+                    else:
+                        logger.info("Standalone mode: %s price: $%.2f (change: %s)", D['symbol'], D['last'], D.get('change'))
                 else:
                     logger.warning("Some stock data had null values, not adding to Elasticsearch")
 
@@ -226,12 +239,19 @@ if __name__ == '__main__':
         print("No stock symbol, see -h for help.")
         sys.exit(1)
 
-    if args.delindex:
-        logger.info('Deleting existing Elasticsearch index ' + args.index)
-        es.indices.delete(index=args.index, ignore=[400, 404])
+    if es is not None:
+        try:
+            if args.delindex:
+                logger.info('Deleting existing Elasticsearch index ' + args.index)
+                es.indices.delete(index=args.index, ignore=[400, 404])
 
-    logger.info('Creating new Elasticsearch index or using existing ' + args.index)
-    es.indices.create(index=args.index, body=mappings, ignore=[400, 404])
+            logger.info('Creating new Elasticsearch index or using existing ' + args.index)
+            es.indices.create(index=args.index, body=mappings, ignore=[400, 404])
+        except Exception as e:
+            logger.warning("Elasticsearch index setup failed (%s). Continuing in standalone mode.", e)
+            es = None
+    else:
+        logger.info("Operating in standalone mode. Real-time prices will be printed to console.")
 
     # create instance of GetStock
     stockprice = GetStock()

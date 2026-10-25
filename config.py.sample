@@ -18,3 +18,8 @@ twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits",
                  "@MorganStanley", "@ianbremmer", "@GoldmanSachs", "@Wu_Tang_Finance",
                  "@Schuldensuehner", "@NorthmanTrader", "@Frances_Coppola", "@bySamRo",
                  "@BuzzFeed","@nytimes"]
+
+# Google Gemma 4 Configuration (for advanced LLM sentiment & reasoning)
+gemma_api_key = ""
+gemma_model = "gemma-4-26b-a4b-it"  # "gemma-4-26b-a4b-it" or "gemma-4-31b-it"
+gemma_thinking = True
