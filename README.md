@@ -89,6 +89,23 @@ https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens
 
 ### Examples
 
+#### 🧠 Gemma 4 Open AI Model Integration (Recommended)
+
+Analyze stock news headlines with **Google Gemma 4** (`gemma-4-26b-a4b-it` or `gemma-4-31b-it`) and multi-step financial reasoning (`--thinking`):
+
+```sh
+# Run sentiment analysis with Gemma 4 on stock news in standalone mode (no Elasticsearch needed):
+$ python sentiment.py -s TSLA -n --gemma --standalone
+
+# Specify Gemma 4 31B model with custom API key:
+$ python sentiment.py -s NVDA -n --gemma --gemma-model gemma-4-31b-it --gemma-api-key "YOUR_KEY"
+
+# Launch the interactive StockSight Gemma 4 Web Dashboard:
+$ streamlit run app.py
+```
+
+#### Legacy Elasticsearch & Social Mining Examples
+
 Run sentiment.py to create 'stocksight' index in Elasticsearch and start mining and analyzing Tweets using keywords and the stock symbol TSLA
 
 ```sh

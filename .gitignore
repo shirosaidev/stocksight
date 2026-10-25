@@ -100,3 +100,6 @@ ENV/
 # mypy
 .mypy_cache/
 .DS_Store
+config.py
+test_analyzer.py
+test_*.py

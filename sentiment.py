@@ -24,18 +24,64 @@ try:
     import urllib.parse as urlparse
 except ImportError:
     import urlparse
-from tweepy.streaming import StreamListener
-from tweepy import API, Stream, OAuthHandler, TweepError
+try:
+    from tweepy.streaming import StreamListener
+except (ImportError, AttributeError):
+    try:
+        from tweepy import Stream as StreamListener
+    except (ImportError, AttributeError):
+        StreamListener = object
+
+try:
+    from tweepy import API, Stream, OAuthHandler, TweepError
+except (ImportError, AttributeError):
+    try:
+        from tweepy import API, Stream, OAuthHandler
+        from tweepy.errors import TweepyException as TweepError
+    except (ImportError, AttributeError):
+        API = Stream = OAuthHandler = TweepError = None
+
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from bs4 import BeautifulSoup
 from elasticsearch import Elasticsearch
 from random import randint, randrange
 from datetime import datetime
-from newspaper import Article, ArticleException
+try:
+    from newspaper import Article, ArticleException
+    HAS_NEWSPAPER = True
+except (ImportError, Exception):
+    Article = None
+    class ArticleException(Exception):
+        pass
+    HAS_NEWSPAPER = False
 
-# import elasticsearch host, twitter keys and tokens
-from config import *
+# import Gemma 4 sentiment analyzer
+try:
+    from gemma_sentiment import GemmaSentimentAnalyzer
+    HAS_GEMMA = True
+except ImportError:
+    HAS_GEMMA = False
+
+# import elasticsearch host, twitter keys, tokens and gemma settings
+try:
+    from config import *
+except ImportError:
+    elasticsearch_host = "localhost"
+    elasticsearch_port = 9200
+    elasticsearch_user = ""
+    elasticsearch_password = ""
+    consumer_key = ""
+    consumer_secret = ""
+    access_token = ""
+    access_token_secret = ""
+    nltk_tokens_required = ("neuralink", "solar", "tesla", "@tesla", "#tesla", "tesla", "tsla", "#tsla", "elonmusk", "elon", "musk", "spacex", "starlink")
+    nltk_min_tokens = 1
+    nltk_tokens_ignored = ("win", "giveaway")
+    twitter_feeds = ["@elonmusk", "@cnbc", "@benzinga", "@stockwits"]
+    gemma_api_key = ""
+    gemma_model = "gemma-4-26b-a4b-it"
+    gemma_thinking = True
 
 
 STOCKSIGHT_VERSION = '0.1-b.12'
@@ -222,22 +268,25 @@ class TweetStreamListener(StreamListener):
                     subjectivity = (subjectivity + tweet_urls_subjectivity) / 2
             
 
-            logger.info("Adding tweet to elasticsearch")
-            # add twitter data and sentiment info to elasticsearch
-            es.index(index=args.index,
-                    doc_type="tweet",
-                    body={"author": screen_name,
-                        "location": location,
-                        "language": language,
-                        "friends": friends,
-                        "followers": followers,
-                        "statuses": statuses,
-                        "date": created_date,
-                        "message": text_filtered,
-                        "tweet_id": tweetid,
-                        "polarity": polarity,
-                        "subjectivity": subjectivity,
-                        "sentiment": sentiment})
+            if es is not None:
+                logger.info("Adding tweet to elasticsearch")
+                # add twitter data and sentiment info to elasticsearch
+                es.index(index=args.index,
+                        doc_type="tweet",
+                        body={"author": screen_name,
+                            "location": location,
+                            "language": language,
+                            "friends": friends,
+                            "followers": followers,
+                            "statuses": statuses,
+                            "date": created_date,
+                            "message": text_filtered,
+                            "tweet_id": tweetid,
+                            "polarity": polarity,
+                            "subjectivity": subjectivity,
+                            "sentiment": sentiment})
+            else:
+                logger.info("Standalone mode: analyzed tweet for %s (polarity=%.3f, sentiment=%s)", args.symbol, polarity, sentiment)
 
             # randomly sleep to stagger request time
             time.sleep(randrange(2,5))
@@ -249,7 +298,12 @@ class TweetStreamListener(StreamListener):
 
     # on failure
     def on_error(self, status_code):
-        logger.error("Got an error with status code: %s (will try again later)" % status_code)
+        if status_code == 401:
+            logger.error("Got an error with status code: 401 (Unauthorized). Twitter API v1.1 free streaming is discontinued. Please run news headlines mode with Gemma 4: `python sentiment.py -s %s -n --gemma`" % getattr(args, 'symbol', 'TSLA'))
+        elif status_code == 404:
+            logger.error("Got an error with status code: 404 (Not Found). The Twitter Streaming endpoint has been decommissioned by X/Twitter. Please run news headlines mode with Gemma 4: `python sentiment.py -s %s -n --gemma`" % getattr(args, 'symbol', 'TSLA'))
+        else:
+            logger.error("Got an error with status code: %s (will try again later)" % status_code)
         # randomly sleep to stagger request time
         time.sleep(randrange(2,30))
         return True
@@ -322,16 +376,19 @@ class NewsHeadlineListener:
                     # get sentiment values
                     polarity, subjectivity, sentiment = sentiment_analysis(htext)
 
-                    logger.info("Adding news headline to elasticsearch")
-                    # add news headline data and sentiment info to elasticsearch
-                    es.index(index=args.index,
-                            doc_type="newsheadline",
-                            body={"date": datenow,
-                                "location": htext_url,
-                                "message": htext,
-                                "polarity": polarity,
-                                "subjectivity": subjectivity,
-                                "sentiment": sentiment})
+                    if es is not None:
+                        logger.info("Adding news headline to elasticsearch")
+                        # add news headline data and sentiment info to elasticsearch
+                        es.index(index=args.index,
+                                doc_type="newsheadline",
+                                body={"date": datenow,
+                                    "location": htext_url,
+                                    "message": htext,
+                                    "polarity": polarity,
+                                    "subjectivity": subjectivity,
+                                    "sentiment": sentiment})
+                    else:
+                        logger.info("Standalone mode: analyzed headline for %s (polarity=%.3f, sentiment=%s)", args.symbol, polarity, sentiment)
 
             logger.info("Will get news headlines again in %s sec..." % self.frequency)
             time.sleep(self.frequency)
@@ -355,7 +412,9 @@ class NewsHeadlineListener:
 
             if html:
                 for i in html:
-                    latestheadlines.append((i.next.next.next.next, url))
+                    text_str = i.get_text(strip=True)
+                    if text_str:
+                        latestheadlines.append((text_str, url))
             logger.debug(latestheadlines)
 
             if args.followlinks:
@@ -465,12 +524,34 @@ def get_sentiment_from_url(text, sentimentURL):
 
 
 def sentiment_analysis(text):
-    """Determine if sentiment is positive, negative, or neutral
-    algorithm to figure out if sentiment is positive, negative or neutral
-    uses sentiment polarity from TextBlob, VADER Sentiment and
-    sentiment from text-processing URL
-    could be made better :)
+    """Determine if sentiment is positive, negative, or neutral.
+    Supports Google Gemma 4 models (gemma-4-26b-a4b-it / gemma-4-31b-it)
+    for deep quantitative reasoning, alongside traditional TextBlob and VADER.
     """
+    # Use Gemma 4 if requested
+    if getattr(args, 'gemma', False) and HAS_GEMMA and gemma_analyzer:
+        try:
+            result = gemma_analyzer.analyze(text, symbol=getattr(args, 'symbol', None))
+            polarity = result["polarity"]
+            subjectivity = result["subjectivity"]
+            sentiment = result["sentiment"]
+            reasoning = result.get("reasoning", "")
+            catalysts = result.get("key_catalysts", [])
+            confidence = result.get("confidence", 0.8)
+
+            print("************ [Gemma 4 Financial Analysis] ************")
+            print("Sentiment:    " + sentiment.upper())
+            print("Polarity:     " + str(round(polarity, 3)))
+            print("Subjectivity: " + str(round(subjectivity, 3)))
+            print("Confidence:   " + str(round(confidence, 3)))
+            if reasoning:
+                print("Reasoning:    " + str(reasoning))
+            if catalysts:
+                print("Catalysts:    " + ", ".join(catalysts))
+            print("******************************************************")
+            return polarity, subjectivity, sentiment
+        except Exception as e:
+            logger.warning("Gemma analysis failed (%s), falling back to baseline...", e)
 
     # pass text into sentiment url
     if args.websentiment:
@@ -665,6 +746,16 @@ if __name__ == '__main__':
                         help="Debug message output")
     parser.add_argument("-q", "--quiet", action="store_true",
                         help="Run quiet with no message output")
+    parser.add_argument("--gemma", action="store_true",
+                        help="Use Google Gemma 4 open model for frontier financial sentiment analysis & reasoning")
+    parser.add_argument("--gemma-model", metavar="MODEL", default="gemma-4-26b-a4b-it",
+                        help="Gemma 4 model to use (default: gemma-4-26b-a4b-it, optional: gemma-4-31b-it)")
+    parser.add_argument("--gemma-api-key", metavar="KEY",
+                        help="Google GenAI API key for Gemma 4 (or set via config.py / GEMINI_API_KEY env)")
+    parser.add_argument("--no-thinking", action="store_true",
+                        help="Disable Gemma 4 internal thinking reasoning process")
+    parser.add_argument("--standalone", "--no-es", action="store_true", dest="standalone",
+                        help="Run in standalone mode without requiring a live Elasticsearch cluster")
     parser.add_argument("-V", "--version", action="version",
                         version="stocksight v%s" % STOCKSIGHT_VERSION,
                         help="Prints version and exits")
@@ -734,9 +825,36 @@ if __name__ == '__main__':
             \033[0m""" % (color, STOCKSIGHT_VERSION)
         print(banner + '\n')
 
+    # initialize Gemma analyzer if requested
+    global gemma_analyzer
+    gemma_analyzer = None
+    if getattr(args, 'gemma', False):
+        if not HAS_GEMMA:
+            logger.error("google-genai package is not installed. Please install it with: pip install google-genai")
+            sys.exit(1)
+        api_key = args.gemma_api_key or os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            try:
+                import config
+                api_key = getattr(config, 'gemma_api_key', '')
+            except Exception:
+                pass
+        model = args.gemma_model or 'gemma-4-26b-a4b-it'
+        thinking = not args.no_thinking
+        gemma_analyzer = GemmaSentimentAnalyzer(api_key=api_key, model=model, thinking=thinking)
+        logger.info("Gemma 4 financial sentiment engine active (model: %s, thinking: %s)", model, thinking)
+
     # create instance of elasticsearch
-    es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
-                http_auth=(elasticsearch_user, elasticsearch_password))
+    es = None
+    if not args.standalone:
+        try:
+            es = Elasticsearch(hosts=[{'host': elasticsearch_host, 'port': elasticsearch_port}],
+                        http_auth=(elasticsearch_user, elasticsearch_password))
+        except Exception as e:
+            logger.warning("Could not connect to Elasticsearch (%s). Running in standalone mode.", e)
+            es = None
+    else:
+        logger.info("Running in standalone mode (Elasticsearch disabled).")
 
     # set up elasticsearch mappings and create index
     mappings = {
@@ -854,12 +972,19 @@ if __name__ == '__main__':
         }
     }
 
-    if args.delindex:
-        logger.info('Deleting existing Elasticsearch index ' + args.index)
-        es.indices.delete(index=args.index, ignore=[400, 404])
+    if es is not None:
+        try:
+            if args.delindex:
+                logger.info('Deleting existing Elasticsearch index ' + args.index)
+                es.indices.delete(index=args.index, ignore=[400, 404])
 
-    logger.info('Creating new Elasticsearch index or using existing ' + args.index)
-    es.indices.create(index=args.index, body=mappings, ignore=[400, 404])
+            logger.info('Creating new Elasticsearch index or using existing ' + args.index)
+            es.indices.create(index=args.index, body=mappings, ignore=[400, 404])
+        except Exception as e:
+            logger.warning("Elasticsearch index setup failed (%s). Continuing in standalone mode.", e)
+            es = None
+    else:
+        logger.info("Operating in standalone mode. Analysis results will be streamed to stdout.")
 
     # check if we need to override any tokens
     if args.overridetokensreq:
